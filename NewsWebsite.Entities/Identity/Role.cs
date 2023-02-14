@@ -23,7 +23,7 @@ namespace NewsWebsite.Entities.Identity
         }
 
         public string Description { get; set; }
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<UserRole> Users { get; set; }
         public virtual ICollection<RoleClaim> Claims { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace NewsWebsite.Entities.Identity
         public bool IsActive { get; set; }
         public GenderType Gender { get; set; }
 
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<UserRole> Roles { get; set; }
         public virtual ICollection<UserClaim> Claims { get; set; }
         public virtual ICollection<Bookmark> Bookmarks { get; set; }
         public virtual ICollection<News> News { get; set; }
