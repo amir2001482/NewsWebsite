@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NewsWebsite.Data;
+using NewsWebsite.IocConfig;
 
 namespace NewsWebsite
 {
@@ -25,6 +26,8 @@ namespace NewsWebsite
         {
             services.AddDbContext<NewsDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
             services.AddMvc(opptions => opptions.EnableEndpointRouting = false);
+            services.AddCustomServices();
+            services.AddControllers().AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

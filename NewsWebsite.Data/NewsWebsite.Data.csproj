@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="bin\**" />
+    <None Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.4" />
@@ -17,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NewsWebsite.Entities\NewsWebsite.Entities.csproj" />
+    <ProjectReference Include="..\NewsWebsite.ViewModels\NewsWebsite.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

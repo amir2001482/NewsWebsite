@@ -19,5 +19,111 @@
        data-page-list="[10, 25, 50, 100, all]"
        data-show-footer="true"
        data-side-pagination="server"
-       data-url="https://examples.wenzhixin.net.cn/examples/bootstrap_table/data"
+       data-url="/Admin/Category/GetCategories"
        data-response-handler="responseHandler"></table>
+
+<script>
+        var $table = $('#table')
+        var selections = []
+
+    function get_query_params(p) {
+        return {
+            extraParam: 'abc',
+            search: p.title,
+            sort: p.sort,
+            order: p.order,
+            limit: p.limit,
+            offset: p.offset
+        }
+    }
+
+        function responseHandler(res) {
+            $.each(res.rows, function (i, row) {
+                row.state = $.inArray(row.id, selections) !== -1
+            })
+            return res
+        }
+
+         function detailFormatter(index, row) {
+            var html = []
+            $.each(row, function (key, value) {
+                if (key != "state" && key != "Id" && key!='آدرس' && key!="ردیف")
+                    html.push('<p><b>' + key + ':</b> ' + value + '</p>')
+                if (key == 'آدرس') {
+                    var url = '@string.Format("{0}://{1}", Context.Request.Scheme, Context.Request.Host)' + '/' + row.Id + '/' + value;
+                    html.push('<p><b>' + key + ':</b> ' + '<a href="' + url +'">'  + url + '</a>' + '</p>')
+                }
+            })
+            return html.join('')
+        }
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="like" href="javascript:void(0)" title="Like">',
+                '<i class="fa fa-heart"></i>',
+                '</a>  ',
+                '<a class="remove" href="javascript:void(0)" title="Remove">',
+                '<i class="fa fa-trash"></i>',
+                '</a>'
+            ].join('')
+        }
+
+
+        function totalTextFormatter(data) {
+            return 'تعداد'
+        }
+
+        function totalNameFormatter(data) {
+            return data.length
+        }
+
+
+    function initTable() {
+        $table.bootstrapTable('destroy').bootstrapTable({
+            height: 600,
+            locale: 'fa-IR',
+            columns: [
+                [{
+                    field: 'state',
+                    checkbox: true,
+                    rowspan: 2,
+                    align: 'center',
+                    valign: 'middle'
+                }, {
+                    title: 'ردیف',
+                    field: 'ردیف',
+                    rowspan: 2,
+                    align: 'center',
+                    valign: 'middle',
+                    footerFormatter: totalTextFormatter
+                }, {
+                    title: 'جزئیات اطلاعات دسته بندی ها',
+                    colspan: 3,
+                    align: 'center'
+                }],
+                [{
+                    field: 'دسته',
+                    title: 'دسته',
+                    sortable: true,
+                    footerFormatter: totalNameFormatter,
+                    align: 'center'
+                }, {
+                    field: 'دسته پدر',
+                    title: 'دسته پدر',
+                    sortable: true,
+                    align: 'center'
+                }, {
+                    field: 'operate',
+                    title: 'عملیات',
+                    align: 'center',
+                    events: window.operateEvents,
+                    formatter: operateFormatter
+                }]
+            ]
+        })
+    }
+
+        $(function () {
+            initTable()
+            $('#locale').change(initTable)
+        })</script>
