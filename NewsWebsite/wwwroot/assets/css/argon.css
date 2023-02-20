@@ -271,6 +271,7 @@ th {
 label {
     display: inline-block;
     margin-bottom: .5rem;
+    font-size:14px;
 }
 
 button {
@@ -427,6 +428,9 @@ h2,
 h3,
 .h3 {
     font-size: 1.0625rem;
+    font-family:Vazir_Medium;
+    font-weight:100;
+    margin:0px;
 }
 
 h4,
@@ -644,9 +648,8 @@ pre {
 
 .row {
     display: flex;
-    margin-right: -15px;
-    margin-left: -15px;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .no-gutters {
@@ -2018,8 +2021,7 @@ pre {
     line-height: 1.5;
     display: block;
     width: 100%;
-    height: calc(2.75rem + 2px);
-    padding: .625rem .75rem;
+    padding: .4rem .75rem;
     transition: all .2s cubic-bezier(.68, -.55, .265, 1.55);
     color: #8898aa;
     border: 1px solid #cad1d7;
@@ -5290,6 +5292,8 @@ input[type='button'].btn-block {
     padding-left: 0;
     list-style: none;
     border-radius: .375rem;
+    float:right;
+    direction:ltr;
 }
 
 .page-link {
@@ -6219,19 +6223,14 @@ button.close {
 
 .modal-header {
     display: flex;
-    padding: 1.25rem;
+    padding: 1rem;
     border-bottom: 0 solid #e9ecef;
     border-top-left-radius: .4375rem;
     border-top-right-radius: .4375rem;
     align-items: flex-start;
     justify-content: space-between;
+    border-bottom:1px solid #e7e7e7;
 }
-
-    .modal-header .close {
-        margin: -1.25rem -1.25rem -1.25rem auto;
-        padding: 1.25rem;
-    }
-
 .modal-title {
     line-height: 1.1;
     margin-bottom: 0;
@@ -6245,10 +6244,11 @@ button.close {
 
 .modal-footer {
     display: flex;
-    padding: 1.5rem;
+    padding: 1rem;
     border-top: 0 solid #e9ecef;
     align-items: center;
     justify-content: flex-end;
+    border-top:1px solid #e7e7e7;
 }
 
     .modal-footer > :not(:first-child) {
@@ -19314,4 +19314,19 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle {
 
 .fixed-table-pagination {
     font-size: 14px;
+}
+
+.bootstrap-table .fixed-table-container .table tbody tr .card-view .card-view-title {
+    min-width: 0!important;
+    padding-left: 15px !important;
+}
+
+.field-validation-error {
+    font-size: 13px;
+    background-color: #f9f3f3;
+    padding: 0px 10px;
+    border-radius: 2px;
+}
+#table td:nth-child(3) {
+    font-family: Vazir_FD;
 }

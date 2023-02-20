@@ -9,6 +9,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
     [Area(AreaConstants.areaName)]
     public class BaseController : Controller
     {
-
+        public IActionResult Notification()
+        {
+            return Content(TempData["notification"].ToString());
+        }
     }
 }

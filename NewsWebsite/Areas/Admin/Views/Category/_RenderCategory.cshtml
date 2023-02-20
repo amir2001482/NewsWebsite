@@ -1,0 +1,55 @@
+﻿
+@model NewsWebsite.ViewModels.Category.CategoryViewModel
+
+<link href="~/lib/comboTreePlugin/comboTreePlugin.css" rel="stylesheet" />
+<script src="~/lib/comboTreePlugin/comboTreePlugin.js"></script>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @if (Model.CategoryId != null)
+                {
+                    <h3 id="modal-title">ویرایش اطلاعات دسته بندی</h3>
+                }
+                else
+                {
+                    <h3 id="modal-title">افزودن دسته بندی جدید</h3>
+                }
+
+                <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body clearfix">
+                <form asp-action="CreateOrUpdate">
+                </form>
+                <h4>hello world</h4>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">بستن</button>
+                @if (Model.CategoryId != null)
+                {
+                    <button type="submit" class="btn btn-sm btn-labeled btn-success mr-1" data-save="modal">
+                        ذخیره تغییرات
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-sm btn-labeled btn-success mr-1" data-save="modal">
+                        افزودن اطلاعات
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    jQuery(document).ready(function($) {
+		comboTree2 = $('#ParentCategoryName').comboTree({
+			source : @Html.Raw(Json.Serialize(ViewBag.Categories)),
+			isMultiple: false
+		});
+    });
+</script>
+
