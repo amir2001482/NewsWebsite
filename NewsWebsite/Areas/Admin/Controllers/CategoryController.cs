@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
@@ -13,10 +14,12 @@ namespace NewsWebsite.Areas.Admin.Controllers
     public class CategoryController : BaseController
     {
         private readonly IUnitOfWork _uw;
+        private readonly IMapper _mapper;
         private const string CategoryNotFound = "دسته ی درخواستی یافت نشد.";
-        public CategoryController(IUnitOfWork uw)
+        public CategoryController(IUnitOfWork uw , IMapper mapper)
         {
             _uw = uw;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -69,13 +72,14 @@ namespace NewsWebsite.Areas.Admin.Controllers
             if (categoryId.HasValue())
             {
                 var category = await _uw.BaseRepository<Category>().FindByIdAsync(categoryId);
-                await _uw._Context.Entry(category).Reference(c => c.category).LoadAsync();
+                await _uw._Context.Entry(category).Reference(c => c.Parent).LoadAsync();
                 if (category != null)
                 {
-                    categoryViewModel.CategoryId = category.CategoryId;
-                    categoryViewModel.CategoryName = category.CategoryName;
-                    categoryViewModel.ParentCategoryName = category.category?.CategoryName;
-                    categoryViewModel.Url = category.Url;
+                    //categoryViewModel.CategoryId = category.CategoryId;
+                    //categoryViewModel.CategoryName = category.CategoryName;
+                    //categoryViewModel.ParentCategoryName = category.category?.CategoryName;
+                    //categoryViewModel.Url = category.Url;
+                    categoryViewModel = _mapper.Map<CategoryViewModel>(category);
                 }
                 else
                     ModelState.AddModelError(string.Empty, CategoryNotFound);

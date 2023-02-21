@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NewsWebsite.Data;
 using NewsWebsite.IocConfig;
+using NewsWebsite.IocConfig.Mapping;
 
 namespace NewsWebsite
 {
@@ -33,9 +35,8 @@ namespace NewsWebsite
             });
             services.AddCustomServices();
             services.AddControllers().AddNewtonsoftJson();
-            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()))
-;
-            //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()));
+            services.AddAutoMapper(typeof(MappingProfiles));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
