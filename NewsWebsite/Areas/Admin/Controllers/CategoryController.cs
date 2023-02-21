@@ -69,11 +69,12 @@ namespace NewsWebsite.Areas.Admin.Controllers
             if (categoryId.HasValue())
             {
                 var category = await _uw.BaseRepository<Category>().FindByIdAsync(categoryId);
+                await _uw._Context.Entry(category).Reference(c => c.category).LoadAsync();
                 if (category != null)
                 {
                     categoryViewModel.CategoryId = category.CategoryId;
                     categoryViewModel.CategoryName = category.CategoryName;
-                    categoryViewModel.ParentCategoryName = category.ParentCategoryId;
+                    categoryViewModel.ParentCategoryName = category.category?.CategoryName;
                     categoryViewModel.Url = category.Url;
                 }
                 else
@@ -84,61 +85,98 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrUpdate(CategoryViewModel viewModel)
         {
-            if (ModelState.IsValid)
-            {
-                string parentCategoryId = null;
-                if (viewModel.ParentCategoryName.HasValue())
+                if (ModelState.IsValid)
                 {
-                    var parentCategory = _uw.CategoryRepository.FindByCategoryName(viewModel.ParentCategoryName);
-                    if (parentCategory != null)
-                        parentCategoryId = parentCategory.CategoryId;
+                    string parentCategoryId = null;
+                    if (viewModel.ParentCategoryName.HasValue())
+                    {
+                        var parentCategory = _uw.CategoryRepository.FindByCategoryName(viewModel.ParentCategoryName);
+                        if (parentCategory != null)
+                            parentCategoryId = parentCategory.CategoryId;
+                        else
+                        {
+                            Category parent = new Category()
+                            {
+                                CategoryId = StringExtensions.GenerateId(10),
+                                CategoryName = viewModel.CategoryName,
+                                Url = viewModel.CategoryName,
+                            };
+                            await _uw.BaseRepository<Category>().CreateAsync(parent);
+                            parentCategoryId = parent.CategoryId;
+                        }
+                    }
+
+                    if (viewModel.CategoryId.HasValue())
+                    {
+                        var category = await _uw.BaseRepository<Category>().FindByIdAsync(viewModel.CategoryId);
+                        if (category != null)
+                        {
+                            category.CategoryName = viewModel.CategoryName;
+                            category.ParentCategoryId = parentCategoryId;
+                            category.Url = viewModel.Url;
+                            _uw.BaseRepository<Category>().Update(category);
+                            await _uw.Commit();
+                            TempData["notification"] = "ویرایش اطلاعات با موفقیت انجام شد.";
+                        }
+                        else
+                            ModelState.AddModelError(string.Empty, CategoryNotFound);
+                    }
+
                     else
                     {
-                        Category parent = new Category()
+                        Category category = new Category()
                         {
                             CategoryId = StringExtensions.GenerateId(10),
                             CategoryName = viewModel.CategoryName,
-                            Url = viewModel.CategoryName,
+                            ParentCategoryId = parentCategoryId,
+                            Url = viewModel.Url,
                         };
-                        await _uw.BaseRepository<Category>().CreateAsync(parent);
-                        parentCategoryId = parent.CategoryId;
-                    }
-                }
-
-                if (viewModel.CategoryId.HasValue())
-                {
-                    var category = await _uw.BaseRepository<Category>().FindByIdAsync(viewModel.CategoryId);
-                    if (category != null)
-                    {
-                        category.CategoryName = viewModel.CategoryName;
-                        category.ParentCategoryId = parentCategoryId;
-                        category.Url = viewModel.Url;
-                        _uw.BaseRepository<Category>().Update(category);
+                        await _uw.BaseRepository<Category>().CreateAsync(category);
                         await _uw.Commit();
-                        TempData["notification"] = "ویرایش اطلاعات با موفقیت انجام شد.";
+                        TempData["notification"] = "درج اطلاعات با موفقیت انجام شد.";
                     }
-                    else
-                        ModelState.AddModelError(string.Empty, CategoryNotFound);
                 }
+                return PartialView("_RenderCategory", viewModel);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(string categoryId)
+        {
+            if (!categoryId.HasValue())
+                ModelState.AddModelError(string.Empty, CategoryNotFound);
+            else
+            {
+                var category = await _uw.BaseRepository<Category>().FindByIdAsync(categoryId);
+                if (category == null)
+                    ModelState.AddModelError(string.Empty, CategoryNotFound);
+                else
+                    return PartialView("_DeleteConfirmation", category);
+            }
+            return PartialView("_DeleteConfirmation");
+        }
 
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(Category model)
+        {
+            if (model.CategoryId == null)
+                ModelState.AddModelError(string.Empty, CategoryNotFound);
+            else
+            {
+                var category = await _uw.BaseRepository<Category>().FindByIdAsync(model.CategoryId);
+                if (category == null)
+                    ModelState.AddModelError(string.Empty, CategoryNotFound);
                 else
                 {
-                    Category category = new Category()
-                    {
-                        CategoryId = StringExtensions.GenerateId(10),
-                        CategoryName = viewModel.CategoryName,
-                        ParentCategoryId = parentCategoryId,
-                        Url = viewModel.Url,
-                    };
-                    await _uw.BaseRepository<Category>().CreateAsync(category);
+                    _uw.BaseRepository<Category>().Delete(category);
                     await _uw.Commit();
-                    TempData["notification"] = "درج اطلاعات با موفقیت انجام شد.";
+                    TempData["notification"] = "حذف اطلاعات با موفقیت انجام شد.";
+                    return PartialView("_DeleteConfirmation", category);
                 }
             }
-
-            return PartialView("_RenderCategory", viewModel);
+            return PartialView("_DeleteConfirmation");
         }
     }
 }

@@ -1,3715 +1,3770 @@
-﻿/**
- * bootstrap-table - An extended table to integration with some of the most widely used CSS frameworks. (Supports Bootstrap, Semantic UI, Bulma, Material Design, Foundation)
- *
- * @version v1.15.2
- * @homepage https://bootstrap-table.com
- * @author wenzhixin <wenzhixin2010@gmail.com> (http://wenzhixin.net.cn/)
- * @license MIT
- */
-
-(function (e, t) {
-    "object" == typeof exports && "undefined" != typeof module ? module.exports = t(require("jquery")) : "function" == typeof define && define.amd ? define(["jquery"], t) : (e = e || self, e.BootstrapTable = t(e.jQuery))
-})(this, function (t) {
-    'use strict';
-    var m = String.prototype,
-        b = Number.parseFloat,
-        y = Math.max,
-        w = Math.min,
-        S = Math.floor,
-        v = Math.ceil;
-
-    function e(e, t) {
-        return t = {
-            exports: {}
-        }, e(t, t.exports), t.exports
-    }
-
-    function a(e) {
-        return a = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
-            return typeof e
-        } : function (e) {
-            return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e
-        }, a(e)
-    }
-
-    function n(e, t) {
-        if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function")
-    }
-
-    function i(e, t) {
-        for (var o, a = 0; a < t.length; a++) o = t[a], o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, o.key, o)
-    }
-
-    function s(e, t, o) {
-        return t && i(e.prototype, t), o && i(e, o), e
-    }
-
-    function l(e, t) {
-        return d(e) || u(e, t) || g()
-    }
-
-    function r(e) {
-        return c(e) || p(e) || h()
-    }
-
-    function c(e) {
-        if (Array.isArray(e)) {
-            for (var t = 0, o = Array(e.length); t < e.length; t++) o[t] = e[t];
-            return o
-        }
-    }
-
-    function d(e) {
-        if (Array.isArray(e)) return e
-    }
-
-    function p(e) {
-        if (Symbol.iterator in Object(e) || "[object Arguments]" === Object.prototype.toString.call(e)) return Array.from(e)
-    }
-
-    function u(e, t) {
-        var o = [],
-            a = !0,
-            n = !1,
-            i = void 0;
-        try {
-            for (var s, l = e[Symbol.iterator](); !(a = (s = l.next()).done) && (o.push(s.value), !(t && o.length === t)); a = !0);
-        } catch (e) {
-            n = !0, i = e
-        } finally {
-            try {
-                a || null == l["return"] || l["return"]()
-            } finally {
-                if (n) throw i
-            }
-        }
-        return o
-    }
-
-    function h() {
-        throw new TypeError("Invalid attempt to spread non-iterable instance")
-    }
-
-    function g() {
-        throw new TypeError("Invalid attempt to destructure non-iterable instance")
-    }
-    t = t && t.hasOwnProperty("default") ? t["default"] : t;
-    var x, k, T, P = "undefined" == typeof globalThis ? "undefined" == typeof window ? "undefined" == typeof global ? "undefined" == typeof self ? {} : self : global : window : globalThis,
-        C = "object",
-        o = function (e) {
-            return e && e.Math == Math && e
-        },
-        I = o(typeof globalThis == C && globalThis) || o(typeof window == C && window) || o(typeof self == C && self) || o(typeof P == C && P) || Function("return this")(),
-        A = function (e) {
-            try {
-                return !!e()
-            } catch (e) {
-                return !0
-            }
-        },
-        E = !A(function () {
-            return 7 != Object.defineProperty({}, "a", {
-                get: function () {
-                    return 7
-                }
-            }).a
-        }),
-        R = {}.propertyIsEnumerable,
-        _ = Object.getOwnPropertyDescriptor,
-        N = _ && !R.call({
-            1: 2
-        }, 1),
-        D = N ? function (e) {
-            var t = _(this, e);
-            return !!t && t.enumerable
-        } : R,
-        f = {
-            f: D
-        },
-        F = function (e, t) {
-            return {
-                enumerable: !(1 & e),
-                configurable: !(2 & e),
-                writable: !(4 & e),
-                value: t
-            }
-        },
-        L = {}.toString,
-        B = function (e) {
-            return L.call(e).slice(8, -1)
-        },
-        V = "".split,
-        H = A(function () {
-            return !Object("z").propertyIsEnumerable(0)
-        }) ? function (e) {
-            return "String" == B(e) ? V.call(e, "") : Object(e)
-        } : Object,
-        M = function (e) {
-            if (null == e) throw TypeError("Can't call method on " + e);
-            return e
-        },
-        U = function (e) {
-            return H(M(e))
-        },
-        q = function (e) {
-            return "object" == typeof e ? null !== e : "function" == typeof e
-        },
-        z = function (e, t) {
-            if (!q(e)) return e;
-            var o, a;
-            if (t && "function" == typeof (o = e.toString) && !q(a = o.call(e))) return a;
-            if ("function" == typeof (o = e.valueOf) && !q(a = o.call(e))) return a;
-            if (!t && "function" == typeof (o = e.toString) && !q(a = o.call(e))) return a;
-            throw TypeError("Can't convert object to primitive value")
-        },
-        G = {}.hasOwnProperty,
-        W = function (e, t) {
-            return G.call(e, t)
-        },
-        Y = I.document,
-        K = q(Y) && q(Y.createElement),
-        X = function (e) {
-            return K ? Y.createElement(e) : {}
-        },
-        Q = !E && !A(function () {
-            return 7 != Object.defineProperty(X("div"), "a", {
-                get: function () {
-                    return 7
-                }
-            }).a
-        }),
-        J = Object.getOwnPropertyDescriptor,
-        Z = E ? J : function (e, t) {
-            if (e = U(e), t = z(t, !0), Q) try {
-                return J(e, t)
-            } catch (e) { }
-            return W(e, t) ? F(!f.f.call(e, t), e[t]) : void 0
-        },
-        ee = {
-            f: Z
-        },
-        te = function (e) {
-            if (!q(e)) throw TypeError(e + " is not an object");
-            return e
-        },
-        oe = Object.defineProperty,
-        ae = E ? oe : function (e, t, o) {
-            if (te(e), t = z(t, !0), te(o), Q) try {
-                return oe(e, t, o)
-            } catch (e) { }
-            if ("get" in o || "set" in o) throw TypeError("Accessors not supported");
-            return "value" in o && (e[t] = o.value), e
-        },
-        ne = {
-            f: ae
-        },
-        ie = E ? function (e, t, o) {
-            return ne.f(e, t, F(1, o))
-        } : function (e, t, o) {
-            return e[t] = o, e
-        },
-        se = function (e, t) {
-            try {
-                ie(I, e, t)
-            } catch (o) {
-                I[e] = t
-            }
-            return t
-        },
-        le = e(function (e) {
-            var t = I["__core-js_shared__"] || se("__core-js_shared__", {});
-            (e.exports = function (e, o) {
-                return t[e] || (t[e] = void 0 === o ? {} : o)
-            })("versions", []).push({
-                version: "3.1.3",
-                mode: "global",
-                copyright: "\xA9 2019 Denis Pushkarev (zloirock.ru)"
-            })
-        }),
-        re = le("native-function-to-string", Function.toString),
-        ce = I.WeakMap,
-        de = "function" == typeof ce && /native code/.test(re.call(ce)),
-        pe = 0,
-        O = Math.random(),
-        ue = function (e) {
-            return "Symbol(" + ((void 0 === e ? "" : e) + ")_") + (++pe + O).toString(36)
-        },
-        he = le("keys"),
-        ge = function (e) {
-            return he[e] || (he[e] = ue(e))
-        },
-        fe = {},
-        me = I.WeakMap,
-        be = function (e) {
-            return T(e) ? k(e) : x(e, {})
-        };
-    if (de) {
-        var ye = new me,
-            we = ye.get,
-            Se = ye.has,
-            ve = ye.set;
-        x = function (e, t) {
-            return ve.call(ye, e, t), t
-        }, k = function (e) {
-            return we.call(ye, e) || {}
-        }, T = function (e) {
-            return Se.call(ye, e)
-        }
-    } else {
-        var xe = ge("state");
-        fe[xe] = !0, x = function (e, t) {
-            return ie(e, xe, t), t
-        }, k = function (e) {
-            return W(e, xe) ? e[xe] : {}
-        }, T = function (e) {
-            return W(e, xe)
-        }
-    }
-    var ke = {
-        set: x,
-        get: k,
-        has: T,
-        enforce: be,
-        getterFor: function (e) {
-            return function (t) {
-                var o;
-                if (!q(t) || (o = k(t)).type !== e) throw TypeError("Incompatible receiver, " + e + " required");
-                return o
-            }
-        }
-    },
-        Te = e(function (e) {
-            var t = ke.get,
-                o = ke.enforce,
-                a = (re + "").split("toString");
-            le("inspectSource", function (e) {
-                return re.call(e)
-            }), (e.exports = function (e, t, n, i) {
-                var s = !!i && !!i.unsafe,
-                    l = !!i && !!i.enumerable,
-                    r = !!i && !!i.noTargetGet;
-                return ("function" == typeof n && ("string" == typeof t && !W(n, "name") && ie(n, "name", t), o(n).source = a.join("string" == typeof t ? t : "")), e === I) ? void (l ? e[t] = n : se(t, n)) : void (s ? !r && e[t] && (l = !0) : delete e[t], l ? e[t] = n : ie(e, t, n))
-            })(Function.prototype, "toString", function () {
-                return "function" == typeof this && t(this).source || re.call(this)
-            })
-        }),
-        Pe = I,
-        Oe = function (e) {
-            return "function" == typeof e ? e : void 0
-        },
-        Ce = function (e, t) {
-            return 2 > arguments.length ? Oe(Pe[e]) || Oe(I[e]) : Pe[e] && Pe[e][t] || I[e] && I[e][t]
-        },
-        Ie = function (e) {
-            return isNaN(e = +e) ? 0 : (0 < e ? S : v)(e)
-        },
-        $e = function (e) {
-            return 0 < e ? w(Ie(e), 9007199254740991) : 0
-        },
-        Ae = function (e, t) {
-            var o = Ie(e);
-            return 0 > o ? y(o + t, 0) : w(o, t)
-        },
-        Ee = function (e) {
-            return function (t, o, a) {
-                var n, i = U(t),
-                    s = $e(i.length),
-                    l = Ae(a, s);
-                if (e && o != o) {
-                    for (; s > l;)
-                        if (n = i[l++], n != n) return !0;
-                } else
-                    for (; s > l; l++)
-                        if ((e || l in i) && i[l] === o) return e || l || 0; return !e && -1
-            }
-        },
-        Re = {
-            includes: Ee(!0),
-            indexOf: Ee(!1)
-        },
-        _e = Re.indexOf,
-        Ne = function (e, t) {
-            var o, a = U(e),
-                n = 0,
-                s = [];
-            for (o in a) !W(fe, o) && W(a, o) && s.push(o);
-            for (; t.length > n;) W(a, o = t[n++]) && (~_e(s, o) || s.push(o));
-            return s
-        },
-        De = ["constructor", "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", "toLocaleString", "toString", "valueOf"],
-        Fe = De.concat("length", "prototype"),
-        Le = Object.getOwnPropertyNames || function (e) {
-            return Ne(e, Fe)
-        },
-        Be = {
-            f: Le
-        },
-        Ve = Object.getOwnPropertySymbols,
-        He = {
-            f: Ve
-        },
-        je = Ce("Reflect", "ownKeys") || function (e) {
-            var t = Be.f(te(e)),
-                o = He.f;
-            return o ? t.concat(o(e)) : t
-        },
-        Me = function (e, t) {
-            for (var o, a = je(t), n = ne.f, s = ee.f, l = 0; l < a.length; l++) o = a[l], W(e, o) || n(e, o, s(t, o))
-        },
-        Ue = /#|\.prototype\./,
-        qe = function (e, t) {
-            var o = Ge[ze(e)];
-            return o == Ye || o != We && ("function" == typeof t ? A(t) : !!t)
-        },
-        ze = qe.normalize = function (e) {
-            return (e + "").replace(Ue, ".").toLowerCase()
-        },
-        Ge = qe.data = {},
-        We = qe.NATIVE = "N",
-        Ye = qe.POLYFILL = "P",
-        Ke = qe,
-        Xe = ee.f,
-        Qe = function (e, t) {
-            var o, a, n, i, s, l, r = e.target,
-                c = e.global,
-                d = e.stat;
-            if (a = c ? I : d ? I[r] || se(r, {}) : (I[r] || {}).prototype, a)
-                for (n in t) {
-                    if (s = t[n], e.noTargetGet ? (l = Xe(a, n), i = l && l.value) : i = a[n], o = Ke(c ? n : r + (d ? "." : "#") + n, e.forced), !o && void 0 !== i) {
-                        if (typeof s == typeof i) continue;
-                        Me(s, i)
-                    } (e.sham || i && i.sham) && ie(s, "sham", !0), Te(a, n, s, e)
-                }
-        },
-        Je = !!Object.getOwnPropertySymbols && !A(function () {
-            return !(Symbol() + "")
-        }),
-        Ze = Array.isArray || function (e) {
-            return "Array" == B(e)
-        },
-        et = function (e) {
-            return Object(M(e))
-        },
-        tt = Object.keys || function (e) {
-            return Ne(e, De)
-        },
-        ot = E ? Object.defineProperties : function (e, t) {
-            te(e);
-            for (var o, a = tt(t), n = a.length, i = 0; n > i;) ne.f(e, o = a[i++], t[o]);
-            return e
-        },
-        at = Ce("document", "documentElement"),
-        nt = ge("IE_PROTO"),
-        it = "prototype",
-        st = function () { },
-        rt = function () {
-            var e, t = X("iframe"),
-                o = De.length,
-                a = "<",
-                n = "script",
-                i = ">";
-            for (t.style.display = "none", at.appendChild(t), t.src = "java" + n + ":" + "", e = t.contentWindow.document, e.open(), e.write(a + n + i + "document.F=Object" + a + "/" + n + i), e.close(), rt = e.F; o--;) delete rt[it][De[o]];
-            return rt()
-        },
-        ct = Object.create || function (e, t) {
-            var o;
-            return null === e ? o = rt() : (st[it] = te(e), o = new st, st[it] = null, o[nt] = e), void 0 === t ? o : ot(o, t)
-        };
-    fe[nt] = !0;
-    var dt = Be.f,
-        pt = {}.toString,
-        ut = "object" == typeof window && window && Object.getOwnPropertyNames ? Object.getOwnPropertyNames(window) : [],
-        ht = function (e) {
-            try {
-                return dt(e)
-            } catch (e) {
-                return ut.slice()
-            }
-        },
-        gt = {
-            f: function (e) {
-                return ut && "[object Window]" == pt.call(e) ? ht(e) : dt(U(e))
-            }
-        },
-        ft = I.Symbol,
-        mt = le("wks"),
-        bt = function (e) {
-            return mt[e] || (mt[e] = Je && ft[e] || (Je ? ft : ue)("Symbol." + e))
-        },
-        yt = {
-            f: bt
-        },
-        wt = ne.f,
-        St = function (e) {
-            var t = Pe.Symbol || (Pe.Symbol = {});
-            W(t, e) || wt(t, e, {
-                value: yt.f(e)
-            })
-        },
-        vt = ne.f,
-        xt = bt("toStringTag"),
-        kt = function (e, t, o) {
-            e && !W(e = o ? e : e.prototype, xt) && vt(e, xt, {
-                configurable: !0,
-                value: t
-            })
-        },
-        Tt = function (e) {
-            if ("function" != typeof e) throw TypeError(e + " is not a function");
-            return e
-        },
-        Pt = function (e, t, o) {
-            return (Tt(e), void 0 === t) ? e : 0 === o ? function () {
-                return e.call(t)
-            } : 1 === o ? function (o) {
-                return e.call(t, o)
-            } : 2 === o ? function (o, a) {
-                return e.call(t, o, a)
-            } : 3 === o ? function (o, a, n) {
-                return e.call(t, o, a, n)
-            } : function () {
-                return e.apply(t, arguments)
-            }
-        },
-        Ot = bt("species"),
-        Ct = function (e, t) {
-            var o;
-            return Ze(e) && (o = e.constructor, "function" == typeof o && (o === Array || Ze(o.prototype)) ? o = void 0 : q(o) && (o = o[Ot], null === o && (o = void 0))), new (void 0 === o ? Array : o)(0 === t ? 0 : t)
-        },
-        It = [].push,
-        $t = function (e) {
-            var t = 1 == e,
-                o = 4 == e,
-                a = 6 == e;
-            return function (n, i, s, l) {
-                for (var r, c, d = et(n), p = H(d), u = Pt(i, s, 3), h = $e(p.length), g = 0, f = l || Ct, m = t ? f(n, h) : 2 == e ? f(n, 0) : void 0; h > g; g++)
-                    if ((5 == e || a || g in p) && (r = p[g], c = u(r, g, d), e))
-                        if (t) m[g] = c;
-                        else if (c) switch (e) {
-                            case 3:
-                                return !0;
-                            case 5:
-                                return r;
-                            case 6:
-                                return g;
-                            case 2:
-                                It.call(m, r);
-                        } else if (o) return !1;
-                return a ? -1 : 3 == e || o ? o : m
-            }
-        },
-        At = {
-            forEach: $t(0),
-            map: $t(1),
-            filter: $t(2),
-            some: $t(3),
-            every: $t(4),
-            find: $t(5),
-            findIndex: $t(6)
-        },
-        Et = At.forEach,
-        Rt = ge("hidden"),
-        _t = "Symbol",
-        Nt = "prototype",
-        Dt = bt("toPrimitive"),
-        Ft = ke.set,
-        Lt = ke.getterFor(_t),
-        Bt = Object[Nt],
-        Vt = I.Symbol,
-        Ht = I.JSON,
-        jt = Ht && Ht.stringify,
-        Mt = ee.f,
-        Ut = ne.f,
-        qt = gt.f,
-        zt = f.f,
-        Gt = le("symbols"),
-        Wt = le("op-symbols"),
-        Yt = le("string-to-symbol-registry"),
-        Kt = le("symbol-to-string-registry"),
-        Xt = le("wks"),
-        Qt = I.QObject,
-        Jt = !Qt || !Qt[Nt] || !Qt[Nt].findChild,
-        Zt = E && A(function () {
-            return 7 != ct(Ut({}, "a", {
-                get: function () {
-                    return Ut(this, "a", {
-                        value: 7
-                    }).a
-                }
-            })).a
-        }) ? function (e, t, o) {
-            var a = Mt(Bt, t);
-            a && delete Bt[t], Ut(e, t, o), a && e !== Bt && Ut(Bt, t, a)
-        } : Ut,
-        eo = function (e, t) {
-            var o = Gt[e] = ct(Vt[Nt]);
-            return Ft(o, {
-                type: _t,
-                tag: e,
-                description: t
-            }), E || (o.description = t), o
-        },
-        to = Je && "symbol" == typeof Vt.iterator ? function (e) {
-            return "symbol" == typeof e
-        } : function (e) {
-            return Object(e) instanceof Vt
-        },
-        oo = function (e, t, o) {
-            e === Bt && oo(Wt, t, o), te(e);
-            var a = z(t, !0);
-            return te(o), W(Gt, a) ? (o.enumerable ? (W(e, Rt) && e[Rt][a] && (e[Rt][a] = !1), o = ct(o, {
-                enumerable: F(0, !1)
-            })) : (!W(e, Rt) && Ut(e, Rt, F(1, {})), e[Rt][a] = !0), Zt(e, a, o)) : Ut(e, a, o)
-        },
-        ao = function (e, t) {
-            te(e);
-            var o = U(t),
-                a = tt(o).concat(lo(o));
-            return Et(a, function (t) {
-                (!E || no.call(o, t)) && oo(e, t, o[t])
-            }), e
-        },
-        no = function (e) {
-            var t = z(e, !0),
-                o = zt.call(this, t);
-            return (this !== Bt || !W(Gt, t) || W(Wt, t)) && (!(o || !W(this, t) || !W(Gt, t) || W(this, Rt) && this[Rt][t]) || o)
-        },
-        io = function (e, t) {
-            var o = U(e),
-                a = z(t, !0);
-            if (o !== Bt || !W(Gt, a) || W(Wt, a)) {
-                var n = Mt(o, a);
-                return n && W(Gt, a) && !(W(o, Rt) && o[Rt][a]) && (n.enumerable = !0), n
-            }
-        },
-        so = function (e) {
-            var t = qt(U(e)),
-                o = [];
-            return Et(t, function (e) {
-                W(Gt, e) || W(fe, e) || o.push(e)
-            }), o
-        },
-        lo = function (e) {
-            var t = e === Bt,
-                o = qt(t ? Wt : U(e)),
-                a = [];
-            return Et(o, function (e) {
-                W(Gt, e) && (!t || W(Bt, e)) && a.push(Gt[e])
-            }), a
-        };
-    Je || (Vt = function () {
-        if (this instanceof Vt) throw TypeError("Symbol is not a constructor");
-        var e = arguments.length && void 0 !== arguments[0] ? arguments[0] + "" : void 0,
-            t = ue(e),
-            o = function (e) {
-                this === Bt && o.call(Wt, e), W(this, Rt) && W(this[Rt], t) && (this[Rt][t] = !1), Zt(this, t, F(1, e))
-            };
-        return E && Jt && Zt(Bt, t, {
-            configurable: !0,
-            set: o
-        }), eo(t, e)
-    }, Te(Vt[Nt], "toString", function () {
-        return Lt(this).tag
-    }), f.f = no, ne.f = oo, ee.f = io, Be.f = gt.f = so, He.f = lo, E && (Ut(Vt[Nt], "description", {
-        configurable: !0,
-        get: function () {
-            return Lt(this).description
-        }
-    }), Te(Bt, "propertyIsEnumerable", no, {
-        unsafe: !0
-    })), yt.f = function (e) {
-        return eo(bt(e), e)
-    }), Qe({
-        global: !0,
-        wrap: !0,
-        forced: !Je,
-        sham: !Je
-    }, {
-            Symbol: Vt
-        }), Et(tt(Xt), function (e) {
-            St(e)
-        }), Qe({
-            target: _t,
-            stat: !0,
-            forced: !Je
-        }, {
-                for: function (e) {
-                    var t = e + "";
-                    if (W(Yt, t)) return Yt[t];
-                    var o = Vt(t);
-                    return Yt[t] = o, Kt[o] = t, o
-                },
-                keyFor: function (e) {
-                    if (!to(e)) throw TypeError(e + " is not a symbol");
-                    return W(Kt, e) ? Kt[e] : void 0
-                },
-                useSetter: function () {
-                    Jt = !0
-                },
-                useSimple: function () {
-                    Jt = !1
-                }
-            }), Qe({
-                target: "Object",
-                stat: !0,
-                forced: !Je,
-                sham: !E
-            }, {
-                    create: function (e, t) {
-                        return void 0 === t ? ct(e) : ao(ct(e), t)
-                    },
-                    defineProperty: oo,
-                    defineProperties: ao,
-                    getOwnPropertyDescriptor: io
-                }), Qe({
-                    target: "Object",
-                    stat: !0,
-                    forced: !Je
-                }, {
-                        getOwnPropertyNames: so,
-                        getOwnPropertySymbols: lo
-                    }), Qe({
-                        target: "Object",
-                        stat: !0,
-                        forced: A(function () {
-                            He.f(1)
-                        })
-                    }, {
-                            getOwnPropertySymbols: function (e) {
-                                return He.f(et(e))
-                            }
-                        }), Ht && Qe({
-                            target: "JSON",
-                            stat: !0,
-                            forced: !Je || A(function () {
-                                var e = Vt();
-                                return "[null]" != jt([e]) || "{}" != jt({
-                                    a: e
-                                }) || "{}" != jt(Object(e))
-                            })
-                        }, {
-                                stringify: function (e) {
-                                    for (var t, o, a = [e], n = 1; arguments.length > n;) a.push(arguments[n++]);
-                                    if (o = t = a[1], (q(t) || void 0 !== e) && !to(e)) return Ze(t) || (t = function (e, t) {
-                                        if ("function" == typeof o && (t = o.call(this, e, t)), !to(t)) return t
-                                    }), a[1] = t, jt.apply(Ht, a)
-                                }
-                            }), Vt[Nt][Dt] || ie(Vt[Nt], Dt, Vt[Nt].valueOf), kt(Vt, _t), fe[Rt] = !0;
-    var ro = ne.f,
-        co = I.Symbol;
-    if (E && "function" == typeof co && (!("description" in co.prototype) || void 0 !== co().description)) {
-        var po = {},
-            uo = function () {
-                var e = 1 > arguments.length || void 0 === arguments[0] ? void 0 : arguments[0] + "",
-                    t = this instanceof uo ? new co(e) : void 0 === e ? co() : co(e);
-                return "" === e && (po[t] = !0), t
-            };
-        Me(uo, co);
-        var ho = uo.prototype = co.prototype;
-        ho.constructor = uo;
-        var go = ho.toString,
-            fo = "Symbol(test)" == co("test") + "",
-            mo = /^Symbol\((.*)\)[^)]+$/;
-        ro(ho, "description", {
-            configurable: !0,
-            get: function () {
-                var e = q(this) ? this.valueOf() : this,
-                    t = go.call(e);
-                if (W(po, e)) return "";
-                var o = fo ? t.slice(7, -1) : t.replace(mo, "$1");
-                return "" === o ? void 0 : o
-            }
-        }), Qe({
-            global: !0,
-            forced: !0
-        }, {
-                Symbol: uo
-            })
-    }
-    St("iterator");
-    var bo = function (e, t, o) {
-        var a = z(t);
-        a in e ? ne.f(e, a, F(0, o)) : e[a] = o
-    },
-        yo = bt("species"),
-        wo = function (e) {
-            return !A(function () {
-                var t = [],
-                    o = t.constructor = {};
-                return o[yo] = function () {
-                    return {
-                        foo: 1
-                    }
-                }, 1 !== t[e](Boolean).foo
-            })
-        },
-        So = bt("isConcatSpreadable"),
-        vo = 9007199254740991,
-        xo = "Maximum allowed index exceeded",
-        ko = !A(function () {
-            var e = [];
-            return e[So] = !1, e.concat()[0] !== e
-        }),
-        To = wo("concat"),
-        Po = function (e) {
-            if (!q(e)) return !1;
-            var t = e[So];
-            return void 0 === t ? Ze(e) : !!t
-        };
-    Qe({
-        target: "Array",
-        proto: !0,
-        forced: !ko || !To
-    }, {
-            concat: function () {
-                var e, t, o, a, s, l = et(this),
-                    r = Ct(l, 0),
-                    c = 0;
-                for (e = -1, o = arguments.length; e < o; e++)
-                    if (s = -1 === e ? l : arguments[e], Po(s)) {
-                        if (a = $e(s.length), c + a > vo) throw TypeError(xo);
-                        for (t = 0; t < a; t++ , c++) t in s && bo(r, c, s[t])
-                    } else {
-                        if (c >= vo) throw TypeError(xo);
-                        bo(r, c++, s)
-                    }
-                return r.length = c, r
-            }
-        });
-    var Oo = At.filter;
-    Qe({
-        target: "Array",
-        proto: !0,
-        forced: !wo("filter")
-    }, {
-            filter: function (e) {
-                return Oo(this, e, 1 < arguments.length ? arguments[1] : void 0)
-            }
-        });
-    var Co = bt("unscopables"),
-        Io = Array.prototype;
-    null == Io[Co] && ie(Io, Co, ct(null));
-    var $o = function (e) {
-        Io[Co][e] = !0
-    },
-        Ao = At.find,
-        Eo = "find",
-        Ro = !0;
-    Eo in [] && [,][Eo](function () {
-        Ro = !1
-    }), Qe({
-        target: "Array",
-        proto: !0,
-        forced: Ro
-    }, {
-            find: function (e) {
-                return Ao(this, e, 1 < arguments.length ? arguments[1] : void 0)
-            }
-        }), $o(Eo);
-    var _o = At.findIndex,
-        No = "findIndex",
-        Do = !0;
-    No in [] && [,][No](function () {
-        Do = !1
-    }), Qe({
-        target: "Array",
-        proto: !0,
-        forced: Do
-    }, {
-            findIndex: function (e) {
-                return _o(this, e, 1 < arguments.length ? arguments[1] : void 0)
-            }
-        }), $o(No);
-    var Fo = Re.includes;
-    Qe({
-        target: "Array",
-        proto: !0
-    }, {
-            includes: function (e) {
-                return Fo(this, e, 1 < arguments.length ? arguments[1] : void 0)
-            }
-        }), $o("includes");
-    var Lo = function (e, t) {
-        var o = [][e];
-        return !o || !A(function () {
-            o.call(null, t || function () {
-                throw 1
-            }, 1)
-        })
-    },
-        Bo = Re.indexOf,
-        Vo = [].indexOf,
-        Ho = !!Vo && 0 > 1 / [1].indexOf(1, -0),
-        jo = Lo("indexOf");
-    Qe({
-        target: "Array",
-        proto: !0,
-        forced: Ho || jo
-    }, {
-            indexOf: function (e) {
-                return Ho ? Vo.apply(this, arguments) || 0 : Bo(this, e, 1 < arguments.length ? arguments[1] : void 0)
-            }
-        });
-    var Mo, Uo, qo, zo = !A(function () {
-        function e() { }
-        return e.prototype.constructor = null, Object.getPrototypeOf(new e) !== e.prototype
-    }),
-        Go = ge("IE_PROTO"),
-        Wo = Object.prototype,
-        Yo = zo ? Object.getPrototypeOf : function (e) {
-            return e = et(e), W(e, Go) ? e[Go] : "function" == typeof e.constructor && e instanceof e.constructor ? e.constructor.prototype : e instanceof Object ? Wo : null
-        },
-        Ko = bt("iterator"),
-        Xo = !1;
-    [].keys && (qo = [].keys(), "next" in qo ? (Uo = Yo(Yo(qo)), Uo !== Object.prototype && (Mo = Uo)) : Xo = !0), null == Mo && (Mo = {}), W(Mo, Ko) || ie(Mo, Ko, function () {
-        return this
-    });
-    var Qo = {
-        IteratorPrototype: Mo,
-        BUGGY_SAFARI_ITERATORS: Xo
-    },
-        Jo = Qo.IteratorPrototype,
-        Zo = function (e, t, o) {
-            return e.prototype = ct(Jo, {
-                next: F(1, o)
-            }), kt(e, t + " Iterator", !1), e
-        },
-        ea = function (e) {
-            if (!q(e) && null !== e) throw TypeError("Can't set " + (e + " as a prototype"));
-            return e
-        },
-        ta = Object.setPrototypeOf || ("__proto__" in {} ? function () {
-            var e, t = !1,
-                o = {};
-            try {
-                e = Object.getOwnPropertyDescriptor(Object.prototype, "__proto__").set, e.call(o, []), t = o instanceof Array
-            } catch (e) { }
-            return function (o, a) {
-                return te(o), ea(a), t ? e.call(o, a) : o.__proto__ = a, o
-            }
-        }() : void 0),
-        oa = Qo.IteratorPrototype,
-        aa = Qo.BUGGY_SAFARI_ITERATORS,
-        na = bt("iterator"),
-        ia = "keys",
-        sa = "values",
-        la = "entries",
-        ra = function () {
-            return this
-        },
-        ca = function (e, t, o, a, n, i, s) {
-            Zo(o, t, a);
-            var l, r, c, d = function (e) {
-                return e === n && g ? g : !aa && e in u ? u[e] : e === ia ? function () {
-                    return new o(this, e)
-                } : e === sa ? function () {
-                    return new o(this, e)
-                } : e === la ? function () {
-                    return new o(this, e)
-                } : function () {
-                    return new o(this)
-                }
-            },
-                p = !1,
-                u = e.prototype,
-                h = u[na] || u["@@iterator"] || n && u[n],
-                g = !aa && h || d(n),
-                f = "Array" == t ? u.entries || h : h;
-            if (f && (l = Yo(f.call(new e)), oa !== Object.prototype && l.next && (Yo(l) !== oa && (ta ? ta(l, oa) : "function" != typeof l[na] && ie(l, na, ra)), kt(l, t + " Iterator", !0))), n == sa && h && h.name !== sa && (p = !0, g = function () {
-                return h.call(this)
-            }), u[na] !== g && ie(u, na, g), n)
-                if (r = {
-                    values: d(sa),
-                    keys: i ? g : d(ia),
-                    entries: d(la)
-                }, s)
-                    for (c in r) (aa || p || !(c in u)) && Te(u, c, r[c]);
-                else Qe({
-                    target: t,
-                    proto: !0,
-                    forced: aa || p
-                }, r);
-            return r
-        },
-        da = "Array Iterator",
-        pa = ke.set,
-        ua = ke.getterFor(da),
-        ha = ca(Array, "Array", function (e, t) {
-            pa(this, {
-                type: da,
-                target: U(e),
-                index: 0,
-                kind: t
-            })
-        }, function () {
-            var e = ua(this),
-                t = e.target,
-                o = e.kind,
-                a = e.index++;
-            return !t || a >= t.length ? (e.target = void 0, {
-                value: void 0,
-                done: !0
-            }) : "keys" == o ? {
-                value: a,
-                done: !1
-            } : "values" == o ? {
-                value: t[a],
-                done: !1
-            } : {
-                            value: [a, t[a]],
-                            done: !1
-                        }
-        }, "values");
-    $o("keys"), $o("values"), $o("entries");
-    var ga = [].join,
-        fa = H != Object,
-        ma = Lo("join", ",");
-    Qe({
-        target: "Array",
-        proto: !0,
-        forced: fa || ma
-    }, {
-            join: function (e) {
-                return ga.call(U(this), void 0 === e ? "," : e)
-            }
-        });
-    var ba = bt("species"),
-        ya = [].slice;
-    Qe({
-        target: "Array",
-        proto: !0,
-        forced: !wo("slice")
-    }, {
-            slice: function (e, t) {
-                var o, a, i, s = U(this),
-                    l = $e(s.length),
-                    r = Ae(e, l),
-                    c = Ae(void 0 === t ? l : t, l);
-                if (Ze(s) && (o = s.constructor, "function" == typeof o && (o === Array || Ze(o.prototype)) ? o = void 0 : q(o) && (o = o[ba], null === o && (o = void 0)), o === Array || void 0 === o)) return ya.call(s, r, c);
-                for (a = new (void 0 === o ? Array : o)(y(c - r, 0)), i = 0; r < c; r++ , i++) r in s && bo(a, i, s[r]);
-                return a.length = i, a
-            }
-        });
-    var wa = [].sort,
-        Sa = [1, 2, 3],
-        va = A(function () {
-            Sa.sort(void 0)
-        }),
-        xa = A(function () {
-            Sa.sort(null)
-        }),
-        ka = Lo("sort");
-    Qe({
-        target: "Array",
-        proto: !0,
-        forced: va || !xa || ka
-    }, {
-            sort: function (e) {
-                return void 0 === e ? wa.call(et(this)) : wa.call(et(this), Tt(e))
-            }
-        });
-    Qe({
-        target: "Array",
-        proto: !0,
-        forced: !wo("splice")
-    }, {
-            splice: function (e, t) {
-                var o, a, n, i, s, l, r = et(this),
-                    c = $e(r.length),
-                    d = Ae(e, c),
-                    p = arguments.length;
-                if (0 === p ? o = a = 0 : 1 === p ? (o = 0, a = c - d) : (o = p - 2, a = w(y(Ie(t), 0), c - d)), c + o - a > 9007199254740991) throw TypeError("Maximum allowed length exceeded");
-                for (n = Ct(r, a), i = 0; i < a; i++) s = d + i, s in r && bo(n, i, r[s]);
-                if (n.length = a, o < a) {
-                    for (i = d; i < c - a; i++) s = i + a, l = i + o, s in r ? r[l] = r[s] : delete r[l];
-                    for (i = c; i > c - a + o; i--) delete r[i - 1]
-                } else if (o > a)
-                    for (i = c - a; i > d; i--) s = i + a - 1, l = i + o - 1, s in r ? r[l] = r[s] : delete r[l];
-                for (i = 0; i < o; i++) r[i + d] = arguments[i + 2];
-                return r.length = c - a + o, n
-            }
-        });
-    var Ta = function (e, t, o) {
-        var a, n;
-        return ta && "function" == typeof (a = t.constructor) && a !== o && q(n = a.prototype) && n !== o.prototype && ta(e, n), e
-    },
-        Pa = "\t\n\x0B\f\r \xA0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF",
-        Oa = "[" + Pa + "]",
-        Ca = RegExp("^" + Oa + Oa + "*"),
-        Ia = RegExp(Oa + Oa + "*$"),
-        $a = function (e) {
-            return function (t) {
-                var o = M(t) + "";
-                return 1 & e && (o = o.replace(Ca, "")), 2 & e && (o = o.replace(Ia, "")), o
-            }
-        },
-        Aa = {
-            start: $a(1),
-            end: $a(2),
-            trim: $a(3)
-        },
-        Ea = Be.f,
-        Ra = ee.f,
-        _a = ne.f,
-        Na = Aa.trim,
-        Da = "Number",
-        Fa = I[Da],
-        La = Fa.prototype,
-        Ba = B(ct(La)) == Da,
-        Va = function (e) {
-            var t, o, a, n, i, s, l, r, c = z(e, !1);
-            if ("string" == typeof c && 2 < c.length)
-                if (c = Na(c), t = c.charCodeAt(0), 43 === t || 45 === t) {
-                    if (o = c.charCodeAt(2), 88 === o || 120 === o) return NaN;
-                } else if (48 === t) {
-                    switch (c.charCodeAt(1)) {
-                        case 66:
-                        case 98:
-                            a = 2, n = 49;
-                            break;
-                        case 79:
-                        case 111:
-                            a = 8, n = 55;
-                            break;
-                        default:
-                            return +c;
-                    }
-                    for (i = c.slice(2), s = i.length, l = 0; l < s; l++)
-                        if (r = i.charCodeAt(l), 48 > r || r > n) return NaN;
-                    return parseInt(i, a)
-                }
-            return +c
-        };
-    if (Ke(Da, !Fa(" 0o1") || !Fa("0b1") || Fa("+0x1"))) {
-        for (var Ha, ja = function (e) {
-            var t = 1 > arguments.length ? 0 : e,
-                o = this;
-            return o instanceof ja && (Ba ? A(function () {
-                La.valueOf.call(o)
-            }) : B(o) != Da) ? Ta(new Fa(Va(t)), o, ja) : Va(t)
-        }, Ma = E ? Ea(Fa) : ["MAX_VALUE", "MIN_VALUE", "NaN", "NEGATIVE_INFINITY", "POSITIVE_INFINITY", "EPSILON", "isFinite", "isInteger", "isNaN", "isSafeInteger", "MAX_SAFE_INTEGER", "MIN_SAFE_INTEGER", "parseFloat", "parseInt", "isInteger"], Ua = 0; Ma.length > Ua; Ua++) W(Fa, Ha = Ma[Ua]) && !W(ja, Ha) && _a(ja, Ha, Ra(Fa, Ha));
-        ja.prototype = La, La.constructor = ja, Te(I, Da, ja)
-    }
-    var lt = Aa.trim,
-        qa = I.parseFloat,
-        za = 1 / qa(Pa + "-0") != -Infinity,
-        Ga = za ? function (e) {
-            var t = lt(e + ""),
-                o = qa(t);
-            return 0 === o && "-" == t.charAt(0) ? -0 : o
-        } : qa;
-    Qe({
-        target: "Number",
-        stat: !0,
-        forced: b != Ga
-    }, {
-            parseFloat: Ga
-        });
-    var Wa = Object.assign,
-        Ya = !Wa || A(function () {
-            var e = {},
-                t = {},
-                o = Symbol(),
-                a = "abcdefghijklmnopqrst";
-            return e[o] = 7, a.split("").forEach(function (e) {
-                t[e] = e
-            }), 7 != Wa({}, e)[o] || tt(Wa({}, t)).join("") != a
-        }) ? function (e) {
-            for (var t = et(e), o = arguments.length, a = 1, n = He.f, i = f.f; o > a;)
-                for (var s, l = H(arguments[a++]), r = n ? tt(l).concat(n(l)) : tt(l), c = r.length, d = 0; c > d;) s = r[d++], (!E || i.call(l, s)) && (t[s] = l[s]);
-            return t
-        } : Wa;
-    Qe({
-        target: "Object",
-        stat: !0,
-        forced: Object.assign !== Ya
-    }, {
-            assign: Ya
-        });
-    var Ka = f.f,
-        Xa = function (e) {
-            return function (t) {
-                for (var o, a = U(t), n = tt(a), s = n.length, l = 0, r = []; s > l;) o = n[l++], (!E || Ka.call(a, o)) && r.push(e ? [o, a[o]] : a[o]);
-                return r
-            }
-        },
-        Qa = {
-            entries: Xa(!0),
-            values: Xa(!1)
-        },
-        Ja = Qa.entries;
-    Qe({
-        target: "Object",
-        stat: !0
-    }, {
-            entries: function (e) {
-                return Ja(e)
-            }
-        });
-    var Za = bt("toStringTag"),
-        en = "Arguments" == B(function () {
-            return arguments
-        }()),
-        tn = function (e, t) {
-            try {
-                return e[t]
-            } catch (e) { }
-        },
-        on = function (e) {
-            var t, o, a;
-            return void 0 === e ? "Undefined" : null === e ? "Null" : "string" == typeof (o = tn(t = Object(e), Za)) ? o : en ? B(t) : "Object" == (a = B(t)) && "function" == typeof t.callee ? "Arguments" : a
-        },
-        an = bt("toStringTag"),
-        nn = {};
-    nn[an] = "z";
-    var sn = function () {
-        return "[object " + on(this) + "]"
-    },
-        ln = Object.prototype;
-    sn !== ln.toString && Te(ln, "toString", sn, {
-        unsafe: !0
-    }), Qe({
-        global: !0,
-        forced: parseFloat != Ga
-    }, {
-            parseFloat: Ga
-        });
-    var rn = Aa.trim,
-        cn = I.parseInt,
-        dn = /^[+-]?0[Xx]/,
-        pn = 8 !== cn(Pa + "08") || 22 !== cn(Pa + "0x16"),
-        un = pn ? function (e, t) {
-            var o = rn(e + "");
-            return cn(o, t >>> 0 || (dn.test(o) ? 16 : 10))
-        } : cn;
-    Qe({
-        global: !0,
-        forced: parseInt != un
-    }, {
-            parseInt: un
-        });
-    var hn = function () {
-        var e = te(this),
-            t = "";
-        return e.global && (t += "g"), e.ignoreCase && (t += "i"), e.multiline && (t += "m"), e.dotAll && (t += "s"), e.unicode && (t += "u"), e.sticky && (t += "y"), t
-    },
-        gn = "toString",
-        fn = RegExp.prototype,
-        mn = fn[gn],
-        bn = A(function () {
-            return "/a/b" != mn.call({
-                source: "a",
-                flags: "b"
-            })
-        }),
-        yn = mn.name != gn;
-    (bn || yn) && Te(RegExp.prototype, gn, function () {
-        var e = te(this),
-            t = e.source + "",
-            o = e.flags,
-            a = (void 0 === o && e instanceof RegExp && !("flags" in fn) ? hn.call(e) : o) + "";
-        return "/" + t + "/" + a
-    }, {
-            unsafe: !0
-        });
-    var wn = bt("match"),
-        Sn = function (e) {
-            var t;
-            return q(e) && (void 0 === (t = e[wn]) ? "RegExp" == B(e) : !!t)
-        },
-        vn = function (e) {
-            if (Sn(e)) throw TypeError("The method doesn't accept regular expressions");
-            return e
-        },
-        xn = bt("match");
-    Qe({
-        target: "String",
-        proto: !0,
-        forced: ! function (e) {
-            var t = /./;
-            try {
-                "/./"[e](t)
-            } catch (o) {
-                try {
-                    return t[xn] = !1, "/./"[e](t)
-                } catch (e) { }
-            }
-            return !1
-        }("includes")
-    }, {
-            includes: function (e) {
-                return !!~(M(this) + "").indexOf(vn(e), 1 < arguments.length ? arguments[1] : void 0)
-            }
-        });
-    var kn = function (e) {
-        return function (t, o) {
-            var a, n, i = M(t) + "",
-                s = Ie(o),
-                l = i.length;
-            return 0 > s || s >= l ? e ? "" : void 0 : (a = i.charCodeAt(s), 55296 > a || 56319 < a || s + 1 === l || 56320 > (n = i.charCodeAt(s + 1)) || 57343 < n ? e ? i.charAt(s) : a : e ? i.slice(s, s + 2) : (a - 55296 << 10) + (n - 56320) + 65536)
-        }
-    },
-        Tn = {
-            codeAt: kn(!1),
-            charAt: kn(!0)
-        },
-        Pn = Tn.charAt,
-        On = "String Iterator",
-        Cn = ke.set,
-        In = ke.getterFor(On);
-    ca(String, "String", function (e) {
-        Cn(this, {
-            type: On,
-            string: e + "",
-            index: 0
-        })
-    }, function () {
-        var e, t = In(this),
-            o = t.string,
-            a = t.index;
-        return a >= o.length ? {
-            value: void 0,
-            done: !0
-        } : (e = Pn(o, a), t.index += e.length, {
-            value: e,
-            done: !1
-        })
-    });
-    var $n = RegExp.prototype.exec,
-        An = m.replace,
-        En = $n,
-        Rn = function () {
-            var e = /a/,
-                t = /b*/g;
-            return $n.call(e, "a"), $n.call(t, "a"), 0 !== e.lastIndex || 0 !== t.lastIndex
-        }(),
-        _n = void 0 !== /()??/.exec("")[1];
-    (Rn || _n) && (En = function (e) {
-        var t, o, a, n, s = this;
-        return _n && (o = new RegExp("^" + s.source + "$(?!\\s)", hn.call(s))), Rn && (t = s.lastIndex), a = $n.call(s, e), Rn && a && (s.lastIndex = s.global ? a.index + a[0].length : t), _n && a && 1 < a.length && An.call(a[0], o, function () {
-            for (n = 1; n < arguments.length - 2; n++) void 0 === arguments[n] && (a[n] = void 0)
-        }), a
-    });
-    var Nn = En,
-        Dn = bt("species"),
-        Fn = !A(function () {
-            var e = /./;
-            return e.exec = function () {
-                var e = [];
-                return e.groups = {
-                    a: "7"
-                }, e
-            }, "7" !== "".replace(e, "$<a>")
-        }),
-        Ln = !A(function () {
-            var e = /(?:)/,
-                t = e.exec;
-            e.exec = function () {
-                return t.apply(this, arguments)
-            };
-            var o = "ab".split(e);
-            return 2 !== o.length || "a" !== o[0] || "b" !== o[1]
-        }),
-        Bn = function (e, t, o, a) {
-            var n = bt(e),
-                i = !A(function () {
-                    var t = {};
-                    return t[n] = function () {
-                        return 7
-                    }, 7 != ""[e](t)
-                }),
-                s = i && !A(function () {
-                    var t = !1,
-                        o = /a/;
-                    return o.exec = function () {
-                        return t = !0, null
-                    }, "split" === e && (o.constructor = {}, o.constructor[Dn] = function () {
-                        return o
-                    }), o[n](""), !t
-                });
-            if (!i || !s || "replace" === e && !Fn || "split" === e && !Ln) {
-                var l = /./[n],
-                    r = o(n, ""[e], function (e, t, o, a, n) {
-                        return t.exec === Nn ? i && !n ? {
-                            done: !0,
-                            value: l.call(t, o, a)
-                        } : {
-                                done: !0,
-                                value: e.call(o, t, a)
-                            } : {
-                                done: !1
-                            }
-                    }),
-                    c = r[0],
-                    d = r[1];
-                Te(String.prototype, e, c), Te(RegExp.prototype, n, 2 == t ? function (e, t) {
-                    return d.call(e, this, t)
-                } : function (e) {
-                    return d.call(e, this)
-                }), a && ie(RegExp.prototype[n], "sham", !0)
-            }
-        },
-        Vn = Tn.charAt,
-        Hn = function (e, t, o) {
-            return t + (o ? Vn(e, t).length : 1)
-        },
-        jn = function (e, t) {
-            var o = e.exec;
-            if ("function" == typeof o) {
-                var a = o.call(e, t);
-                if ("object" != typeof a) throw TypeError("RegExp exec method returned something other than an Object or null");
-                return a
-            }
-            if ("RegExp" !== B(e)) throw TypeError("RegExp#exec called on incompatible receiver");
-            return Nn.call(e, t)
-        },
-        Mn = /\$([$&'`]|\d\d?|<[^>]*>)/g,
-        Un = /\$([$&'`]|\d\d?)/g,
-        qn = function (e) {
-            return void 0 === e ? e : e + ""
-        };
-    Bn("replace", 2, function (e, t, o) {
-        function a(e, o, a, i, s, l) {
-            var r = a + e.length,
-                c = i.length,
-                n = Un;
-            return void 0 !== s && (s = et(s), n = Mn), t.call(l, n, function (t, l) {
-                var d;
-                switch (l.charAt(0)) {
-                    case "$":
-                        return "$";
-                    case "&":
-                        return e;
-                    case "`":
-                        return o.slice(0, a);
-                    case "'":
-                        return o.slice(r);
-                    case "<":
-                        d = s[l.slice(1, -1)];
-                        break;
-                    default:
-                        var p = +l;
-                        if (0 == p) return t;
-                        if (p > c) {
-                            var n = S(p / 10);
-                            return 0 === n ? t : n <= c ? void 0 === i[n - 1] ? l.charAt(1) : i[n - 1] + l.charAt(1) : t
-                        }
-                        d = i[p - 1];
-                }
-                return void 0 === d ? "" : d
-            })
-        }
-        return [function (o, a) {
-            var n = M(this),
-                i = null == o ? void 0 : o[e];
-            return void 0 === i ? t.call(n + "", o, a) : i.call(o, n, a)
-        }, function (e, n) {
-            var s = o(t, e, this, n);
-            if (s.done) return s.value;
-            var l = te(e),
-                r = this + "",
-                c = "function" == typeof n;
-            c || (n += "");
-            var d = l.global;
-            if (d) {
-                var p = l.unicode;
-                l.lastIndex = 0
-            }
-            for (var u, h, g = [];
-                (u = jn(l, r), null !== u) && (g.push(u), !!d);) h = u[0] + "", "" == h && (l.lastIndex = Hn(r, $e(l.lastIndex), p));
-            for (var f = "", m = 0, b = 0; b < g.length; b++) {
-                u = g[b];
-                for (var S = u[0] + "", v = y(w(Ie(u.index), r.length), 0), x = [], k = 1; k < u.length; k++) x.push(qn(u[k]));
-                var T = u.groups;
-                if (c) {
-                    var P = [S].concat(x, v, r);
-                    void 0 !== T && P.push(T);
-                    var O = n.apply(void 0, P) + ""
-                } else O = a(S, r, v, x, T, n);
-                v >= m && (f += r.slice(m, v) + O, m = v + S.length)
-            }
-            return f + r.slice(m)
-        }]
-    });
-    var zn = Object.is || function (e, t) {
-        return e === t ? 0 !== e || 1 / e == 1 / t : e != e && t != t
+(function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define([], factory);
+  } else if (typeof exports !== "undefined") {
+    factory();
+  } else {
+    var mod = {
+      exports: {}
     };
-    Bn("search", 1, function (e, t, o) {
-        return [function (t) {
-            var o = M(this),
-                a = null == t ? void 0 : t[e];
-            return void 0 === a ? new RegExp(t)[e](o + "") : a.call(t, o)
-        }, function (e) {
-            var a = o(t, e, this);
-            if (a.done) return a.value;
-            var n = te(e),
-                i = this + "",
-                s = n.lastIndex;
-            zn(s, 0) || (n.lastIndex = 0);
-            var l = jn(n, i);
-            return zn(n.lastIndex, s) || (n.lastIndex = s), null === l ? -1 : l.index
-        }]
-    });
-    var Gn = bt("species"),
-        Wn = function (e, t) {
-            var o, a = te(e).constructor;
-            return void 0 === a || null == (o = te(a)[Gn]) ? t : Tt(o)
-        },
-        Yn = [].push,
-        Kn = 4294967295,
-        Xn = !A(function () {
-            return !RegExp(Kn, "y")
-        });
-    Bn("split", 2, function (e, t, o) {
-        var a;
-        return a = "c" == "abbc".split(/(b)*/)[1] || 4 != "test".split(/(?:)/, -1).length || 2 != "ab".split(/(?:ab)*/).length || 4 != ".".split(/(.?)(.?)/).length || 1 < ".".split(/()()/).length || "".split(/.?/).length ? function (e, o) {
-            var a = M(this) + "",
-                n = void 0 === o ? Kn : o >>> 0;
-            if (0 === n) return [];
-            if (void 0 === e) return [a];
-            if (!Sn(e)) return t.call(a, e, n);
-            for (var i, s, l, r = [], c = (e.ignoreCase ? "i" : "") + (e.multiline ? "m" : "") + (e.unicode ? "u" : "") + (e.sticky ? "y" : ""), d = 0, p = new RegExp(e.source, c + "g");
-                (i = Nn.call(p, a)) && (s = p.lastIndex, !(s > d && (r.push(a.slice(d, i.index)), 1 < i.length && i.index < a.length && Yn.apply(r, i.slice(1)), l = i[0].length, d = s, r.length >= n)));) p.lastIndex === i.index && p.lastIndex++;
-            return d === a.length ? (l || !p.test("")) && r.push("") : r.push(a.slice(d)), r.length > n ? r.slice(0, n) : r
-        } : function (e, o) {
-            return void 0 === e && 0 === o ? [] : t.call(this, e, o)
-        }, [function (t, o) {
-            var n = M(this),
-                i = null == t ? void 0 : t[e];
-            return void 0 === i ? a.call(n + "", t, o) : i.call(t, n, o)
-        }, function (n, s) {
-            var l = o(a, n, this, s, a !== t);
-            if (l.done) return l.value;
-            var r = te(n),
-                c = this + "",
-                d = Wn(r, RegExp),
-                u = r.unicode,
-                h = (r.ignoreCase ? "i" : "") + (r.multiline ? "m" : "") + (r.unicode ? "u" : "") + (Xn ? "y" : "g"),
-                g = new d(Xn ? r : "^(?:" + r.source + ")", h),
-                f = void 0 === s ? Kn : s >>> 0;
-            if (0 === f) return [];
-            if (0 === c.length) return null === jn(g, c) ? [c] : [];
-            for (var m = 0, b = 0, y = []; b < c.length;) {
-                g.lastIndex = Xn ? b : 0;
-                var S, v = jn(g, Xn ? c : c.slice(b));
-                if (null === v || (S = w($e(g.lastIndex + (Xn ? 0 : b)), c.length)) === m) b = Hn(c, b, u);
-                else {
-                    if (y.push(c.slice(m, b)), y.length === f) return y;
-                    for (var x = 1; x <= v.length - 1; x++)
-                        if (y.push(v[x]), y.length === f) return y;
-                    b = m = S
-                }
-            }
-            return y.push(c.slice(m)), y
-        }]
-    }, !Xn);
-    var Qn = Aa.trim;
-    Qe({
-        target: "String",
-        proto: !0,
-        forced: function (e) {
-            return A(function () {
-                return !!Pa[e]() || "\u200B\x85\u180E" != "\u200B\x85\u180E"[e]() || Pa[e].name !== e
-            })
-        }("trim")
-    }, {
-            trim: function () {
-                return Qn(this)
-            }
-        });
-    var Jn = {
-        CSSRuleList: 0,
-        CSSStyleDeclaration: 0,
-        CSSValueList: 0,
-        ClientRectList: 0,
-        DOMRectList: 0,
-        DOMStringList: 0,
-        DOMTokenList: 1,
-        DataTransferItemList: 0,
-        FileList: 0,
-        HTMLAllCollection: 0,
-        HTMLCollection: 0,
-        HTMLFormElement: 0,
-        HTMLSelectElement: 0,
-        MediaList: 0,
-        MimeTypeArray: 0,
-        NamedNodeMap: 0,
-        NodeList: 1,
-        PaintRequestList: 0,
-        Plugin: 0,
-        PluginArray: 0,
-        SVGLengthList: 0,
-        SVGNumberList: 0,
-        SVGPathSegList: 0,
-        SVGPointList: 0,
-        SVGStringList: 0,
-        SVGTransformList: 0,
-        SourceBufferList: 0,
-        StyleSheetList: 0,
-        TextTrackCueList: 0,
-        TextTrackList: 0,
-        TouchList: 0
-    },
-        Zn = At.forEach,
-        ei = Lo("forEach") ? function (e) {
-            return Zn(this, e, 1 < arguments.length ? arguments[1] : void 0)
-        } : [].forEach;
-    for (var ti in Jn) {
-        var oi = I[ti],
-            ai = oi && oi.prototype;
-        if (ai && ai.forEach !== ei) try {
-            ie(ai, "forEach", ei)
-        } catch (e) {
-            ai.forEach = ei
-        }
+    factory();
+    global.bootstrapTable = mod.exports;
+  }
+})(this, function () {
+  'use strict';
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
     }
-    var ni = bt("iterator"),
-        ii = bt("toStringTag"),
-        si = ha.values;
-    for (var li in Jn) {
-        var ri = I[li],
-            ci = ri && ri.prototype;
-        if (ci) {
-            if (ci[ni] !== si) try {
-                ie(ci, ni, si)
-            } catch (e) {
-                ci[ni] = si
-            }
-            if (ci[ii] || ie(ci, ii, li), Jn[li])
-                for (var di in ha)
-                    if (ci[di] !== ha[di]) try {
-                        ie(ci, di, ha[di])
-                    } catch (e) {
-                        ci[di] = ha[di]
-                    }
-        }
+  }
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
     }
-    var pi = 4;
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  };
+
+  /**
+   * @author zhixin wen <wenzhixin2010@gmail.com>
+   * version: 1.14.2
+   * https://github.com/wenzhixin/bootstrap-table/
+   */
+
+  (function ($) {
+    // TOOLS DEFINITION
+    // ======================
+
+    var bootstrapVersion = 4;
     try {
-        var ui = t.fn.dropdown.Constructor.VERSION;
-        void 0 !== ui && (pi = parseInt(ui, 10))
-    } catch (t) { }
-    var hi = {
-        3: {
-            iconsPrefix: "glyphicon",
-            icons: {
-                paginationSwitchDown: "glyphicon-collapse-down icon-chevron-down",
-                paginationSwitchUp: "glyphicon-collapse-up icon-chevron-up",
-                refresh: "glyphicon-refresh icon-refresh",
-                toggleOff: "glyphicon-list-alt icon-list-alt",
-                toggleOn: "glyphicon-list-alt icon-list-alt",
-                columns: "glyphicon-th icon-th",
-                detailOpen: "glyphicon-plus icon-plus",
-                detailClose: "glyphicon-minus icon-minus",
-                fullscreen: "glyphicon-fullscreen",
-                search: "glyphicon-search",
-                clearSearch: "glyphicon-trash"
-            },
-            classes: {
-                buttonsPrefix: "btn",
-                buttons: "default",
-                buttonsGroup: "btn-group",
-                buttonsDropdown: "btn-group",
-                pull: "pull",
-                inputGroup: "input-group",
-                input: "form-control",
-                paginationDropdown: "btn-group dropdown",
-                dropup: "dropup",
-                dropdownActive: "active",
-                paginationActive: "active",
-                buttonActive: "active"
-            },
-            html: {
-                toolbarDropdown: ["<ul class=\"dropdown-menu\" role=\"menu\">", "</ul>"],
-                toolbarDropdownItem: "<li role=\"menuitem\"><label>%s</label></li>",
-                toolbarDropdownSeperator: "<li class=\"divider\"></li>",
-                pageDropdown: ["<ul class=\"dropdown-menu\" role=\"menu\">", "</ul>"],
-                pageDropdownItem: "<li role=\"menuitem\" class=\"%s\"><a href=\"#\">%s</a></li>",
-                dropdownCaret: "<span class=\"caret\"></span>",
-                pagination: ["<ul class=\"pagination%s\">", "</ul>"],
-                paginationItem: "<li class=\"page-item%s\"><a class=\"page-link\" aria-label=\"%s\" href=\"javascript:void(0)\">%s</a></li>",
-                icon: "<i class=\"%s %s\"></i>",
-                inputGroup: "<div class=\"input-group\">%s<span class=\"input-group-btn\">%s</span></div>",
-                searchInput: "<input class=\"%s%s\" type=\"text\" placeholder=\"%s\">",
-                searchButton: "<button class=\"btn btn-default\" type=\"button\" name=\"search\" title=\"%s\">%s %s</button>",
-                searchClearButton: "<button class=\"btn btn-default\" type=\"button\" name=\"clearSearch\" title=\"%s\">%s %s</button>"
-            }
+      var rawVersion = $.fn.dropdown.Constructor.VERSION;
+
+      // Only try to parse VERSION if is is defined.
+      // It is undefined in older versions of Bootstrap (tested with 3.1.1).
+      if (rawVersion !== undefined) {
+        bootstrapVersion = parseInt(rawVersion, 10);
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    var constants = {
+      3: {
+        theme: 'bootstrap3',
+        iconsPrefix: 'glyphicon',
+        icons: {
+          paginationSwitchDown: 'glyphicon-collapse-down icon-chevron-down',
+          paginationSwitchUp: 'glyphicon-collapse-up icon-chevron-up',
+          refresh: 'glyphicon-refresh icon-refresh',
+          toggleOff: 'glyphicon-list-alt icon-list-alt',
+          toggleOn: 'glyphicon-list-alt icon-list-alt',
+          columns: 'glyphicon-th icon-th',
+          detailOpen: 'glyphicon-plus icon-plus',
+          detailClose: 'glyphicon-minus icon-minus',
+          fullscreen: 'glyphicon-fullscreen'
         },
-        4: {
-            iconsPrefix: "fa",
-            icons: {
-                paginationSwitchDown: "fa-caret-square-down",
-                paginationSwitchUp: "fa-caret-square-up",
-                refresh: "fa-sync",
-                toggleOff: "fa-toggle-off",
-                toggleOn: "fa-toggle-on",
-                columns: "fa-th-list",
-                detailOpen: "fa-plus",
-                detailClose: "fa-minus",
-                fullscreen: "fa-arrows-alt",
-                search: "fa-search",
-                clearSearch: "fa-trash"
-            },
-            classes: {
-                buttonsPrefix: "btn",
-                buttons: "secondary",
-                buttonsGroup: "btn-group",
-                buttonsDropdown: "btn-group",
-                pull: "float",
-                inputGroup: "btn-group",
-                input: "form-control",
-                paginationDropdown: "btn-group dropdown",
-                dropup: "dropup",
-                dropdownActive: "active",
-                paginationActive: "active",
-                buttonActive: "active"
-            },
-            html: {
-                toolbarDropdown: ["<div class=\"dropdown-menu dropdown-menu-right\">", "</div>"],
-                toolbarDropdownItem: "<label class=\"dropdown-item\">%s</label>",
-                pageDropdown: ["<div class=\"dropdown-menu\">", "</div>"],
-                pageDropdownItem: "<a class=\"dropdown-item %s\" href=\"#\">%s</a>",
-                toolbarDropdownSeperator: "<div class=\"dropdown-divider\"></div>",
-                dropdownCaret: "<span class=\"caret\"></span>",
-                pagination: ["<ul class=\"pagination%s\">", "</ul>"],
-                paginationItem: "<li class=\"page-item%s\"><a class=\"page-link\" aria-label=\"%s\" href=\"javascript:void(0)\">%s</a></li>",
-                icon: "<i class=\"%s %s\"></i>",
-                inputGroup: "<div class=\"input-group\">%s<div class=\"input-group-append\">%s</div></div>",
-                searchInput: "<input class=\"%s%s\" type=\"text\" placeholder=\"%s\">",
-                searchButton: "<button class=\"btn btn-secondary\" type=\"button\" name=\"search\" title=\"%s\">%s %s</button>",
-                searchClearButton: "<button class=\"btn btn-secondary\" type=\"button\" name=\"clearSearch\" title=\"%s\">%s %s</button>"
-            }
+        classes: {
+          buttonsPrefix: 'btn',
+          buttons: 'default',
+          buttonsGroup: 'btn-group',
+          buttonsDropdown: 'btn-group',
+          pull: 'pull',
+          inputGroup: '',
+          input: 'form-control',
+          paginationDropdown: 'btn-group dropdown',
+          dropup: 'dropup',
+          dropdownActive: 'active',
+          paginationActive: 'active'
+        },
+        html: {
+          toobarDropdow: ['<ul class="dropdown-menu" role="menu">', '</ul>'],
+          toobarDropdowItem: '<li role="menuitem"><label>%s</label></li>',
+          pageDropdown: ['<ul class="dropdown-menu" role="menu">', '</ul>'],
+          pageDropdownItem: '<li role="menuitem" class="%s"><a href="#">%s</a></li>',
+          dropdownCaret: '<span class="caret"></span>',
+          pagination: ['<ul class="pagination%s">', '</ul>'],
+          paginationItem: '<li class="page-item%s"><a class="page-link" href="#">%s</a></li>',
+          icon: '<i class="%s %s"></i>'
         }
-    }[pi],
-        gi = {
-            height: void 0,
-            classes: "table table-bordered table-hover",
-            theadClasses: "",
-            rowStyle: function () {
-                return {}
-            },
-            rowAttributes: function () {
-                return {}
-            },
-            undefinedText: "-",
-            locale: void 0,
-            virtualScroll: !1,
-            virtualScrollItemHeight: void 0,
-            sortable: !0,
-            sortClass: void 0,
-            silentSort: !0,
-            sortName: void 0,
-            sortOrder: "asc",
-            sortStable: !1,
-            rememberOrder: !1,
-            customSort: void 0,
-            columns: [
-                []
-            ],
-            data: [],
-            url: void 0,
-            method: "get",
-            cache: !0,
-            contentType: "application/json",
-            dataType: "json",
-            ajax: void 0,
-            ajaxOptions: {},
-            queryParams: function (e) {
-                return e
-            },
-            queryParamsType: "limit",
-            responseHandler: function (e) {
-                return e
-            },
-            totalField: "total",
-            totalNotFilteredField: "totalNotFiltered",
-            dataField: "rows",
-            pagination: !1,
-            onlyInfoPagination: !1,
-            showExtendedPagination: !1,
-            paginationLoop: !0,
-            sidePagination: "client",
-            totalRows: 0,
-            totalNotFiltered: 0,
-            pageNumber: 1,
-            pageSize: 10,
-            pageList: [10, 25, 50, 100],
-            paginationHAlign: "right",
-            paginationVAlign: "bottom",
-            paginationDetailHAlign: "left",
-            paginationPreText: "&lsaquo;",
-            paginationNextText: "&rsaquo;",
-            paginationSuccessivelySize: 5,
-            paginationPagesBySide: 1,
-            paginationUseIntermediate: !1,
-            search: !1,
-            searchOnEnterKey: !1,
-            strictSearch: !1,
-            visibleSearch: !1,
-            showButtonIcons: !0,
-            showButtonText: !1,
-            showSearchButton: !1,
-            showSearchClearButton: !1,
-            trimOnSearch: !0,
-            searchAlign: "right",
-            searchTimeOut: 500,
-            searchText: "",
-            customSearch: void 0,
-            showHeader: !0,
-            showFooter: !1,
-            footerStyle: function () {
-                return {}
-            },
-            showColumns: !1,
-            showColumnsToggleAll: !1,
-            minimumCountColumns: 1,
-            showPaginationSwitch: !1,
-            showRefresh: !1,
-            showToggle: !1,
-            showFullscreen: !1,
-            smartDisplay: !0,
-            escape: !1,
-            filterOptions: {
-                filterAlgorithm: "and"
-            },
-            idField: void 0,
-            selectItemName: "btSelectItem",
-            clickToSelect: !1,
-            ignoreClickToSelectOn: function (e) {
-                var t = e.tagName;
-                return ["A", "BUTTON"].includes(t)
-            },
-            singleSelect: !1,
-            checkboxHeader: !0,
-            maintainMetaData: !1,
-            multipleSelectRow: !1,
-            uniqueId: void 0,
-            cardView: !1,
-            detailView: !1,
-            detailViewIcon: !0,
-            detailViewByClick: !1,
-            detailFormatter: function () {
-                return ""
-            },
-            detailFilter: function () {
-                return !0
-            },
-            toolbar: void 0,
-            toolbarAlign: "left",
-            buttonsToolbar: void 0,
-            buttonsAlign: "right",
-            buttonsPrefix: hi.classes.buttonsPrefix,
-            buttonsClass: hi.classes.buttons,
-            icons: hi.icons,
-            html: hi.html,
-            iconSize: void 0,
-            iconsPrefix: hi.iconsPrefix,
-            onAll: function () {
-                return !1
-            },
-            onClickCell: function () {
-                return !1
-            },
-            onDblClickCell: function () {
-                return !1
-            },
-            onClickRow: function () {
-                return !1
-            },
-            onDblClickRow: function () {
-                return !1
-            },
-            onSort: function () {
-                return !1
-            },
-            onCheck: function () {
-                return !1
-            },
-            onUncheck: function () {
-                return !1
-            },
-            onCheckAll: function () {
-                return !1
-            },
-            onUncheckAll: function () {
-                return !1
-            },
-            onCheckSome: function () {
-                return !1
-            },
-            onUncheckSome: function () {
-                return !1
-            },
-            onLoadSuccess: function () {
-                return !1
-            },
-            onLoadError: function () {
-                return !1
-            },
-            onColumnSwitch: function () {
-                return !1
-            },
-            onPageChange: function () {
-                return !1
-            },
-            onSearch: function () {
-                return !1
-            },
-            onToggle: function () {
-                return !1
-            },
-            onPreBody: function () {
-                return !1
-            },
-            onPostBody: function () {
-                return !1
-            },
-            onPostHeader: function () {
-                return !1
-            },
-            onPostFooter: function () {
-                return !1
-            },
-            onExpandRow: function () {
-                return !1
-            },
-            onCollapseRow: function () {
-                return !1
-            },
-            onRefreshOptions: function () {
-                return !1
-            },
-            onRefresh: function () {
-                return !1
-            },
-            onResetView: function () {
-                return !1
-            },
-            onScrollBody: function () {
-                return !1
-            }
+      },
+      4: {
+        theme: 'bootstrap4',
+        iconsPrefix: 'fa',
+        icons: {
+          paginationSwitchDown: 'fa-caret-square-down',
+          paginationSwitchUp: 'fa-caret-square-up',
+          refresh: 'fa-sync',
+          toggleOff: 'fa-toggle-off',
+          toggleOn: 'fa-toggle-on',
+          columns: 'fa-th-list',
+          fullscreen: 'fa-arrows-alt',
+          detailOpen: 'fa-plus',
+          detailClose: 'fa-minus'
         },
-        fi = {
-            formatLoadingMessage: function () {
-                return "Loading, please wait"
-            },
-            formatRecordsPerPage: function (e) {
-                return "".concat(e, " rows per page")
-            },
-            formatShowingRows: function (e, t, o, a) {
-                return void 0 !== a && 0 < a && a > o ? "Showing ".concat(e, " to ").concat(t, " of ").concat(o, " rows (filtered from ").concat(a, " total rows)") : "Showing ".concat(e, " to ").concat(t, " of ").concat(o, " rows")
-            },
-            formatSRPaginationPreText: function () {
-                return "previous page"
-            },
-            formatSRPaginationPageText: function (e) {
-                return "to page ".concat(e)
-            },
-            formatSRPaginationNextText: function () {
-                return "next page"
-            },
-            formatDetailPagination: function (e) {
-                return "Showing ".concat(e, " rows")
-            },
-            formatSearch: function () {
-                return "Search"
-            },
-            formatClearSearch: function () {
-                return "Clear Search"
-            },
-            formatNoMatches: function () {
-                return "No matching records found"
-            },
-            formatPaginationSwitch: function () {
-                return "Hide/Show pagination"
-            },
-            formatPaginationSwitchDown: function () {
-                return "Show pagination"
-            },
-            formatPaginationSwitchUp: function () {
-                return "Hide pagination"
-            },
-            formatRefresh: function () {
-                return "Refresh"
-            },
-            formatToggle: function () {
-                return "Toggle"
-            },
-            formatToggleOn: function () {
-                return "Show card view"
-            },
-            formatToggleOff: function () {
-                return "Hide card view"
-            },
-            formatColumns: function () {
-                return "Columns"
-            },
-            formatColumnsToggleAll: function () {
-                return "Toggle all"
-            },
-            formatFullscreen: function () {
-                return "Fullscreen"
-            },
-            formatAllRows: function () {
-                return "All"
-            }
-        };
-    Object.assign(gi, fi);
-    var mi = {
-        VERSION: "1.15.2",
-        THEME: "bootstrap".concat(pi),
-        CONSTANTS: hi,
-        DEFAULTS: gi,
-        COLUMN_DEFAULTS: {
-            field: void 0,
-            title: void 0,
-            titleTooltip: void 0,
-            class: void 0,
-            width: void 0,
-            widthUnit: "px",
-            rowspan: void 0,
-            colspan: void 0,
-            align: void 0,
-            halign: void 0,
-            falign: void 0,
-            valign: void 0,
-            cellStyle: void 0,
-            radio: !1,
-            checkbox: !1,
-            checkboxEnabled: !0,
-            clickToSelect: !0,
-            showSelectTitle: !1,
-            sortable: !1,
-            sortName: void 0,
-            order: "asc",
-            sorter: void 0,
-            visible: !0,
-            switchable: !0,
-            cardVisible: !0,
-            searchable: !0,
-            formatter: void 0,
-            footerFormatter: void 0,
-            detailFormatter: void 0,
-            searchFormatter: !0,
-            escape: !1,
-            events: void 0
+        classes: {
+          buttonsPrefix: 'btn',
+          buttons: 'secondary',
+          buttonsGroup: 'btn-group',
+          buttonsDropdown: 'btn-group',
+          pull: 'float',
+          inputGroup: '',
+          input: 'form-control',
+          paginationDropdown: 'btn-group dropdown',
+          dropup: 'dropup',
+          dropdownActive: 'active',
+          paginationActive: 'active'
         },
-        METHODS: ["getOptions", "refreshOptions", "getData", "getSelections", "getAllSelections", "load", "append", "prepend", "remove", "removeAll", "insertRow", "updateRow", "getRowByUniqueId", "updateByUniqueId", "removeByUniqueId", "updateCell", "updateCellByUniqueId", "showRow", "hideRow", "getHiddenRows", "showColumn", "hideColumn", "getVisibleColumns", "getHiddenColumns", "showAllColumns", "hideAllColumns", "mergeCells", "checkAll", "uncheckAll", "checkInvert", "check", "uncheck", "checkBy", "uncheckBy", "refresh", "destroy", "resetView", "resetWidth", "showLoading", "hideLoading", "togglePagination", "toggleFullscreen", "toggleView", "resetSearch", "filterBy", "scrollTo", "getScrollPosition", "selectPage", "prevPage", "nextPage", "toggleDetailView", "expandRow", "collapseRow", "expandAllRows", "collapseAllRows", "updateColumnTitle", "updateFormatText"],
-        EVENTS: {
-            "all.bs.table": "onAll",
-            "click-row.bs.table": "onClickRow",
-            "dbl-click-row.bs.table": "onDblClickRow",
-            "click-cell.bs.table": "onClickCell",
-            "dbl-click-cell.bs.table": "onDblClickCell",
-            "sort.bs.table": "onSort",
-            "check.bs.table": "onCheck",
-            "uncheck.bs.table": "onUncheck",
-            "check-all.bs.table": "onCheckAll",
-            "uncheck-all.bs.table": "onUncheckAll",
-            "check-some.bs.table": "onCheckSome",
-            "uncheck-some.bs.table": "onUncheckSome",
-            "load-success.bs.table": "onLoadSuccess",
-            "load-error.bs.table": "onLoadError",
-            "column-switch.bs.table": "onColumnSwitch",
-            "page-change.bs.table": "onPageChange",
-            "search.bs.table": "onSearch",
-            "toggle.bs.table": "onToggle",
-            "pre-body.bs.table": "onPreBody",
-            "post-body.bs.table": "onPostBody",
-            "post-header.bs.table": "onPostHeader",
-            "post-footer.bs.table": "onPostFooter",
-            "expand-row.bs.table": "onExpandRow",
-            "collapse-row.bs.table": "onCollapseRow",
-            "refresh-options.bs.table": "onRefreshOptions",
-            "reset-view.bs.table": "onResetView",
-            "refresh.bs.table": "onRefresh",
-            "scroll-body.bs.table": "onScrollBody"
-        },
-        LOCALES: {
-            en: fi,
-            "en-US": fi
+        html: {
+          toobarDropdow: ['<div class="dropdown-menu dropdown-menu-right">', '</div>'],
+          toobarDropdowItem: '<label class="dropdown-item">%s</label>',
+          pageDropdown: ['<div class="dropdown-menu">', '</div>'],
+          pageDropdownItem: '<a class="dropdown-item %s" href="#">%s</a>',
+          dropdownCaret: '<span class="caret"></span>',
+          pagination: ['<ul class="pagination%s">', '</ul>'],
+          paginationItem: '<li class="page-item%s"><a class="page-link" href="#">%s</a></li>',
+          icon: '<i class="%s %s"></i>'
         }
-    },
-        bi = A(function () {
-            tt(1)
+      }
+    }[bootstrapVersion];
+
+    var Utils = {
+      bootstrapVersion: bootstrapVersion,
+
+      sprintf: function sprintf(_str) {
+        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        var flag = true;
+        var i = 0;
+
+        var str = _str.replace(/%s/g, function () {
+          var arg = args[i++];
+
+          if (typeof arg === 'undefined') {
+            flag = false;
+            return '';
+          }
+          return arg;
         });
-    Qe({
-        target: "Object",
-        stat: !0,
-        forced: bi
-    }, {
-            keys: function (e) {
-                return tt(et(e))
+        return flag ? str : '';
+      },
+      isEmptyObject: function isEmptyObject() {
+        var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        return function (target) {
+          return Object.keys(target).map(function (key) {
+            return [key, target[key]];
+          });
+        }(obj).length === 0 && obj.constructor === Object;
+      },
+      isNumeric: function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+      },
+      getFieldTitle: function getFieldTitle(list, value) {
+        for (var _iterator = list, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+          var _ref;
+
+          if (_isArray) {
+            if (_i >= _iterator.length) break;
+            _ref = _iterator[_i++];
+          } else {
+            _i = _iterator.next();
+            if (_i.done) break;
+            _ref = _i.value;
+          }
+
+          var item = _ref;
+
+          if (item.field === value) {
+            return item.title;
+          }
+        }
+        return '';
+      },
+      setFieldIndex: function setFieldIndex(columns) {
+        var totalCol = 0;
+        var flag = [];
+
+        for (var _iterator2 = columns[0], _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
+          var _ref2;
+
+          if (_isArray2) {
+            if (_i2 >= _iterator2.length) break;
+            _ref2 = _iterator2[_i2++];
+          } else {
+            _i2 = _iterator2.next();
+            if (_i2.done) break;
+            _ref2 = _i2.value;
+          }
+
+          var column = _ref2;
+
+          totalCol += column.colspan || 1;
+        }
+
+        for (var i = 0; i < columns.length; i++) {
+          flag[i] = [];
+          for (var j = 0; j < totalCol; j++) {
+            flag[i][j] = false;
+          }
+        }
+
+        for (var _i3 = 0; _i3 < columns.length; _i3++) {
+          for (var _iterator3 = columns[_i3], _isArray3 = Array.isArray(_iterator3), _i4 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
+            var _ref3;
+
+            if (_isArray3) {
+              if (_i4 >= _iterator3.length) break;
+              _ref3 = _iterator3[_i4++];
+            } else {
+              _i4 = _iterator3.next();
+              if (_i4.done) break;
+              _ref3 = _i4.value;
             }
-        });
-    var yi = {
-        sprintf: function (e) {
-            for (var t = arguments.length, o = Array(1 < t ? t - 1 : 0), a = 1; a < t; a++) o[a - 1] = arguments[a];
-            var n = !0,
-                s = 0,
-                l = e.replace(/%s/g, function () {
-                    var e = o[s++];
-                    return "undefined" == typeof e ? (n = !1, "") : e
+
+            var r = _ref3;
+
+            var rowspan = r.rowspan || 1;
+            var colspan = r.colspan || 1;
+            var index = flag[_i3].indexOf(false);
+
+            if (colspan === 1) {
+              r.fieldIndex = index;
+              // when field is undefined, use index instead
+              if (typeof r.field === 'undefined') {
+                r.field = index;
+              }
+            }
+
+            for (var k = 0; k < rowspan; k++) {
+              flag[_i3 + k][index] = true;
+            }
+            for (var _k = 0; _k < colspan; _k++) {
+              flag[_i3][index + _k] = true;
+            }
+          }
+        }
+      },
+      getScrollBarWidth: function getScrollBarWidth() {
+        if (this.cachedWidth === undefined) {
+          var $inner = $('<div/>').addClass('fixed-table-scroll-inner');
+          var $outer = $('<div/>').addClass('fixed-table-scroll-outer');
+
+          $outer.append($inner);
+          $('body').append($outer);
+
+          var w1 = $inner[0].offsetWidth;
+          $outer.css('overflow', 'scroll');
+          var w2 = $inner[0].offsetWidth;
+
+          if (w1 === w2) {
+            w2 = $outer[0].clientWidth;
+          }
+
+          $outer.remove();
+          this.cachedWidth = w1 - w2;
+        }
+        return this.cachedWidth;
+      },
+      calculateObjectValue: function calculateObjectValue(self, name, args, defaultValue) {
+        var func = name;
+
+        if (typeof name === 'string') {
+          // support obj.func1.func2
+          var names = name.split('.');
+
+          if (names.length > 1) {
+            func = window;
+            for (var _iterator4 = names, _isArray4 = Array.isArray(_iterator4), _i5 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
+              var _ref4;
+
+              if (_isArray4) {
+                if (_i5 >= _iterator4.length) break;
+                _ref4 = _iterator4[_i5++];
+              } else {
+                _i5 = _iterator4.next();
+                if (_i5.done) break;
+                _ref4 = _i5.value;
+              }
+
+              var f = _ref4;
+
+              func = func[f];
+            }
+          } else {
+            func = window[name];
+          }
+        }
+
+        if (func !== null && (typeof func === 'undefined' ? 'undefined' : _typeof(func)) === 'object') {
+          return func;
+        }
+
+        if (typeof func === 'function') {
+          return func.apply(self, args || []);
+        }
+
+        if (!func && typeof name === 'string' && this.sprintf.apply(this, [name].concat(_toConsumableArray(args)))) {
+          return this.sprintf.apply(this, [name].concat(_toConsumableArray(args)));
+        }
+
+        return defaultValue;
+      },
+      compareObjects: function compareObjects(objectA, objectB, compareLength) {
+        var aKeys = Object.keys(objectA);
+        var bKeys = Object.keys(objectB);
+
+        if (compareLength && aKeys.length !== bKeys.length) {
+          return false;
+        }
+
+        for (var _iterator5 = aKeys, _isArray5 = Array.isArray(_iterator5), _i6 = 0, _iterator5 = _isArray5 ? _iterator5 : _iterator5[Symbol.iterator]();;) {
+          var _ref5;
+
+          if (_isArray5) {
+            if (_i6 >= _iterator5.length) break;
+            _ref5 = _iterator5[_i6++];
+          } else {
+            _i6 = _iterator5.next();
+            if (_i6.done) break;
+            _ref5 = _i6.value;
+          }
+
+          var key = _ref5;
+
+          if (bKeys.indexOf(key) !== -1 && objectA[key] !== objectB[key]) {
+            return false;
+          }
+        }
+
+        return true;
+      },
+      escapeHTML: function escapeHTML(text) {
+        if (typeof text === 'string') {
+          return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;').replace(/`/g, '&#x60;');
+        }
+        return text;
+      },
+      getRealDataAttr: function getRealDataAttr(dataAttr) {
+        for (var _iterator6 = function (target) {
+          return Object.keys(target).map(function (key) {
+            return [key, target[key]];
+          });
+        }(dataAttr), _isArray6 = Array.isArray(_iterator6), _i7 = 0, _iterator6 = _isArray6 ? _iterator6 : _iterator6[Symbol.iterator]();;) {
+          var _ref6;
+
+          if (_isArray6) {
+            if (_i7 >= _iterator6.length) break;
+            _ref6 = _iterator6[_i7++];
+          } else {
+            _i7 = _iterator6.next();
+            if (_i7.done) break;
+            _ref6 = _i7.value;
+          }
+
+          var _ref7 = _ref6,
+              _ref8 = _slicedToArray(_ref7, 2),
+              attr = _ref8[0],
+              value = _ref8[1];
+
+          var auxAttr = attr.split(/(?=[A-Z])/).join('-').toLowerCase();
+          if (auxAttr !== attr) {
+            dataAttr[auxAttr] = value;
+            delete dataAttr[attr];
+          }
+        }
+        return dataAttr;
+      },
+      getItemField: function getItemField(item, field, escape) {
+        var value = item;
+
+        if (typeof field !== 'string' || item.hasOwnProperty(field)) {
+          return escape ? this.escapeHTML(item[field]) : item[field];
+        }
+
+        var props = field.split('.');
+        for (var _iterator7 = props, _isArray7 = Array.isArray(_iterator7), _i8 = 0, _iterator7 = _isArray7 ? _iterator7 : _iterator7[Symbol.iterator]();;) {
+          var _ref9;
+
+          if (_isArray7) {
+            if (_i8 >= _iterator7.length) break;
+            _ref9 = _iterator7[_i8++];
+          } else {
+            _i8 = _iterator7.next();
+            if (_i8.done) break;
+            _ref9 = _i8.value;
+          }
+
+          var p = _ref9;
+
+          value = value && value[p];
+        }
+        return escape ? this.escapeHTML(value) : value;
+      },
+      isIEBrowser: function isIEBrowser() {
+        return navigator.userAgent.indexOf('MSIE ') !== -1 || /Trident.*rv:11\./.test(navigator.userAgent);
+      },
+      findIndex: function findIndex(items, item) {
+        for (var _iterator8 = items, _isArray8 = Array.isArray(_iterator8), _i9 = 0, _iterator8 = _isArray8 ? _iterator8 : _iterator8[Symbol.iterator]();;) {
+          var _ref10;
+
+          if (_isArray8) {
+            if (_i9 >= _iterator8.length) break;
+            _ref10 = _iterator8[_i9++];
+          } else {
+            _i9 = _iterator8.next();
+            if (_i9.done) break;
+            _ref10 = _i9.value;
+          }
+
+          var it = _ref10;
+
+          if (JSON.stringify(it) === JSON.stringify(item)) {
+            return items.indexOf(it);
+          }
+        }
+        return -1;
+      }
+    };
+
+    // BOOTSTRAP TABLE CLASS DEFINITION
+    // ======================
+
+    var DEFAULTS = {
+      height: undefined,
+      classes: 'table table-bordered table-hover',
+      theadClasses: '',
+      rowStyle: function rowStyle(row, index) {
+        return {};
+      },
+      rowAttributes: function rowAttributes(row, index) {
+        return {};
+      },
+
+      undefinedText: '-',
+      locale: undefined,
+      sortable: true,
+      sortClass: undefined,
+      silentSort: true,
+      sortName: undefined,
+      sortOrder: 'asc',
+      sortStable: false,
+      rememberOrder: false,
+      customSort: undefined,
+      columns: [[]],
+      data: [],
+      url: undefined,
+      method: 'get',
+      cache: true,
+      contentType: 'application/json',
+      dataType: 'json',
+      ajax: undefined,
+      ajaxOptions: {},
+      queryParams: function queryParams(params) {
+        return params;
+      },
+
+      queryParamsType: 'limit', responseHandler: function responseHandler(res) {
+        return res;
+      },
+
+      totalField: 'total',
+      dataField: 'rows',
+      pagination: false,
+      onlyInfoPagination: false,
+      paginationLoop: true,
+      sidePagination: 'client', // client or server
+      totalRows: 0,
+      pageNumber: 1,
+      pageSize: 10,
+      pageList: [10, 25, 50, 100],
+      paginationHAlign: 'right', // right, left
+      paginationVAlign: 'bottom', // bottom, top, both
+      paginationDetailHAlign: 'left', // right, left
+      paginationPreText: '&lsaquo;',
+      paginationNextText: '&rsaquo;',
+      paginationSuccessivelySize: 5, // Maximum successively number of pages in a row
+      paginationPagesBySide: 1, // Number of pages on each side (right, left) of the current page.
+      paginationUseIntermediate: false, // Calculate intermediate pages for quick access
+      search: false,
+      searchOnEnterKey: false,
+      strictSearch: false,
+      trimOnSearch: true,
+      searchAlign: 'right',
+      searchTimeOut: 500,
+      searchText: '',
+      customSearch: undefined,
+      showHeader: true,
+      showFooter: false,
+      footerStyle: function footerStyle(row, index) {
+        return {};
+      },
+
+      showColumns: false,
+      minimumCountColumns: 1,
+      showPaginationSwitch: false,
+      showRefresh: false,
+      showToggle: false,
+      showFullscreen: false,
+      smartDisplay: true,
+      escape: false,
+      idField: undefined,
+      selectItemName: 'btSelectItem',
+      clickToSelect: false,
+      ignoreClickToSelectOn: function ignoreClickToSelectOn(_ref11) {
+        var tagName = _ref11.tagName;
+
+        return ['A', 'BUTTON'].indexOf(tagName) !== -1;
+      },
+
+      singleSelect: false,
+      checkboxHeader: true,
+      maintainSelected: false,
+      uniqueId: undefined,
+      cardView: false,
+      detailView: false,
+      detailFormatter: function detailFormatter(index, row) {
+        return '';
+      },
+      detailFilter: function detailFilter(index, row) {
+        return true;
+      },
+
+      toolbar: undefined,
+      toolbarAlign: 'left',
+      buttonsToolbar: undefined,
+      buttonsAlign: 'right',
+      buttonsPrefix: constants.classes.buttonsPrefix,
+      buttonsClass: constants.classes.buttons,
+      icons: constants.icons,
+      iconSize: undefined,
+      iconsPrefix: constants.iconsPrefix, onAll: function onAll(name, args) {
+        return false;
+      },
+      onClickCell: function onClickCell(field, value, row, $element) {
+        return false;
+      },
+      onDblClickCell: function onDblClickCell(field, value, row, $element) {
+        return false;
+      },
+      onClickRow: function onClickRow(item, $element) {
+        return false;
+      },
+      onDblClickRow: function onDblClickRow(item, $element) {
+        return false;
+      },
+      onSort: function onSort(name, order) {
+        return false;
+      },
+      onCheck: function onCheck(row) {
+        return false;
+      },
+      onUncheck: function onUncheck(row) {
+        return false;
+      },
+      onCheckAll: function onCheckAll(rows) {
+        return false;
+      },
+      onUncheckAll: function onUncheckAll(rows) {
+        return false;
+      },
+      onCheckSome: function onCheckSome(rows) {
+        return false;
+      },
+      onUncheckSome: function onUncheckSome(rows) {
+        return false;
+      },
+      onLoadSuccess: function onLoadSuccess(data) {
+        return false;
+      },
+      onLoadError: function onLoadError(status) {
+        return false;
+      },
+      onColumnSwitch: function onColumnSwitch(field, checked) {
+        return false;
+      },
+      onPageChange: function onPageChange(number, size) {
+        return false;
+      },
+      onSearch: function onSearch(text) {
+        return false;
+      },
+      onToggle: function onToggle(cardView) {
+        return false;
+      },
+      onPreBody: function onPreBody(data) {
+        return false;
+      },
+      onPostBody: function onPostBody() {
+        return false;
+      },
+      onPostHeader: function onPostHeader() {
+        return false;
+      },
+      onExpandRow: function onExpandRow(index, row, $detail) {
+        return false;
+      },
+      onCollapseRow: function onCollapseRow(index, row) {
+        return false;
+      },
+      onRefreshOptions: function onRefreshOptions(options) {
+        return false;
+      },
+      onRefresh: function onRefresh(params) {
+        return false;
+      },
+      onResetView: function onResetView() {
+        return false;
+      },
+      onScrollBody: function onScrollBody() {
+        return false;
+      }
+    };
+
+    var LOCALES = {};
+    LOCALES['en-US'] = LOCALES.en = {
+      formatLoadingMessage: function formatLoadingMessage() {
+        return 'Loading, please wait';
+      },
+      formatRecordsPerPage: function formatRecordsPerPage(pageNumber) {
+        return pageNumber + ' rows per page';
+      },
+      formatShowingRows: function formatShowingRows(pageFrom, pageTo, totalRows) {
+        return 'Showing ' + pageFrom + ' to ' + pageTo + ' of ' + totalRows + ' rows';
+      },
+      formatDetailPagination: function formatDetailPagination(totalRows) {
+        return 'Showing ' + totalRows + ' rows';
+      },
+      formatSearch: function formatSearch() {
+        return 'Search';
+      },
+      formatNoMatches: function formatNoMatches() {
+        return 'No matching records found';
+      },
+      formatPaginationSwitch: function formatPaginationSwitch() {
+        return 'Hide/Show pagination';
+      },
+      formatRefresh: function formatRefresh() {
+        return 'Refresh';
+      },
+      formatToggle: function formatToggle() {
+        return 'Toggle';
+      },
+      formatColumns: function formatColumns() {
+        return 'Columns';
+      },
+      formatFullscreen: function formatFullscreen() {
+        return 'Fullscreen';
+      },
+      formatAllRows: function formatAllRows() {
+        return 'All';
+      }
+    };
+
+    $.extend(DEFAULTS, LOCALES['en-US']);
+
+    var COLUMN_DEFAULTS = {
+      radio: false,
+      checkbox: false,
+      checkboxEnabled: true,
+      field: undefined,
+      title: undefined,
+      titleTooltip: undefined,
+      'class': undefined,
+      align: undefined, // left, right, center
+      halign: undefined, // left, right, center
+      falign: undefined, // left, right, center
+      valign: undefined, // top, middle, bottom
+      width: undefined,
+      sortable: false,
+      order: 'asc', // asc, desc
+      visible: true,
+      switchable: true,
+      clickToSelect: true,
+      formatter: undefined,
+      footerFormatter: undefined,
+      events: undefined,
+      sorter: undefined,
+      sortName: undefined,
+      cellStyle: undefined,
+      searchable: true,
+      searchFormatter: true,
+      cardVisible: true,
+      escape: false,
+      showSelectTitle: false
+    };
+
+    var EVENTS = {
+      'all.bs.table': 'onAll',
+      'click-cell.bs.table': 'onClickCell',
+      'dbl-click-cell.bs.table': 'onDblClickCell',
+      'click-row.bs.table': 'onClickRow',
+      'dbl-click-row.bs.table': 'onDblClickRow',
+      'sort.bs.table': 'onSort',
+      'check.bs.table': 'onCheck',
+      'uncheck.bs.table': 'onUncheck',
+      'check-all.bs.table': 'onCheckAll',
+      'uncheck-all.bs.table': 'onUncheckAll',
+      'check-some.bs.table': 'onCheckSome',
+      'uncheck-some.bs.table': 'onUncheckSome',
+      'load-success.bs.table': 'onLoadSuccess',
+      'load-error.bs.table': 'onLoadError',
+      'column-switch.bs.table': 'onColumnSwitch',
+      'page-change.bs.table': 'onPageChange',
+      'search.bs.table': 'onSearch',
+      'toggle.bs.table': 'onToggle',
+      'pre-body.bs.table': 'onPreBody',
+      'post-body.bs.table': 'onPostBody',
+      'post-header.bs.table': 'onPostHeader',
+      'expand-row.bs.table': 'onExpandRow',
+      'collapse-row.bs.table': 'onCollapseRow',
+      'refresh-options.bs.table': 'onRefreshOptions',
+      'reset-view.bs.table': 'onResetView',
+      'refresh.bs.table': 'onRefresh',
+      'scroll-body.bs.table': 'onScrollBody'
+    };
+
+    var BootstrapTable = function () {
+      function BootstrapTable(el, options) {
+        _classCallCheck(this, BootstrapTable);
+
+        this.options = options;
+        this.$el = $(el);
+        this.$el_ = this.$el.clone();
+        this.timeoutId_ = 0;
+        this.timeoutFooter_ = 0;
+
+        this.init();
+      }
+
+      _createClass(BootstrapTable, [{
+        key: 'init',
+        value: function init() {
+          this.initConstants();
+          this.initLocale();
+          this.initContainer();
+          this.initTable();
+          this.initHeader();
+          this.initData();
+          this.initHiddenRows();
+          this.initFooter();
+          this.initToolbar();
+          this.initPagination();
+          this.initBody();
+          this.initSearchText();
+          this.initServer();
+        }
+      }, {
+        key: 'initConstants',
+        value: function initConstants() {
+          var o = this.options;
+          this.constants = constants;
+
+          var buttonsPrefix = o.buttonsPrefix ? o.buttonsPrefix + '-' : '';
+          this.constants.buttonsClass = [o.buttonsPrefix, buttonsPrefix + o.buttonsClass, Utils.sprintf(buttonsPrefix + '%s', o.iconSize)].join(' ').trim();
+        }
+      }, {
+        key: 'initLocale',
+        value: function initLocale() {
+          if (this.options.locale) {
+            var locales = $.fn.bootstrapTable.locales;
+            var parts = this.options.locale.split(/-|_/);
+
+            parts[0] = parts[0].toLowerCase();
+            if (parts[1]) {
+              parts[1] = parts[1].toUpperCase();
+            }
+
+            if (locales[this.options.locale]) {
+              $.extend(this.options, locales[this.options.locale]);
+            } else if (locales[parts.join('-')]) {
+              $.extend(this.options, locales[parts.join('-')]);
+            } else if (locales[parts[0]]) {
+              $.extend(this.options, locales[parts[0]]);
+            }
+          }
+        }
+      }, {
+        key: 'initContainer',
+        value: function initContainer() {
+          var topPagination = ['top', 'both'].indexOf(this.options.paginationVAlign) !== -1 ? '<div class="fixed-table-pagination clearfix"></div>' : '';
+          var bottomPagination = ['bottom', 'both'].indexOf(this.options.paginationVAlign) !== -1 ? '<div class="fixed-table-pagination"></div>' : '';
+
+          this.$container = $('\n        <div class="bootstrap-table">\n        <div class="fixed-table-toolbar"></div>\n        ' + topPagination + '\n        <div class="fixed-table-container">\n        <div class="fixed-table-header"><table></table></div>\n        <div class="fixed-table-body">\n        <div class="fixed-table-loading">\n        <span class="loading-wrap">\n        <span class="loading-text">' + this.options.formatLoadingMessage() + '</span>\n        <span class="animation-wrap"><span class="animation-dot"></span></span>\n        </span>\n        </div>\n        </div>\n        <div class="fixed-table-footer"><table><thead><tr></tr></thead></table></div>\n        </div>\n        ' + bottomPagination + '\n        </div>\n      ');
+
+          this.$container.insertAfter(this.$el);
+          this.$tableContainer = this.$container.find('.fixed-table-container');
+          this.$tableHeader = this.$container.find('.fixed-table-header');
+          this.$tableBody = this.$container.find('.fixed-table-body');
+          this.$tableLoading = this.$container.find('.fixed-table-loading');
+          this.$tableFooter = this.$container.find('.fixed-table-footer');
+          // checking if custom table-toolbar exists or not
+          if (this.options.buttonsToolbar) {
+            this.$toolbar = $('body').find(this.options.buttonsToolbar);
+          } else {
+            this.$toolbar = this.$container.find('.fixed-table-toolbar');
+          }
+          this.$pagination = this.$container.find('.fixed-table-pagination');
+
+          this.$tableBody.append(this.$el);
+          this.$container.after('<div class="clearfix"></div>');
+
+          this.$el.addClass(this.options.classes);
+          this.$tableLoading.addClass(this.options.classes);
+
+          if (this.options.height) {
+            this.$tableContainer.addClass('fixed-height');
+
+            if (this.options.showFooter) {
+              this.$tableContainer.addClass('has-footer');
+            }
+
+            if (this.options.classes.split(' ').indexOf('table-bordered') !== -1) {
+              this.$tableBody.append('<div class="fixed-table-border"></div>');
+              this.$tableBorder = this.$tableBody.find('.fixed-table-border');
+              this.$tableLoading.addClass('fixed-table-border');
+            }
+          }
+        }
+      }, {
+        key: 'initTable',
+        value: function initTable() {
+          var _this = this;
+
+          var columns = [];
+          var data = [];
+
+          this.$header = this.$el.find('>thead');
+          if (!this.$header.length) {
+            this.$header = $('<thead class="' + this.options.theadClasses + '"></thead>').appendTo(this.$el);
+          } else if (this.options.theadClasses) {
+            this.$header.addClass(this.options.theadClasses);
+          }
+          this.$header.find('tr').each(function (i, el) {
+            var column = [];
+
+            $(el).find('th').each(function (i, el) {
+              // #2014: getFieldIndex and elsewhere assume this is string, causes issues if not
+              if (typeof $(el).data('field') !== 'undefined') {
+                $(el).data('field', '' + $(el).data('field'));
+              }
+              column.push($.extend({}, {
+                title: $(el).html(),
+                'class': $(el).attr('class'),
+                titleTooltip: $(el).attr('title'),
+                rowspan: $(el).attr('rowspan') ? +$(el).attr('rowspan') : undefined,
+                colspan: $(el).attr('colspan') ? +$(el).attr('colspan') : undefined
+              }, $(el).data()));
+            });
+            columns.push(column);
+          });
+
+          if (!Array.isArray(this.options.columns[0])) {
+            this.options.columns = [this.options.columns];
+          }
+
+          this.options.columns = $.extend(true, [], columns, this.options.columns);
+          this.columns = [];
+          this.fieldsColumnsIndex = [];
+
+          Utils.setFieldIndex(this.options.columns);
+
+          this.options.columns.forEach(function (columns, i) {
+            columns.forEach(function (_column, j) {
+              var column = $.extend({}, BootstrapTable.COLUMN_DEFAULTS, _column);
+
+              if (typeof column.fieldIndex !== 'undefined') {
+                _this.columns[column.fieldIndex] = column;
+                _this.fieldsColumnsIndex[column.field] = column.fieldIndex;
+              }
+
+              _this.options.columns[i][j] = column;
+            });
+          });
+
+          // if options.data is setting, do not process tbody data
+          if (this.options.data.length) {
+            return;
+          }
+
+          var m = [];
+          this.$el.find('>tbody>tr').each(function (y, el) {
+            var row = {};
+
+            // save tr's id, class and data-* attributes
+            row._id = $(el).attr('id');
+            row._class = $(el).attr('class');
+            row._data = Utils.getRealDataAttr($(el).data());
+
+            $(el).find('>td').each(function (_x, el) {
+              var cspan = +$(el).attr('colspan') || 1;
+              var rspan = +$(el).attr('rowspan') || 1;
+              var x = _x;
+
+              // skip already occupied cells in current row
+              for (; m[y] && m[y][x]; x++) {}
+              // ignore
+
+
+              // mark matrix elements occupied by current cell with true
+              for (var tx = x; tx < x + cspan; tx++) {
+                for (var ty = y; ty < y + rspan; ty++) {
+                  if (!m[ty]) {
+                    // fill missing rows
+                    m[ty] = [];
+                  }
+                  m[ty][tx] = true;
+                }
+              }
+
+              var field = _this.columns[x].field;
+
+              row[field] = $(el).html().trim();
+              // save td's id, class and data-* attributes
+              row['_' + field + '_id'] = $(el).attr('id');
+              row['_' + field + '_class'] = $(el).attr('class');
+              row['_' + field + '_rowspan'] = $(el).attr('rowspan');
+              row['_' + field + '_colspan'] = $(el).attr('colspan');
+              row['_' + field + '_title'] = $(el).attr('title');
+              row['_' + field + '_data'] = Utils.getRealDataAttr($(el).data());
+            });
+            data.push(row);
+          });
+          this.options.data = data;
+          if (data.length) {
+            this.fromHtml = true;
+          }
+        }
+      }, {
+        key: 'initHeader',
+        value: function initHeader() {
+          var _this2 = this;
+
+          var visibleColumns = {};
+          var html = [];
+
+          this.header = {
+            fields: [],
+            styles: [],
+            classes: [],
+            formatters: [],
+            events: [],
+            sorters: [],
+            sortNames: [],
+            cellStyles: [],
+            searchables: []
+          };
+
+          this.options.columns.forEach(function (columns, i) {
+            html.push('<tr>');
+
+            if (i === 0 && !_this2.options.cardView && _this2.options.detailView) {
+              html.push('<th class="detail" rowspan="' + _this2.options.columns.length + '">\n            <div class="fht-cell"></div>\n            </th>\n          ');
+            }
+
+            columns.forEach(function (column, j) {
+              var text = '';
+
+              var halign = ''; // header align style
+
+              var align = ''; // body align style
+
+              var style = '';
+              var class_ = Utils.sprintf(' class="%s"', column['class']);
+              var unitWidth = 'px';
+              var width = column.width;
+
+              if (column.width !== undefined && !_this2.options.cardView) {
+                if (typeof column.width === 'string') {
+                  if (column.width.indexOf('%') !== -1) {
+                    unitWidth = '%';
+                  }
+                }
+              }
+              if (column.width && typeof column.width === 'string') {
+                width = column.width.replace('%', '').replace('px', '');
+              }
+
+              halign = Utils.sprintf('text-align: %s; ', column.halign ? column.halign : column.align);
+              align = Utils.sprintf('text-align: %s; ', column.align);
+              style = Utils.sprintf('vertical-align: %s; ', column.valign);
+              style += Utils.sprintf('width: %s; ', (column.checkbox || column.radio) && !width ? !column.showSelectTitle ? '36px' : undefined : width ? width + unitWidth : undefined);
+
+              if (typeof column.fieldIndex !== 'undefined') {
+                _this2.header.fields[column.fieldIndex] = column.field;
+                _this2.header.styles[column.fieldIndex] = align + style;
+                _this2.header.classes[column.fieldIndex] = class_;
+                _this2.header.formatters[column.fieldIndex] = column.formatter;
+                _this2.header.events[column.fieldIndex] = column.events;
+                _this2.header.sorters[column.fieldIndex] = column.sorter;
+                _this2.header.sortNames[column.fieldIndex] = column.sortName;
+                _this2.header.cellStyles[column.fieldIndex] = column.cellStyle;
+                _this2.header.searchables[column.fieldIndex] = column.searchable;
+
+                if (!column.visible) {
+                  return;
+                }
+
+                if (_this2.options.cardView && !column.cardVisible) {
+                  return;
+                }
+
+                visibleColumns[column.field] = column;
+              }
+
+              html.push('<th' + Utils.sprintf(' title="%s"', column.titleTooltip), column.checkbox || column.radio ? Utils.sprintf(' class="bs-checkbox %s"', column['class'] || '') : class_, Utils.sprintf(' style="%s"', halign + style), Utils.sprintf(' rowspan="%s"', column.rowspan), Utils.sprintf(' colspan="%s"', column.colspan), Utils.sprintf(' data-field="%s"', column.field),
+              // If `column` is not the first element of `this.options.columns[0]`, then className 'data-not-first-th' should be added.
+              j === 0 && i > 0 ? ' data-not-first-th' : '', '>');
+
+              html.push(Utils.sprintf('<div class="th-inner %s">', _this2.options.sortable && column.sortable ? 'sortable both' : ''));
+
+              text = _this2.options.escape ? Utils.escapeHTML(column.title) : column.title;
+
+              var title = text;
+              if (column.checkbox) {
+                text = '';
+                if (!_this2.options.singleSelect && _this2.options.checkboxHeader) {
+                  text = '<label><input name="btSelectAll" type="checkbox" /><span></span></label>';
+                }
+                _this2.header.stateField = column.field;
+              }
+              if (column.radio) {
+                text = '';
+                _this2.header.stateField = column.field;
+                _this2.options.singleSelect = true;
+              }
+              if (!text && column.showSelectTitle) {
+                text += title;
+              }
+
+              html.push(text);
+              html.push('</div>');
+              html.push('<div class="fht-cell"></div>');
+              html.push('</div>');
+              html.push('</th>');
+            });
+            html.push('</tr>');
+          });
+
+          this.$header.html(html.join(''));
+          this.$header.find('th[data-field]').each(function (i, el) {
+            $(el).data(visibleColumns[$(el).data('field')]);
+          });
+          this.$container.off('click', '.th-inner').on('click', '.th-inner', function (e) {
+            var $this = $(e.currentTarget);
+
+            if (_this2.options.detailView && !$this.parent().hasClass('bs-checkbox')) {
+              if ($this.closest('.bootstrap-table')[0] !== _this2.$container[0]) {
+                return false;
+              }
+            }
+
+            if (_this2.options.sortable && $this.parent().data().sortable) {
+              _this2.onSort(e);
+            }
+          });
+
+          this.$header.children().children().off('keypress').on('keypress', function (e) {
+            if (_this2.options.sortable && $(e.currentTarget).data().sortable) {
+              var code = e.keyCode || e.which;
+              if (code === 13) {
+                // Enter keycode
+                _this2.onSort(e);
+              }
+            }
+          });
+
+          $(window).off('resize.bootstrap-table');
+          if (!this.options.showHeader || this.options.cardView) {
+            this.$header.hide();
+            this.$tableHeader.hide();
+            this.$tableLoading.css('top', 0);
+          } else {
+            this.$header.show();
+            this.$tableHeader.show();
+            this.$tableLoading.css('top', this.$header.outerHeight() + 1);
+            // Assign the correct sortable arrow
+            this.getCaret();
+            $(window).on('resize.bootstrap-table', function (e) {
+              return _this2.resetWidth(e);
+            });
+          }
+
+          this.$selectAll = this.$header.find('[name="btSelectAll"]');
+          this.$selectAll.off('click').on('click', function (_ref12) {
+            var currentTarget = _ref12.currentTarget;
+
+            var checked = $(currentTarget).prop('checked');
+            _this2[checked ? 'checkAll' : 'uncheckAll']();
+            _this2.updateSelected();
+          });
+        }
+      }, {
+        key: 'initFooter',
+        value: function initFooter() {
+          if (!this.options.showFooter || this.options.cardView) {
+            this.$tableFooter.hide();
+          } else {
+            this.$tableFooter.show();
+          }
+        }
+      }, {
+        key: 'initData',
+        value: function initData(data, type) {
+          if (type === 'append') {
+            this.options.data = this.options.data.concat(data);
+          } else if (type === 'prepend') {
+            this.options.data = [].concat(data).concat(this.options.data);
+          } else {
+            this.options.data = data || this.options.data;
+          }
+
+          this.data = this.options.data;
+
+          if (this.options.sidePagination === 'server') {
+            return;
+          }
+          this.initSort();
+        }
+      }, {
+        key: 'initSort',
+        value: function initSort() {
+          var _this3 = this;
+
+          var name = this.options.sortName;
+          var order = this.options.sortOrder === 'desc' ? -1 : 1;
+          var index = this.header.fields.indexOf(this.options.sortName);
+          var timeoutId = 0;
+
+          if (index !== -1) {
+            if (this.options.sortStable) {
+              this.data.forEach(function (row, i) {
+                if (!row.hasOwnProperty('_position')) {
+                  row._position = i;
+                }
+              });
+            }
+
+            if (this.options.customSort) {
+              Utils.calculateObjectValue(this.options, this.options.customSort, [this.options.sortName, this.options.sortOrder, this.data]);
+            } else {
+              this.data.sort(function (a, b) {
+                if (_this3.header.sortNames[index]) {
+                  name = _this3.header.sortNames[index];
+                }
+                var aa = Utils.getItemField(a, name, _this3.options.escape);
+                var bb = Utils.getItemField(b, name, _this3.options.escape);
+                var value = Utils.calculateObjectValue(_this3.header, _this3.header.sorters[index], [aa, bb, a, b]);
+
+                if (value !== undefined) {
+                  if (_this3.options.sortStable && value === 0) {
+                    return order * (a._position - b._position);
+                  }
+                  return order * value;
+                }
+
+                // Fix #161: undefined or null string sort bug.
+                if (aa === undefined || aa === null) {
+                  aa = '';
+                }
+                if (bb === undefined || bb === null) {
+                  bb = '';
+                }
+
+                if (_this3.options.sortStable && aa === bb) {
+                  aa = a._position;
+                  bb = b._position;
+                }
+
+                // IF both values are numeric, do a numeric comparison
+                if (Utils.isNumeric(aa) && Utils.isNumeric(bb)) {
+                  // Convert numerical values form string to float.
+                  aa = parseFloat(aa);
+                  bb = parseFloat(bb);
+                  if (aa < bb) {
+                    return order * -1;
+                  }
+                  if (aa > bb) {
+                    return order;
+                  }
+                  return 0;
+                }
+
+                if (aa === bb) {
+                  return 0;
+                }
+
+                // If value is not a string, convert to string
+                if (typeof aa !== 'string') {
+                  aa = aa.toString();
+                }
+
+                if (aa.localeCompare(bb) === -1) {
+                  return order * -1;
+                }
+
+                return order;
+              });
+            }
+
+            if (this.options.sortClass !== undefined) {
+              clearTimeout(timeoutId);
+              timeoutId = setTimeout(function () {
+                _this3.$el.removeClass(_this3.options.sortClass);
+                var index = _this3.$header.find('[data-field="' + _this3.options.sortName + '"]').index();
+                _this3.$el.find('tr td:nth-child(' + (index + 1) + ')').addClass(_this3.options.sortClass);
+              }, 250);
+            }
+          }
+        }
+      }, {
+        key: 'onSort',
+        value: function onSort(_ref13) {
+          var type = _ref13.type,
+              currentTarget = _ref13.currentTarget;
+
+          var $this = type === 'keypress' ? $(currentTarget) : $(currentTarget).parent();
+          var $this_ = this.$header.find('th').eq($this.index());
+
+          this.$header.add(this.$header_).find('span.order').remove();
+
+          if (this.options.sortName === $this.data('field')) {
+            this.options.sortOrder = this.options.sortOrder === 'asc' ? 'desc' : 'asc';
+          } else {
+            this.options.sortName = $this.data('field');
+            if (this.options.rememberOrder) {
+              this.options.sortOrder = $this.data('order') === 'asc' ? 'desc' : 'asc';
+            } else {
+              this.options.sortOrder = this.columns[this.fieldsColumnsIndex[$this.data('field')]].order;
+            }
+          }
+          this.trigger('sort', this.options.sortName, this.options.sortOrder);
+
+          $this.add($this_).data('order', this.options.sortOrder);
+
+          // Assign the correct sortable arrow
+          this.getCaret();
+
+          if (this.options.sidePagination === 'server') {
+            this.initServer(this.options.silentSort);
+            return;
+          }
+
+          this.initSort();
+          this.initBody();
+        }
+      }, {
+        key: 'initToolbar',
+        value: function initToolbar() {
+          var _this4 = this;
+
+          var o = this.options;
+          var html = [];
+          var timeoutId = 0;
+          var $keepOpen = void 0;
+          var $search = void 0;
+          var switchableCount = 0;
+
+          if (this.$toolbar.find('.bs-bars').children().length) {
+            $('body').append($(o.toolbar));
+          }
+          this.$toolbar.html('');
+
+          if (typeof o.toolbar === 'string' || _typeof(o.toolbar) === 'object') {
+            $(Utils.sprintf('<div class="bs-bars %s-%s"></div>', this.constants.classes.pull, o.toolbarAlign)).appendTo(this.$toolbar).append($(o.toolbar));
+          }
+
+          // showColumns, showToggle, showRefresh
+          html = ['<div class="' + ['columns', 'columns-' + o.buttonsAlign, this.constants.classes.buttonsGroup, this.constants.classes.pull + '-' + o.buttonsAlign].join(' ') + '">'];
+
+          if (typeof o.icons === 'string') {
+            o.icons = Utils.calculateObjectValue(null, o.icons);
+          }
+
+          if (o.showPaginationSwitch) {
+            html.push('<button class="' + this.constants.buttonsClass + '" type="button" name="paginationSwitch"\n          aria-label="Pagination Switch" title="' + o.formatPaginationSwitch() + '">\n          ' + Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.paginationSwitchDown) + '\n          </button>');
+          }
+
+          if (o.showRefresh) {
+            html.push('<button class="' + this.constants.buttonsClass + '" type="button" name="refresh"\n          aria-label="Refresh" title="' + o.formatRefresh() + '">\n          ' + Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.refresh) + '\n          </button>');
+          }
+
+          if (o.showToggle) {
+            html.push('<button class="' + this.constants.buttonsClass + '" type="button" name="toggle"\n          aria-label="Toggle" title="' + o.formatToggle() + '">\n          ' + Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.toggleOff) + '\n          </button>');
+          }
+
+          if (o.showFullscreen) {
+            html.push('<button class="' + this.constants.buttonsClass + '" type="button" name="fullscreen"\n          aria-label="Fullscreen" title="' + o.formatFullscreen() + '">\n          ' + Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.fullscreen) + '\n          </button>');
+          }
+
+          if (o.showColumns) {
+            html.push('<div class="keep-open ' + this.constants.classes.buttonsDropdown + '" title="' + o.formatColumns() + '">\n          <button class="' + this.constants.buttonsClass + ' dropdown-toggle" type="button" data-toggle="dropdown"\n          aria-label="Columns" title="' + o.formatFullscreen() + '">\n          ' + Utils.sprintf(this.constants.html.icon, o.iconsPrefix, o.icons.columns) + '\n          ' + this.constants.html.dropdownCaret + '\n          </button>\n          ' + this.constants.html.toobarDropdow[0]);
+
+            this.columns.forEach(function (column, i) {
+              if (column.radio || column.checkbox) {
+                return;
+              }
+
+              if (o.cardView && !column.cardVisible) {
+                return;
+              }
+
+              var checked = column.visible ? ' checked="checked"' : '';
+
+              if (column.switchable) {
+                html.push(Utils.sprintf(_this4.constants.html.toobarDropdowItem, Utils.sprintf('<input type="checkbox" data-field="%s" value="%s"%s> <span>%s</span>', column.field, i, checked, column.title)));
+                switchableCount++;
+              }
+            });
+            html.push(this.constants.html.toobarDropdow[1], '</div>');
+          }
+
+          html.push('</div>');
+
+          // Fix #188: this.showToolbar is for extensions
+          if (this.showToolbar || html.length > 2) {
+            this.$toolbar.append(html.join(''));
+          }
+
+          if (o.showPaginationSwitch) {
+            this.$toolbar.find('button[name="paginationSwitch"]').off('click').on('click', function () {
+              return _this4.togglePagination();
+            });
+          }
+
+          if (o.showFullscreen) {
+            this.$toolbar.find('button[name="fullscreen"]').off('click').on('click', function () {
+              return _this4.toggleFullscreen();
+            });
+          }
+
+          if (o.showRefresh) {
+            this.$toolbar.find('button[name="refresh"]').off('click').on('click', function () {
+              return _this4.refresh();
+            });
+          }
+
+          if (o.showToggle) {
+            this.$toolbar.find('button[name="toggle"]').off('click').on('click', function () {
+              _this4.toggleView();
+            });
+          }
+
+          if (o.showColumns) {
+            $keepOpen = this.$toolbar.find('.keep-open');
+
+            if (switchableCount <= o.minimumCountColumns) {
+              $keepOpen.find('input').prop('disabled', true);
+            }
+
+            $keepOpen.find('li, label').off('click').on('click', function (e) {
+              e.stopImmediatePropagation();
+            });
+            $keepOpen.find('input').off('click').on('click', function (_ref14) {
+              var currentTarget = _ref14.currentTarget;
+
+              var $this = $(currentTarget);
+
+              _this4.toggleColumn($this.val(), $this.prop('checked'), false);
+              _this4.trigger('column-switch', $this.data('field'), $this.prop('checked'));
+            });
+          }
+
+          if (o.search) {
+            html = [];
+            html.push('<div class="' + this.constants.classes.pull + '-' + o.searchAlign + ' search ' + this.constants.classes.inputGroup + '">\n          <input class="' + this.constants.classes.input + Utils.sprintf(' input-%s', o.iconSize) + '"\n          type="text" placeholder="' + o.formatSearch() + '">\n          </div>');
+
+            this.$toolbar.append(html.join(''));
+            $search = this.$toolbar.find('.search input');
+            $search.off('keyup drop blur').on('keyup drop blur', function (event) {
+              if (o.searchOnEnterKey && event.keyCode !== 13) {
+                return;
+              }
+
+              if ([37, 38, 39, 40].indexOf(event.keyCode) !== -1) {
+                return;
+              }
+
+              clearTimeout(timeoutId); // doesn't matter if it's 0
+              timeoutId = setTimeout(function () {
+                _this4.onSearch(event);
+              }, o.searchTimeOut);
+            });
+
+            if (Utils.isIEBrowser()) {
+              $search.off('mouseup').on('mouseup', function (event) {
+                clearTimeout(timeoutId); // doesn't matter if it's 0
+                timeoutId = setTimeout(function () {
+                  _this4.onSearch(event);
+                }, o.searchTimeOut);
+              });
+            }
+          }
+        }
+      }, {
+        key: 'onSearch',
+        value: function onSearch(_ref15) {
+          var currentTarget = _ref15.currentTarget,
+              firedByInitSearchText = _ref15.firedByInitSearchText;
+
+          var text = $(currentTarget).val().trim();
+
+          // trim search input
+          if (this.options.trimOnSearch && $(currentTarget).val() !== text) {
+            $(currentTarget).val(text);
+          }
+
+          if (text === this.searchText) {
+            return;
+          }
+          this.searchText = text;
+          this.options.searchText = text;
+
+          if (!firedByInitSearchText) {
+            this.options.pageNumber = 1;
+          }
+          this.initSearch();
+          if (firedByInitSearchText) {
+            if (this.options.sidePagination === 'client') {
+              this.updatePagination();
+            }
+          } else {
+            this.updatePagination();
+          }
+          this.trigger('search', text);
+        }
+      }, {
+        key: 'initSearch',
+        value: function initSearch() {
+          var _this5 = this;
+
+          if (this.options.sidePagination !== 'server') {
+            if (this.options.customSearch) {
+              this.data = Utils.calculateObjectValue(this.options, this.options.customSearch, [this.options.data, this.searchText]);
+              return;
+            }
+
+            var s = this.searchText && (this.options.escape ? Utils.escapeHTML(this.searchText) : this.searchText).toLowerCase();
+            var f = Utils.isEmptyObject(this.filterColumns) ? null : this.filterColumns;
+
+            // Check filter
+            this.data = f ? this.options.data.filter(function (item, i) {
+              for (var key in f) {
+                if (Array.isArray(f[key]) && !(f[key].indexOf(item[key]) !== -1) || !Array.isArray(f[key]) && item[key] !== f[key]) {
+                  return false;
+                }
+              }
+              return true;
+            }) : this.options.data;
+
+            this.data = s ? this.data.filter(function (item, i) {
+              for (var j = 0; j < _this5.header.fields.length; j++) {
+                if (!_this5.header.searchables[j]) {
+                  continue;
+                }
+
+                var key = Utils.isNumeric(_this5.header.fields[j]) ? parseInt(_this5.header.fields[j], 10) : _this5.header.fields[j];
+                var column = _this5.columns[_this5.fieldsColumnsIndex[key]];
+                var value = void 0;
+
+                if (typeof key === 'string') {
+                  value = item;
+                  var props = key.split('.');
+                  for (var _i10 = 0; _i10 < props.length; _i10++) {
+                    if (value[props[_i10]] !== null) {
+                      value = value[props[_i10]];
+                    }
+                  }
+                } else {
+                  value = item[key];
+                }
+
+                // Fix #142: respect searchForamtter boolean
+                if (column && column.searchFormatter) {
+                  value = Utils.calculateObjectValue(column, _this5.header.formatters[j], [value, item, i], value);
+                }
+
+                if (typeof value === 'string' || typeof value === 'number') {
+                  if (_this5.options.strictSearch) {
+                    if (('' + value).toLowerCase() === s) {
+                      return true;
+                    }
+                  } else {
+                    if (('' + value).toLowerCase().indexOf(s) !== -1) {
+                      return true;
+                    }
+                  }
+                }
+              }
+              return false;
+            }) : this.data;
+          }
+        }
+      }, {
+        key: 'initPagination',
+        value: function initPagination() {
+          var _this6 = this;
+
+          var o = this.options;
+          if (!o.pagination) {
+            this.$pagination.hide();
+            return;
+          }
+          this.$pagination.show();
+
+          var html = [];
+          var $allSelected = false;
+          var i = void 0;
+          var from = void 0;
+          var to = void 0;
+          var $pageList = void 0;
+          var $pre = void 0;
+          var $next = void 0;
+          var $number = void 0;
+          var data = this.getData();
+          var pageList = o.pageList;
+
+          if (o.sidePagination !== 'server') {
+            o.totalRows = data.length;
+          }
+
+          this.totalPages = 0;
+          if (o.totalRows) {
+            if (o.pageSize === o.formatAllRows()) {
+              o.pageSize = o.totalRows;
+              $allSelected = true;
+            } else if (o.pageSize === o.totalRows) {
+              // Fix #667 Table with pagination,
+              // multiple pages and a search this matches to one page throws exception
+              var pageLst = typeof o.pageList === 'string' ? o.pageList.replace('[', '').replace(']', '').replace(/ /g, '').toLowerCase().split(',') : o.pageList;
+              if (pageLst.indexOf(o.formatAllRows().toLowerCase()) !== -1) {
+                $allSelected = true;
+              }
+            }
+
+            this.totalPages = ~~((o.totalRows - 1) / o.pageSize) + 1;
+
+            o.totalPages = this.totalPages;
+          }
+          if (this.totalPages > 0 && o.pageNumber > this.totalPages) {
+            o.pageNumber = this.totalPages;
+          }
+
+          this.pageFrom = (o.pageNumber - 1) * o.pageSize + 1;
+          this.pageTo = o.pageNumber * o.pageSize;
+          if (this.pageTo > o.totalRows) {
+            this.pageTo = o.totalRows;
+          }
+
+          var paginationInfo = o.onlyInfoPagination ? o.formatDetailPagination(o.totalRows) : o.formatShowingRows(this.pageFrom, this.pageTo, o.totalRows);
+
+          html.push('<div class="' + this.constants.classes.pull + '-' + o.paginationDetailHAlign + ' pagination-detail">\n        <span class="pagination-info">\n        ' + paginationInfo + '\n        </span>');
+
+          if (!o.onlyInfoPagination) {
+            html.push('<span class="page-list">');
+
+            var pageNumber = ['<span class="' + this.constants.classes.paginationDropdown + '">\n          <button class="' + this.constants.buttonsClass + ' dropdown-toggle" type="button" data-toggle="dropdown">\n          <span class="page-size">\n          ' + ($allSelected ? o.formatAllRows() : o.pageSize) + '\n          </span>\n          ' + this.constants.html.dropdownCaret + '\n          </button>\n          ' + this.constants.html.pageDropdown[0]];
+
+            if (typeof o.pageList === 'string') {
+              var list = o.pageList.replace('[', '').replace(']', '').replace(/ /g, '').split(',');
+
+              pageList = [];
+              for (var _iterator9 = list, _isArray9 = Array.isArray(_iterator9), _i11 = 0, _iterator9 = _isArray9 ? _iterator9 : _iterator9[Symbol.iterator]();;) {
+                var _ref16;
+
+                if (_isArray9) {
+                  if (_i11 >= _iterator9.length) break;
+                  _ref16 = _iterator9[_i11++];
+                } else {
+                  _i11 = _iterator9.next();
+                  if (_i11.done) break;
+                  _ref16 = _i11.value;
+                }
+
+                var value = _ref16;
+
+                pageList.push(value.toUpperCase() === o.formatAllRows().toUpperCase() || value.toUpperCase() === 'UNLIMITED' ? o.formatAllRows() : +value);
+              }
+            }
+
+            pageList.forEach(function (page, i) {
+              if (!o.smartDisplay || i === 0 || pageList[i - 1] < o.totalRows) {
+                var active = void 0;
+                if ($allSelected) {
+                  active = page === o.formatAllRows() ? _this6.constants.classes.dropdownActive : '';
+                } else {
+                  active = page === o.pageSize ? _this6.constants.classes.dropdownActive : '';
+                }
+                pageNumber.push(Utils.sprintf(_this6.constants.html.pageDropdownItem, active, page));
+              }
+            });
+            pageNumber.push(this.constants.html.pageDropdown[1] + '</span>');
+
+            html.push(o.formatRecordsPerPage(pageNumber.join('')));
+            html.push('</span></div>');
+
+            html.push('<div class="' + this.constants.classes.pull + '-' + o.paginationHAlign + ' pagination">', Utils.sprintf(this.constants.html.pagination[0], Utils.sprintf(' pagination-%s', o.iconSize)), Utils.sprintf(this.constants.html.paginationItem, ' page-pre', o.paginationPreText));
+
+            if (this.totalPages < o.paginationSuccessivelySize) {
+              from = 1;
+              to = this.totalPages;
+            } else {
+              from = o.pageNumber - o.paginationPagesBySide;
+              to = from + o.paginationPagesBySide * 2;
+            }
+
+            if (o.pageNumber < o.paginationSuccessivelySize - 1) {
+              to = o.paginationSuccessivelySize;
+            }
+
+            if (to > this.totalPages) {
+              to = this.totalPages;
+            }
+
+            if (o.paginationSuccessivelySize > this.totalPages - from) {
+              from = from - (o.paginationSuccessivelySize - (this.totalPages - from)) + 1;
+            }
+
+            if (from < 1) {
+              from = 1;
+            }
+
+            if (to > this.totalPages) {
+              to = this.totalPages;
+            }
+
+            var middleSize = Math.round(o.paginationPagesBySide / 2);
+            var pageItem = function pageItem(i) {
+              var classes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+              return Utils.sprintf(_this6.constants.html.paginationItem, classes + (i === o.pageNumber ? ' ' + _this6.constants.classes.paginationActive : ''), i);
+            };
+
+            if (from > 1) {
+              var max = o.paginationPagesBySide;
+              if (max >= from) max = from - 1;
+              for (i = 1; i <= max; i++) {
+                html.push(pageItem(i));
+              }
+              if (from - 1 === max + 1) {
+                i = from - 1;
+                html.push(pageItem(i));
+              } else {
+                if (from - 1 > max) {
+                  if (from - o.paginationPagesBySide * 2 > o.paginationPagesBySide && o.paginationUseIntermediate) {
+                    i = Math.round((from - middleSize) / 2 + middleSize);
+                    html.push(pageItem(i, ' page-intermediate'));
+                  } else {
+                    html.push(Utils.sprintf(this.constants.html.paginationItem, ' page-first-separator disabled', '...'));
+                  }
+                }
+              }
+            }
+
+            for (i = from; i <= to; i++) {
+              html.push(pageItem(i));
+            }
+
+            if (this.totalPages > to) {
+              var min = this.totalPages - (o.paginationPagesBySide - 1);
+              if (to >= min) min = to + 1;
+              if (to + 1 === min - 1) {
+                i = to + 1;
+                html.push(pageItem(i));
+              } else {
+                if (min > to + 1) {
+                  if (this.totalPages - to > o.paginationPagesBySide * 2 && o.paginationUseIntermediate) {
+                    i = Math.round((this.totalPages - middleSize - to) / 2 + to);
+                    html.push(pageItem(i, ' page-intermediate'));
+                  } else {
+                    html.push(Utils.sprintf(this.constants.html.paginationItem, ' page-last-separator disabled', '...'));
+                  }
+                }
+              }
+
+              for (i = min; i <= this.totalPages; i++) {
+                html.push(pageItem(i));
+              }
+            }
+
+            html.push(Utils.sprintf(this.constants.html.paginationItem, ' page-next', o.paginationNextText));
+            html.push(this.constants.html.pagination[1], '</div>');
+          }
+          this.$pagination.html(html.join(''));
+
+          var dropupClass = ['bottom', 'both'].indexOf(o.paginationVAlign) !== -1 ? ' ' + this.constants.classes.dropup : '';
+          this.$pagination.last().find('.page-list > span').addClass(dropupClass);
+
+          if (!o.onlyInfoPagination) {
+            $pageList = this.$pagination.find('.page-list a');
+            $pre = this.$pagination.find('.page-pre');
+            $next = this.$pagination.find('.page-next');
+            $number = this.$pagination.find('.page-item').not('.page-next, .page-pre');
+
+            if (o.smartDisplay) {
+              if (this.totalPages <= 1) {
+                this.$pagination.find('div.pagination').hide();
+              }
+              if (pageList.length < 2 || o.totalRows <= pageList[0]) {
+                this.$pagination.find('span.page-list').hide();
+              }
+
+              // when data is empty, hide the pagination
+              this.$pagination[this.getData().length ? 'show' : 'hide']();
+            }
+
+            if (!o.paginationLoop) {
+              if (o.pageNumber === 1) {
+                $pre.addClass('disabled');
+              }
+              if (o.pageNumber === this.totalPages) {
+                $next.addClass('disabled');
+              }
+            }
+
+            if ($allSelected) {
+              o.pageSize = o.formatAllRows();
+            }
+            // removed the events for last and first, onPageNumber executeds the same logic
+            $pageList.off('click').on('click', function (e) {
+              return _this6.onPageListChange(e);
+            });
+            $pre.off('click').on('click', function (e) {
+              return _this6.onPagePre(e);
+            });
+            $next.off('click').on('click', function (e) {
+              return _this6.onPageNext(e);
+            });
+            $number.off('click').on('click', function (e) {
+              return _this6.onPageNumber(e);
+            });
+          }
+        }
+      }, {
+        key: 'updatePagination',
+        value: function updatePagination(event) {
+          // Fix #171: IE disabled button can be clicked bug.
+          if (event && $(event.currentTarget).hasClass('disabled')) {
+            return;
+          }
+
+          if (!this.options.maintainSelected) {
+            this.resetRows();
+          }
+
+          this.initPagination();
+          if (this.options.sidePagination === 'server') {
+            this.initServer();
+          } else {
+            this.initBody();
+          }
+
+          this.trigger('page-change', this.options.pageNumber, this.options.pageSize);
+        }
+      }, {
+        key: 'onPageListChange',
+        value: function onPageListChange(event) {
+          event.preventDefault();
+          var $this = $(event.currentTarget);
+
+          $this.parent().addClass(this.constants.classes.dropdownActive).siblings().removeClass(this.constants.classes.dropdownActive);
+          this.options.pageSize = $this.text().toUpperCase() === this.options.formatAllRows().toUpperCase() ? this.options.formatAllRows() : +$this.text();
+          this.$toolbar.find('.page-size').text(this.options.pageSize);
+
+          this.updatePagination(event);
+          return false;
+        }
+      }, {
+        key: 'onPagePre',
+        value: function onPagePre(event) {
+          event.preventDefault();
+          if (this.options.pageNumber - 1 === 0) {
+            this.options.pageNumber = this.options.totalPages;
+          } else {
+            this.options.pageNumber--;
+          }
+          this.updatePagination(event);
+          return false;
+        }
+      }, {
+        key: 'onPageNext',
+        value: function onPageNext(event) {
+          event.preventDefault();
+          if (this.options.pageNumber + 1 > this.options.totalPages) {
+            this.options.pageNumber = 1;
+          } else {
+            this.options.pageNumber++;
+          }
+          this.updatePagination(event);
+          return false;
+        }
+      }, {
+        key: 'onPageNumber',
+        value: function onPageNumber(event) {
+          event.preventDefault();
+          if (this.options.pageNumber === +$(event.currentTarget).text()) {
+            return;
+          }
+          this.options.pageNumber = +$(event.currentTarget).text();
+          this.updatePagination(event);
+          return false;
+        }
+      }, {
+        key: 'initRow',
+        value: function initRow(item, i, data, parentDom) {
+          var _this7 = this;
+
+          var html = [];
+          var style = {};
+          var csses = [];
+          var data_ = '';
+          var attributes = {};
+          var htmlAttributes = [];
+
+          if (Utils.findIndex(this.hiddenRows, item) > -1) {
+            return;
+          }
+
+          style = Utils.calculateObjectValue(this.options, this.options.rowStyle, [item, i], style);
+
+          if (style && style.css) {
+            for (var _iterator10 = function (target) {
+              return Object.keys(target).map(function (key) {
+                return [key, target[key]];
+              });
+            }(style.css), _isArray10 = Array.isArray(_iterator10), _i12 = 0, _iterator10 = _isArray10 ? _iterator10 : _iterator10[Symbol.iterator]();;) {
+              var _ref17;
+
+              if (_isArray10) {
+                if (_i12 >= _iterator10.length) break;
+                _ref17 = _iterator10[_i12++];
+              } else {
+                _i12 = _iterator10.next();
+                if (_i12.done) break;
+                _ref17 = _i12.value;
+              }
+
+              var _ref18 = _ref17,
+                  _ref19 = _slicedToArray(_ref18, 2),
+                  key = _ref19[0],
+                  value = _ref19[1];
+
+              csses.push(key + ': ' + value);
+            }
+          }
+
+          attributes = Utils.calculateObjectValue(this.options, this.options.rowAttributes, [item, i], attributes);
+
+          if (attributes) {
+            for (var _iterator11 = function (target) {
+              return Object.keys(target).map(function (key) {
+                return [key, target[key]];
+              });
+            }(attributes), _isArray11 = Array.isArray(_iterator11), _i13 = 0, _iterator11 = _isArray11 ? _iterator11 : _iterator11[Symbol.iterator]();;) {
+              var _ref20;
+
+              if (_isArray11) {
+                if (_i13 >= _iterator11.length) break;
+                _ref20 = _iterator11[_i13++];
+              } else {
+                _i13 = _iterator11.next();
+                if (_i13.done) break;
+                _ref20 = _i13.value;
+              }
+
+              var _ref21 = _ref20,
+                  _ref22 = _slicedToArray(_ref21, 2),
+                  _key2 = _ref22[0],
+                  _value2 = _ref22[1];
+
+              htmlAttributes.push(_key2 + '="' + Utils.escapeHTML(_value2) + '"');
+            }
+          }
+
+          if (item._data && !Utils.isEmptyObject(item._data)) {
+            for (var _iterator12 = function (target) {
+              return Object.keys(target).map(function (key) {
+                return [key, target[key]];
+              });
+            }(item._data), _isArray12 = Array.isArray(_iterator12), _i14 = 0, _iterator12 = _isArray12 ? _iterator12 : _iterator12[Symbol.iterator]();;) {
+              var _ref23;
+
+              if (_isArray12) {
+                if (_i14 >= _iterator12.length) break;
+                _ref23 = _iterator12[_i14++];
+              } else {
+                _i14 = _iterator12.next();
+                if (_i14.done) break;
+                _ref23 = _i14.value;
+              }
+
+              var _ref24 = _ref23,
+                  _ref25 = _slicedToArray(_ref24, 2),
+                  k = _ref25[0],
+                  v = _ref25[1];
+
+              // ignore data-index
+              if (k === 'index') {
+                return;
+              }
+              data_ += ' data-' + k + '="' + v + '"';
+            }
+          }
+
+          html.push('<tr', Utils.sprintf(' %s', htmlAttributes.length ? htmlAttributes.join(' ') : undefined), Utils.sprintf(' id="%s"', Array.isArray(item) ? undefined : item._id), Utils.sprintf(' class="%s"', style.classes || (Array.isArray(item) ? undefined : item._class)), ' data-index="' + i + '"', Utils.sprintf(' data-uniqueid="%s"', item[this.options.uniqueId]), Utils.sprintf('%s', data_), '>');
+
+          if (this.options.cardView) {
+            html.push('<td colspan="' + this.header.fields.length + '"><div class="card-views">');
+          }
+
+          if (!this.options.cardView && this.options.detailView) {
+            html.push('<td>');
+
+            if (Utils.calculateObjectValue(null, this.options.detailFilter, [i, item])) {
+              html.push('\n            <a class="detail-icon" href="#">\n            ' + Utils.sprintf(this.constants.html.icon, this.options.iconsPrefix, this.options.icons.detailOpen) + '\n            </a>\n          ');
+            }
+
+            html.push('</td>');
+          }
+
+          this.header.fields.forEach(function (field, j) {
+            var text = '';
+            var value_ = Utils.getItemField(item, field, _this7.options.escape);
+            var value = '';
+            var type = '';
+            var cellStyle = {};
+            var id_ = '';
+            var class_ = _this7.header.classes[j];
+            var style_ = '';
+            var data_ = '';
+            var rowspan_ = '';
+            var colspan_ = '';
+            var title_ = '';
+            var column = _this7.columns[j];
+
+            if (_this7.fromHtml && typeof value_ === 'undefined') {
+              if (!column.checkbox && !column.radio) {
+                return;
+              }
+            }
+
+            if (!column.visible) {
+              return;
+            }
+
+            if (_this7.options.cardView && !column.cardVisible) {
+              return;
+            }
+
+            if (column.escape) {
+              value_ = Utils.escapeHTML(value_);
+            }
+
+            if (csses.concat([_this7.header.styles[j]]).length) {
+              style_ = ' style="' + csses.concat([_this7.header.styles[j]]).join('; ') + '"';
+            }
+            // handle td's id and class
+            if (item['_' + field + '_id']) {
+              id_ = Utils.sprintf(' id="%s"', item['_' + field + '_id']);
+            }
+            if (item['_' + field + '_class']) {
+              class_ = Utils.sprintf(' class="%s"', item['_' + field + '_class']);
+            }
+            if (item['_' + field + '_rowspan']) {
+              rowspan_ = Utils.sprintf(' rowspan="%s"', item['_' + field + '_rowspan']);
+            }
+            if (item['_' + field + '_colspan']) {
+              colspan_ = Utils.sprintf(' colspan="%s"', item['_' + field + '_colspan']);
+            }
+            if (item['_' + field + '_title']) {
+              title_ = Utils.sprintf(' title="%s"', item['_' + field + '_title']);
+            }
+            cellStyle = Utils.calculateObjectValue(_this7.header, _this7.header.cellStyles[j], [value_, item, i, field], cellStyle);
+            if (cellStyle.classes) {
+              class_ = ' class="' + cellStyle.classes + '"';
+            }
+            if (cellStyle.css) {
+              var csses_ = [];
+              for (var _iterator13 = function (target) {
+                return Object.keys(target).map(function (key) {
+                  return [key, target[key]];
                 });
-            return n ? l : ""
-        },
-        isEmptyObject: function () {
-            var e = 0 < arguments.length && void 0 !== arguments[0] ? arguments[0] : {};
-            return 0 === Object.entries(e).length && e.constructor === Object
-        },
-        isNumeric: function (e) {
-            return !isNaN(parseFloat(e)) && isFinite(e)
-        },
-        getFieldTitle: function (e, t) {
-            var o = !0,
-                a = !1,
-                n = void 0;
-            try {
-                for (var i, s, l = e[Symbol.iterator](); !(o = (i = l.next()).done); o = !0)
-                    if (s = i.value, s.field === t) return s.title
-            } catch (e) {
-                a = !0, n = e
-            } finally {
-                try {
-                    o || null == l.return || l.return()
-                } finally {
-                    if (a) throw n
+              }(cellStyle.css), _isArray13 = Array.isArray(_iterator13), _i15 = 0, _iterator13 = _isArray13 ? _iterator13 : _iterator13[Symbol.iterator]();;) {
+                var _ref26;
+
+                if (_isArray13) {
+                  if (_i15 >= _iterator13.length) break;
+                  _ref26 = _iterator13[_i15++];
+                } else {
+                  _i15 = _iterator13.next();
+                  if (_i15.done) break;
+                  _ref26 = _i15.value;
                 }
+
+                var _ref27 = _ref26,
+                    _ref28 = _slicedToArray(_ref27, 2),
+                    _key3 = _ref28[0],
+                    _value3 = _ref28[1];
+
+                csses_.push(_key3 + ': ' + _value3);
+              }
+              style_ = ' style="' + csses_.concat(_this7.header.styles[j]).join('; ') + '"';
             }
-            return ""
-        },
-        setFieldIndex: function (e) {
-            var t = 0,
-                o = [],
-                a = !0,
-                n = !1,
-                s = void 0;
-            try {
-                for (var l, c, d = e[0][Symbol.iterator](); !(a = (l = d.next()).done); a = !0) c = l.value, t += c.colspan || 1
-            } catch (e) {
-                n = !0, s = e
-            } finally {
-                try {
-                    a || null == d.return || d.return()
-                } finally {
-                    if (n) throw s
+
+            value = Utils.calculateObjectValue(column, _this7.header.formatters[j], [value_, item, i, field], value_);
+
+            if (item['_' + field + '_data'] && !Utils.isEmptyObject(item['_' + field + '_data'])) {
+              for (var _iterator14 = function (target) {
+                return Object.keys(target).map(function (key) {
+                  return [key, target[key]];
+                });
+              }(item['_' + field + '_data']), _isArray14 = Array.isArray(_iterator14), _i16 = 0, _iterator14 = _isArray14 ? _iterator14 : _iterator14[Symbol.iterator]();;) {
+                var _ref29;
+
+                if (_isArray14) {
+                  if (_i16 >= _iterator14.length) break;
+                  _ref29 = _iterator14[_i16++];
+                } else {
+                  _i16 = _iterator14.next();
+                  if (_i16.done) break;
+                  _ref29 = _i16.value;
                 }
-            }
-            for (var p = 0; p < e.length; p++) {
-                o[p] = [];
-                for (var u = 0; u < t; u++) o[p][u] = !1
-            }
-            for (var h = 0; h < e.length; h++) {
-                var g = !0,
-                    f = !1,
-                    m = void 0;
-                try {
-                    for (var b, y = e[h][Symbol.iterator](); !(g = (b = y.next()).done); g = !0) {
-                        var w = b.value,
-                            r = w.rowspan || 1,
-                            S = w.colspan || 1,
-                            v = o[h].indexOf(!1);
-                        1 === S && (w.fieldIndex = v, "undefined" == typeof w.field && (w.field = v));
-                        for (var x = 0; x < r; x++) o[h + x][v] = !0;
-                        for (var T = 0; T < S; T++) o[h][v + T] = !0
-                    }
-                } catch (e) {
-                    f = !0, m = e
-                } finally {
-                    try {
-                        g || null == y.return || y.return()
-                    } finally {
-                        if (f) throw m
-                    }
+
+                var _ref30 = _ref29,
+                    _ref31 = _slicedToArray(_ref30, 2),
+                    _k2 = _ref31[0],
+                    _v = _ref31[1];
+
+                // ignore data-index
+                if (_k2 === 'index') {
+                  return;
                 }
+                data_ += ' data-' + _k2 + '="' + _v + '"';
+              }
             }
-        },
-        getScrollBarWidth: function () {
-            if (void 0 === this.cachedWidth) {
-                var e = t("<div/>").addClass("fixed-table-scroll-inner"),
-                    o = t("<div/>").addClass("fixed-table-scroll-outer");
-                o.append(e), t("body").append(o);
-                var a = e[0].offsetWidth;
-                o.css("overflow", "scroll");
-                var n = e[0].offsetWidth;
-                a === n && (n = o[0].clientWidth), o.remove(), this.cachedWidth = a - n
-            }
-            return this.cachedWidth
-        },
-        calculateObjectValue: function (e, t, o, n) {
-            var i = t;
-            if ("string" == typeof t) {
-                var s = t.split(".");
-                if (1 < s.length) {
-                    i = window;
-                    var l = !0,
-                        c = !1,
-                        d = void 0;
-                    try {
-                        for (var p, u, h = s[Symbol.iterator](); !(l = (p = h.next()).done); l = !0) u = p.value, i = i[u]
-                    } catch (e) {
-                        c = !0, d = e
-                    } finally {
-                        try {
-                            l || null == h.return || h.return()
-                        } finally {
-                            if (c) throw d
-                        }
-                    }
-                } else i = window[t]
-            }
-            return null !== i && "object" === a(i) ? i : "function" == typeof i ? i.apply(e, o || []) : !i && "string" == typeof t && this.sprintf.apply(this, [t].concat(r(o))) ? this.sprintf.apply(this, [t].concat(r(o))) : n
-        },
-        compareObjects: function (e, t, o) {
-            var a = Object.keys(e),
-                n = Object.keys(t);
-            if (o && a.length !== n.length) return !1;
-            for (var i, s = 0, l = a; s < l.length; s++)
-                if (i = l[s], n.includes(i) && e[i] !== t[i]) return !1;
-            return !0
-        },
-        escapeHTML: function (e) {
-            return "string" == typeof e ? e.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/`/g, "&#x60;") : e
-        },
-        getRealDataAttr: function (e) {
-            for (var t = 0, o = Object.entries(e); t < o.length; t++) {
-                var a = l(o[t], 2),
-                    n = a[0],
-                    i = a[1],
-                    s = n.split(/(?=[A-Z])/).join("-").toLowerCase();
-                s !== n && (e[s] = i, delete e[n])
-            }
-            return e
-        },
-        getItemField: function (e, t, o) {
-            var a = e;
-            if ("string" != typeof t || e.hasOwnProperty(t)) return o ? this.escapeHTML(e[t]) : e[t];
-            var n = t.split("."),
-                i = !0,
-                s = !1,
-                l = void 0;
-            try {
-                for (var r, c, d = n[Symbol.iterator](); !(i = (r = d.next()).done); i = !0) c = r.value, a = a && a[c]
-            } catch (e) {
-                s = !0, l = e
-            } finally {
-                try {
-                    i || null == d.return || d.return()
-                } finally {
-                    if (s) throw l
+
+            if (column.checkbox || column.radio) {
+              type = column.checkbox ? 'checkbox' : type;
+              type = column.radio ? 'radio' : type;
+
+              var c = column['class'] || '';
+              var isChecked = value === true || value_ || value && value.checked;
+              var isDisabled = !column.checkboxEnabled || value && value.disabled;
+
+              text = [_this7.options.cardView ? '<div class="card-view ' + c + '">' : '<td class="bs-checkbox ' + c + '">','', _this7.header.formatters[j] && typeof value === 'string' ? value : '', _this7.options.cardView ? '</div>' : '</td>'].join('');
+
+              item[_this7.header.stateField] = value === true || !!value_ || value && value.checked;
+            } else {
+              value = typeof value === 'undefined' || value === null ? _this7.options.undefinedText : value;
+
+              if (_this7.options.cardView) {
+                var cardTitle = _this7.options.showHeader ? '<span class="card-view-title"' + style_ + '>' + Utils.getFieldTitle(_this7.columns, field) + '</span>' : '';
+
+                text = '<div class="card-view">' + cardTitle + '<span class="card-view-value">' + value + '</span></div>';
+
+                if (_this7.options.smartDisplay && value === '') {
+                  text = '<div class="card-view"></div>';
                 }
+              } else {
+                text = '<td' + id_ + class_ + style_ + data_ + rowspan_ + colspan_ + title_ + '>' + value + '</td>';
+              }
             }
-            return o ? this.escapeHTML(a) : a
-        },
-        isIEBrowser: function () {
-            return navigator.userAgent.includes("MSIE ") || /Trident.*rv:11\./.test(navigator.userAgent)
-        },
-        findIndex: function (e, t) {
-            var o = !0,
-                a = !1,
-                n = void 0;
-            try {
-                for (var i, s, l = e[Symbol.iterator](); !(o = (i = l.next()).done); o = !0)
-                    if (s = i.value, JSON.stringify(s) === JSON.stringify(t)) return e.indexOf(s)
-            } catch (e) {
-                a = !0, n = e
-            } finally {
-                try {
-                    o || null == l.return || l.return()
-                } finally {
-                    if (a) throw n
-                }
-            }
-            return -1
-        },
-        trToData: function (e, o) {
-            var a = this,
-                n = [],
-                i = [];
-            return o.each(function (o, s) {
-                var l = {};
-                l._id = t(s).attr("id"), l._class = t(s).attr("class"), l._data = a.getRealDataAttr(t(s).data()), t(s).find(">td,>th").each(function (n, s) {
-                    for (var r = +t(s).attr("colspan") || 1, c = +t(s).attr("rowspan") || 1, d = n; i[o] && i[o][d]; d++);
-                    for (var p = d; p < d + r; p++)
-                        for (var u = o; u < o + c; u++) i[u] || (i[u] = []), i[u][p] = !0;
-                    var h = e[d].field;
-                    l[h] = t(s).html().trim(), l["_".concat(h, "_id")] = t(s).attr("id"), l["_".concat(h, "_class")] = t(s).attr("class"), l["_".concat(h, "_rowspan")] = t(s).attr("rowspan"), l["_".concat(h, "_colspan")] = t(s).attr("colspan"), l["_".concat(h, "_title")] = t(s).attr("title"), l["_".concat(h, "_data")] = a.getRealDataAttr(t(s).data())
-                }), n.push(l)
-            }), n
-        },
-        sort: function (e, t, o, n) {
-            return ((void 0 === e || null === e) && (e = ""), (void 0 === t || null === t) && (t = ""), n && e === t && (e = e._position, t = t._position), this.isNumeric(e) && this.isNumeric(t)) ? (e = parseFloat(e), t = parseFloat(t), e < t ? -1 * o : e > t ? o : 0) : e === t ? 0 : ("string" != typeof e && (e = e.toString()), -1 === e.localeCompare(t) ? -1 * o : o)
+
+            html.push(text);
+          });
+
+          if (this.options.cardView) {
+            html.push('</div></td>');
+          }
+          html.push('</tr>');
+
+          return html.join('');
         }
-    },
-        wi = 50,
-        Si = 4,
-        vi = function () {
-            function e(t) {
-                var o = this;
-                n(this, e), this.rows = t.rows, this.scrollEl = t.scrollEl, this.contentEl = t.contentEl, this.callback = t.callback, this.itemHeight = t.itemHeight, this.cache = {}, this.scrollTop = this.scrollEl.scrollTop, this.initDOM(this.rows), this.scrollEl.scrollTop = this.scrollTop, this.lastCluster = 0;
-                var a = function () {
-                    o.lastCluster !== (o.lastCluster = o.getNum()) && (o.initDOM(o.rows), o.callback())
-                };
-                this.scrollEl.addEventListener("scroll", a, !1), this.destroy = function () {
-                    o.contentEl.innerHtml = "", o.scrollEl.removeEventListener("scroll", a, !1)
-                }
+      }, {
+        key: 'initBody',
+        value: function initBody(fixedScroll) {
+          var _this8 = this;
+
+          var data = this.getData();
+
+          this.trigger('pre-body', data);
+
+          this.$body = this.$el.find('>tbody');
+          if (!this.$body.length) {
+            this.$body = $('<tbody></tbody>').appendTo(this.$el);
+          }
+
+          // Fix #389 Bootstrap-table-flatJSON is not working
+          if (!this.options.pagination || this.options.sidePagination === 'server') {
+            this.pageFrom = 1;
+            this.pageTo = data.length;
+          }
+
+          var trFragments = $(document.createDocumentFragment());
+          var hasTr = false;
+
+          for (var i = this.pageFrom - 1; i < this.pageTo; i++) {
+            var item = data[i];
+            var tr = this.initRow(item, i, data, trFragments);
+            hasTr = hasTr || !!tr;
+            if (tr && typeof tr === 'string') {
+              trFragments.append(tr);
             }
-            return s(e, [{
-                key: "initDOM",
-                value: function (e) {
-                    "undefined" == typeof this.clusterHeight && (this.cache.data = this.contentEl.innerHTML = e[0] + e[0] + e[0], this.getRowsHeight(e));
-                    var t = this.initData(e, this.getNum()),
-                        o = t.rows.join(""),
-                        a = this.checkChanges("data", o),
-                        n = this.checkChanges("top", t.topOffset),
-                        i = this.checkChanges("bottom", t.bottomOffset),
-                        s = [];
-                    a && n ? (t.topOffset && s.push(this.getExtra("top", t.topOffset)), s.push(o), t.bottomOffset && s.push(this.getExtra("bottom", t.bottomOffset)), this.contentEl.innerHTML = s.join("")) : i && (this.contentEl.lastChild.style.height = "".concat(t.bottomOffset, "px"))
-                }
-            }, {
-                key: "getRowsHeight",
-                value: function () {
-                    if ("undefined" == typeof this.itemHeight) {
-                        var e = this.contentEl.children,
-                            t = e[S(e.length / 2)];
-                        this.itemHeight = t.offsetHeight
-                    }
-                    this.blockHeight = this.itemHeight * wi, this.clusterRows = wi * Si, this.clusterHeight = this.blockHeight * Si
-                }
-            }, {
-                key: "getNum",
-                value: function () {
-                    return this.scrollTop = this.scrollEl.scrollTop, S(this.scrollTop / (this.clusterHeight - this.blockHeight)) || 0
-                }
-            }, {
-                key: "initData",
-                value: function (e, t) {
-                    if (e.length < wi) return {
-                        topOffset: 0,
-                        bottomOffset: 0,
-                        rowsAbove: 0,
-                        rows: e
-                    };
-                    var o = y((this.clusterRows - wi) * t, 0),
-                        a = o + this.clusterRows,
-                        n = y(o * this.itemHeight, 0),
-                        s = y((e.length - a) * this.itemHeight, 0),
-                        l = [],
-                        r = o;
-                    1 > n && r++;
-                    for (var c = o; c < a; c++) e[c] && l.push(e[c]);
-                    return {
-                        topOffset: n,
-                        bottomOffset: s,
-                        rowsAbove: r,
-                        rows: l
-                    }
-                }
-            }, {
-                key: "checkChanges",
-                value: function (e, t) {
-                    var o = t !== this.cache[e];
-                    return this.cache[e] = t, o
-                }
-            }, {
-                key: "getExtra",
-                value: function (e, t) {
-                    var o = document.createElement("tr");
-                    return o.className = "virtual-scroll-".concat(e), t && (o.style.height = "".concat(t, "px")), o.outerHTML
-                }
-            }]), e
-        }(),
-        xi = function () {
-            function e(o, a) {
-                n(this, e), this.options = a, this.$el = t(o), this.$el_ = this.$el.clone(), this.timeoutId_ = 0, this.timeoutFooter_ = 0, this.init()
+          }
+
+          // show no records
+          if (!hasTr) {
+            this.$body.html('<tr class="no-records-found">' + Utils.sprintf('<td colspan="%s">%s</td>', this.$header.find('th').length, this.options.formatNoMatches()) + '</tr>');
+          } else {
+            this.$body.html(trFragments);
+          }
+
+          if (!fixedScroll) {
+            this.scrollTo(0);
+          }
+
+          // click to select by column
+          this.$body.find('> tr[data-index] > td').off('click dblclick').on('click dblclick', function (_ref32) {
+            var currentTarget = _ref32.currentTarget,
+                type = _ref32.type,
+                target = _ref32.target;
+
+            var $td = $(currentTarget);
+            var $tr = $td.parent();
+            var $cardviewArr = $(target).parents('.card-views').children();
+            var $cardviewTarget = $(target).parents('.card-view');
+            var item = _this8.data[$tr.data('index')];
+            var index = _this8.options.cardView ? $cardviewArr.index($cardviewTarget) : $td[0].cellIndex;
+            var fields = _this8.getVisibleFields();
+            var field = fields[_this8.options.detailView && !_this8.options.cardView ? index - 1 : index];
+            var column = _this8.columns[_this8.fieldsColumnsIndex[field]];
+            var value = Utils.getItemField(item, field, _this8.options.escape);
+
+            if ($td.find('.detail-icon').length) {
+              return;
             }
-            return s(e, [{
-                key: "init",
-                value: function () {
-                    this.initConstants(), this.initLocale(), this.initContainer(), this.initTable(), this.initHeader(), this.initData(), this.initHiddenRows(), this.initToolbar(), this.initPagination(), this.initBody(), this.initSearchText(), this.initServer()
-                }
-            }, {
-                key: "initConstants",
-                value: function () {
-                    var e = this.options;
-                    this.constants = mi.CONSTANTS, this.constants.theme = t.fn.bootstrapTable.theme;
-                    var o = e.buttonsPrefix ? "".concat(e.buttonsPrefix, "-") : "";
-                    this.constants.buttonsClass = [e.buttonsPrefix, o + e.buttonsClass, yi.sprintf("".concat(o, "%s"), e.iconSize)].join(" ").trim()
-                }
-            }, {
-                key: "initLocale",
-                value: function () {
-                    if (this.options.locale) {
-                        var e = t.fn.bootstrapTable.locales,
-                            o = this.options.locale.split(/-|_/);
-                        o[0] = o[0].toLowerCase(), o[1] && (o[1] = o[1].toUpperCase()), e[this.options.locale] ? t.extend(this.options, e[this.options.locale]) : e[o.join("-")] ? t.extend(this.options, e[o.join("-")]) : e[o[0]] && t.extend(this.options, e[o[0]])
-                    }
-                }
-            }, {
-                key: "initContainer",
-                value: function () {
-                    var e = ["top", "both"].includes(this.options.paginationVAlign) ? "<div class=\"fixed-table-pagination clearfix\"></div>" : "",
-                        o = ["bottom", "both"].includes(this.options.paginationVAlign) ? "<div class=\"fixed-table-pagination\"></div>" : "";
-                    this.$container = t("\n      <div class=\"bootstrap-table ".concat(this.constants.theme, "\">\n      <div class=\"fixed-table-toolbar\"></div>\n      ").concat(e, "\n      <div class=\"fixed-table-container\">\n      <div class=\"fixed-table-header\"><table></table></div>\n      <div class=\"fixed-table-body\">\n      <div class=\"fixed-table-loading\">\n      <span class=\"loading-wrap\">\n      <span class=\"loading-text\">").concat(this.options.formatLoadingMessage(), "</span>\n      <span class=\"animation-wrap\"><span class=\"animation-dot\"></span></span>\n      </span>\n      </div>\n      </div>\n      <div class=\"fixed-table-footer\"><table><thead><tr></tr></thead></table></div>\n      </div>\n      ").concat(o, "\n      </div>\n    ")), this.$container.insertAfter(this.$el), this.$tableContainer = this.$container.find(".fixed-table-container"), this.$tableHeader = this.$container.find(".fixed-table-header"), this.$tableBody = this.$container.find(".fixed-table-body"), this.$tableLoading = this.$container.find(".fixed-table-loading"), this.$tableFooter = this.$el.find("tfoot"), this.$toolbar = this.options.buttonsToolbar ? t("body").find(this.options.buttonsToolbar) : this.$container.find(".fixed-table-toolbar"), this.$pagination = this.$container.find(".fixed-table-pagination"), this.$tableBody.append(this.$el), this.$container.after("<div class=\"clearfix\"></div>"), this.$el.addClass(this.options.classes), this.$tableLoading.addClass(this.options.classes), this.options.height && (this.$tableContainer.addClass("fixed-height"), this.options.showFooter && this.$tableContainer.addClass("has-footer"), this.options.classes.split(" ").includes("table-bordered") && (this.$tableBody.append("<div class=\"fixed-table-border\"></div>"), this.$tableBorder = this.$tableBody.find(".fixed-table-border"), this.$tableLoading.addClass("fixed-table-border")), this.$tableFooter = this.$container.find(".fixed-table-footer"))
-                }
-            }, {
-                key: "initTable",
-                value: function () {
-                    var o = this,
-                        a = [];
-                    this.$header = this.$el.find(">thead"), this.$header.length ? this.options.theadClasses && this.$header.addClass(this.options.theadClasses) : this.$header = t("<thead class=\"".concat(this.options.theadClasses, "\"></thead>")).appendTo(this.$el), this.$header.find("tr").each(function (e, o) {
-                        var n = [];
-                        t(o).find("th").each(function (e, o) {
-                            "undefined" != typeof t(o).data("field") && t(o).data("field", "".concat(t(o).data("field"))), n.push(t.extend({}, {
-                                title: t(o).html(),
-                                class: t(o).attr("class"),
-                                titleTooltip: t(o).attr("title"),
-                                rowspan: t(o).attr("rowspan") ? +t(o).attr("rowspan") : void 0,
-                                colspan: t(o).attr("colspan") ? +t(o).attr("colspan") : void 0
-                            }, t(o).data()))
-                        }), a.push(n)
-                    }), Array.isArray(this.options.columns[0]) || (this.options.columns = [this.options.columns]), this.options.columns = t.extend(!0, [], a, this.options.columns), this.columns = [], this.fieldsColumnsIndex = [], yi.setFieldIndex(this.options.columns), this.options.columns.forEach(function (a, n) {
-                        a.forEach(function (a, i) {
-                            var s = t.extend({}, e.COLUMN_DEFAULTS, a);
-                            "undefined" != typeof s.fieldIndex && (o.columns[s.fieldIndex] = s, o.fieldsColumnsIndex[s.field] = s.fieldIndex), o.options.columns[n][i] = s
-                        })
-                    }), this.options.data.length || (this.options.data = yi.trToData(this.columns, this.$el.find(">tbody>tr")), [].length && (this.fromHtml = !0)), this.footerData = yi.trToData(this.columns, this.$el.find(">tfoot>tr")), this.footerData && this.$el.find("tfoot").html("<tr></tr>"), !this.options.showFooter || this.options.cardView ? this.$tableFooter.hide() : this.$tableFooter.show()
-                }
-            }, {
-                key: "initHeader",
-                value: function () {
-                    var o = this,
-                        a = {},
-                        n = [];
-                    this.header = {
-                        fields: [],
-                        styles: [],
-                        classes: [],
-                        formatters: [],
-                        detailFormatters: [],
-                        events: [],
-                        sorters: [],
-                        sortNames: [],
-                        cellStyles: [],
-                        searchables: []
-                    }, this.options.columns.forEach(function (e, t) {
-                        n.push("<tr>"), 0 === t && !o.options.cardView && o.options.detailView && o.options.detailViewIcon && n.push("<th class=\"detail\" rowspan=\"".concat(o.options.columns.length, "\">\n          <div class=\"fht-cell\"></div>\n          </th>\n        ")), e.forEach(function (e, i) {
-                            var s = yi.sprintf(" class=\"%s\"", e["class"]),
-                                l = e.widthUnit,
-                                r = b(e.width),
-                                c = yi.sprintf("text-align: %s; ", e.halign ? e.halign : e.align),
-                                d = yi.sprintf("text-align: %s; ", e.align),
-                                p = yi.sprintf("vertical-align: %s; ", e.valign);
-                            if (p += yi.sprintf("width: %s; ", (e.checkbox || e.radio) && !r ? e.showSelectTitle ? void 0 : "36px" : r ? r + l : void 0), "undefined" != typeof e.fieldIndex) {
-                                if (o.header.fields[e.fieldIndex] = e.field, o.header.styles[e.fieldIndex] = d + p, o.header.classes[e.fieldIndex] = s, o.header.formatters[e.fieldIndex] = e.formatter, o.header.detailFormatters[e.fieldIndex] = e.detailFormatter, o.header.events[e.fieldIndex] = e.events, o.header.sorters[e.fieldIndex] = e.sorter, o.header.sortNames[e.fieldIndex] = e.sortName, o.header.cellStyles[e.fieldIndex] = e.cellStyle, o.header.searchables[e.fieldIndex] = e.searchable, !e.visible) return;
-                                if (o.options.cardView && !e.cardVisible) return;
-                                a[e.field] = e
-                            }
-                            n.push("<th".concat(yi.sprintf(" title=\"%s\"", e.titleTooltip)), e.checkbox || e.radio ? yi.sprintf(" class=\"bs-checkbox %s\"", e["class"] || "") : s, yi.sprintf(" style=\"%s\"", c + p), yi.sprintf(" rowspan=\"%s\"", e.rowspan), yi.sprintf(" colspan=\"%s\"", e.colspan), yi.sprintf(" data-field=\"%s\"", e.field), 0 === i && 0 < t ? " data-not-first-th" : "", ">"), n.push(yi.sprintf("<div class=\"th-inner %s\">", o.options.sortable && e.sortable ? "sortable both" : ""));
-                            var u = o.options.escape ? yi.escapeHTML(e.title) : e.title,
-                                h = u;
-                            e.checkbox && (u = "", !o.options.singleSelect && o.options.checkboxHeader && (u = "<label><input name=\"btSelectAll\" type=\"checkbox\" /><span></span></label>"), o.header.stateField = e.field), e.radio && (u = "", o.header.stateField = e.field, o.options.singleSelect = !0), !u && e.showSelectTitle && (u += h), n.push(u), n.push("</div>"), n.push("<div class=\"fht-cell\"></div>"), n.push("</div>"), n.push("</th>")
-                        }), n.push("</tr>")
-                    }), this.$header.html(n.join("")), this.$header.find("th[data-field]").each(function (e, o) {
-                        t(o).data(a[t(o).data("field")])
-                    }), this.$container.off("click", ".th-inner").on("click", ".th-inner", function (a) {
-                        var e = t(a.currentTarget);
-                        return (!o.options.detailView || e.parent().hasClass("bs-checkbox") || e.closest(".bootstrap-table")[0] === o.$container[0]) && void (o.options.sortable && e.parent().data().sortable && o.onSort(a))
-                    }), this.$header.children().children().off("keypress").on("keypress", function (a) {
-                        if (o.options.sortable && t(a.currentTarget).data().sortable) {
-                            var e = a.keyCode || a.which;
-                            13 === e && o.onSort(a)
-                        }
-                    });
-                    var i = "resize.bootstrap-table".concat(this.$el.attr("id") || "");
-                    t(window).off(i), !this.options.showHeader || this.options.cardView ? (this.$header.hide(), this.$tableHeader.hide(), this.$tableLoading.css("top", 0)) : (this.$header.show(), this.$tableHeader.show(), this.$tableLoading.css("top", this.$header.outerHeight() + 1), this.getCaret(), t(window).on(i, function (t) {
-                        return o.resetWidth(t)
-                    })), this.$selectAll = this.$header.find("[name=\"btSelectAll\"]"), this.$selectAll.off("click").on("click", function (e) {
-                        var a = e.currentTarget,
-                            n = t(a).prop("checked");
-                        o[n ? "checkAll" : "uncheckAll"](), o.updateSelected()
-                    })
-                }
-            }, {
-                key: "initData",
-                value: function (e, t) {
-                    this.options.data = "append" === t ? this.options.data.concat(e) : "prepend" === t ? [].concat(e).concat(this.options.data) : e || this.options.data, this.data = this.options.data, "server" === this.options.sidePagination || this.initSort()
-                }
-            }, {
-                key: "initSort",
-                value: function () {
-                    var e = this,
-                        t = this.options.sortName,
-                        o = "desc" === this.options.sortOrder ? -1 : 1,
-                        n = this.header.fields.indexOf(this.options.sortName),
-                        i = 0; - 1 !== n && (this.options.sortStable && this.data.forEach(function (e, t) {
-                            e.hasOwnProperty("_position") || (e._position = t)
-                        }), this.options.customSort ? yi.calculateObjectValue(this.options, this.options.customSort, [this.options.sortName, this.options.sortOrder, this.data]) : this.data.sort(function (i, a) {
-                            e.header.sortNames[n] && (t = e.header.sortNames[n]);
-                            var s = yi.getItemField(i, t, e.options.escape),
-                                l = yi.getItemField(a, t, e.options.escape),
-                                r = yi.calculateObjectValue(e.header, e.header.sorters[n], [s, l, i, a]);
-                            return void 0 === r ? yi.sort(s, l, o, e.options.sortStable) : e.options.sortStable && 0 === r ? o * (i._position - a._position) : o * r
-                        }), void 0 !== this.options.sortClass && (clearTimeout(i), i = setTimeout(function () {
-                            e.$el.removeClass(e.options.sortClass);
-                            var t = e.$header.find("[data-field=\"".concat(e.options.sortName, "\"]")).index();
-                            e.$el.find("tr td:nth-child(".concat(t + 1, ")")).addClass(e.options.sortClass)
-                        }, 250)))
-                }
-            }, {
-                key: "onSort",
-                value: function (e) {
-                    var o = e.type,
-                        a = e.currentTarget,
-                        n = "keypress" === o ? t(a) : t(a).parent(),
-                        i = this.$header.find("th").eq(n.index());
-                    return this.$header.add(this.$header_).find("span.order").remove(), this.options.sortName === n.data("field") ? this.options.sortOrder = "asc" === this.options.sortOrder ? "desc" : "asc" : (this.options.sortName = n.data("field"), this.options.sortOrder = this.options.rememberOrder ? "asc" === n.data("order") ? "desc" : "asc" : this.columns[this.fieldsColumnsIndex[n.data("field")]].sortOrder || this.columns[this.fieldsColumnsIndex[n.data("field")]].order), this.trigger("sort", this.options.sortName, this.options.sortOrder), n.add(i).data("order", this.options.sortOrder), this.getCaret(), "server" === this.options.sidePagination ? (this.options.pageNumber = 1, void this.initServer(this.options.silentSort)) : void (this.initSort(), this.initBody())
-                }
-            }, {
-                key: "initToolbar",
-                value: function () {
-                    var e, n, s = this,
-                        l = this.options,
-                        o = [],
-                        i = 0,
-                        r = 0;
-                    if (this.$toolbar.find(".bs-bars").children().length && t("body").append(t(l.toolbar)), this.$toolbar.html(""), ("string" == typeof l.toolbar || "object" === a(l.toolbar)) && t(yi.sprintf("<div class=\"bs-bars %s-%s\"></div>", this.constants.classes.pull, l.toolbarAlign)).appendTo(this.$toolbar).append(t(l.toolbar)), o = ["<div class=\"".concat(["columns", "columns-".concat(l.buttonsAlign), this.constants.classes.buttonsGroup, "".concat(this.constants.classes.pull, "-").concat(l.buttonsAlign)].join(" "), "\">")], "string" == typeof l.icons && (l.icons = yi.calculateObjectValue(null, l.icons)), l.showPaginationSwitch && o.push("<button class=\"".concat(this.constants.buttonsClass, "\" type=\"button\" name=\"paginationSwitch\"\n        aria-label=\"Pagination Switch\" title=\"").concat(l.formatPaginationSwitch(), "\">\n        ").concat(l.showButtonIcons ? yi.sprintf(this.constants.html.icon, l.iconsPrefix, l.icons.paginationSwitchDown) : "", "\n        ").concat(l.showButtonText ? l.formatPaginationSwitchUp() : "", "\n        </button>")), l.showRefresh && o.push("<button class=\"".concat(this.constants.buttonsClass, "\" type=\"button\" name=\"refresh\"\n        aria-label=\"Refresh\" title=\"").concat(l.formatRefresh(), "\">\n        ").concat(l.showButtonIcons ? yi.sprintf(this.constants.html.icon, l.iconsPrefix, l.icons.refresh) : "", "\n        ").concat(l.showButtonText ? l.formatRefresh() : "", "\n        </button>")), l.showToggle && o.push("<button class=\"".concat(this.constants.buttonsClass, "\" type=\"button\" name=\"toggle\"\n        aria-label=\"Toggle\" title=\"").concat(l.formatToggle(), "\">\n        ").concat(l.showButtonIcons ? yi.sprintf(this.constants.html.icon, l.iconsPrefix, l.icons.toggleOff) : "", "\n        ").concat(l.showButtonText ? l.formatToggleOn() : "", "\n        </button>")), l.showFullscreen && o.push("<button class=\"".concat(this.constants.buttonsClass, "\" type=\"button\" name=\"fullscreen\"\n        aria-label=\"Fullscreen\" title=\"").concat(l.formatFullscreen(), "\">\n        ").concat(l.showButtonIcons ? yi.sprintf(this.constants.html.icon, l.iconsPrefix, l.icons.fullscreen) : "", "\n        ").concat(l.showButtonText ? l.formatFullscreen() : "", "\n        </button>")), l.showColumns) {
-                        if (o.push("<div class=\"keep-open ".concat(this.constants.classes.buttonsDropdown, "\" title=\"").concat(l.formatColumns(), "\">\n        <button class=\"").concat(this.constants.buttonsClass, " dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\"\n        aria-label=\"Columns\" title=\"").concat(l.formatColumns(), "\">\n        ").concat(l.showButtonIcons ? yi.sprintf(this.constants.html.icon, l.iconsPrefix, l.icons.columns) : "", "\n        ").concat(l.showButtonText ? l.formatColumns() : "", "\n        ").concat(this.constants.html.dropdownCaret, "\n        </button>\n        ").concat(this.constants.html.toolbarDropdown[0])), l.showColumnsToggleAll) {
-                            var c = this.getVisibleColumns().length === this.columns.length;
-                            o.push(yi.sprintf(this.constants.html.toolbarDropdownItem, yi.sprintf("<input type=\"checkbox\" class=\"toggle-all\" %s> <span>%s</span>", c ? "checked=\"checked\"" : "", l.formatColumnsToggleAll()))), o.push(this.constants.html.toolbarDropdownSeperator)
-                        }
-                        this.columns.forEach(function (e, t) {
-                            if (!(e.radio || e.checkbox) && (!l.cardView || e.cardVisible)) {
-                                var a = e.visible ? " checked=\"checked\"" : "";
-                                e.switchable && (o.push(yi.sprintf(s.constants.html.toolbarDropdownItem, yi.sprintf("<input type=\"checkbox\" data-field=\"%s\" value=\"%s\"%s> <span>%s</span>", e.field, t, a, e.title))), r++)
-                            }
-                        }), o.push(this.constants.html.toolbarDropdown[1], "</div>")
-                    }
-                    if (o.push("</div>"), (this.showToolbar || 2 < o.length) && this.$toolbar.append(o.join("")), l.showPaginationSwitch && this.$toolbar.find("button[name=\"paginationSwitch\"]").off("click").on("click", function () {
-                        return s.togglePagination()
-                    }), l.showFullscreen && this.$toolbar.find("button[name=\"fullscreen\"]").off("click").on("click", function () {
-                        return s.toggleFullscreen()
-                    }), l.showRefresh && this.$toolbar.find("button[name=\"refresh\"]").off("click").on("click", function () {
-                        return s.refresh()
-                    }), l.showToggle && this.$toolbar.find("button[name=\"toggle\"]").off("click").on("click", function () {
-                        s.toggleView()
-                    }), l.showColumns) {
-                        e = this.$toolbar.find(".keep-open");
-                        var d = e.find("input:not(\".toggle-all\")"),
-                            p = e.find("input.toggle-all");
-                        r <= l.minimumCountColumns && e.find("input").prop("disabled", !0), e.find("li, label").off("click").on("click", function (t) {
-                            t.stopImmediatePropagation()
-                        }), d.off("click").on("click", function (e) {
-                            var o = e.currentTarget,
-                                a = t(o);
-                            s._toggleColumn(a.val(), a.prop("checked"), !1), s.trigger("column-switch", a.data("field"), a.prop("checked")), p.prop("checked", d.filter(":checked").length === s.columns.length)
-                        }), p.off("click").on("click", function (e) {
-                            var o = e.currentTarget;
-                            s._toggleAllColumns(t(o).prop("checked"))
-                        })
-                    }
-                    if (l.search) {
-                        o = [];
-                        var u = yi.sprintf(this.constants.html.searchButton, l.formatSearch(), l.showButtonIcons ? yi.sprintf(this.constants.html.icon, l.iconsPrefix, l.icons.search) : "", l.showButtonText ? l.formatSearch() : ""),
-                            h = yi.sprintf(this.constants.html.searchClearButton, l.formatClearSearch(), l.showButtonIcons ? yi.sprintf(this.constants.html.icon, l.iconsPrefix, l.icons.clearSearch) : "", l.showButtonText ? l.formatClearSearch() : ""),
-                            g = "<input class=\"".concat(this.constants.classes.input).concat(yi.sprintf(" input-%s", l.iconSize), " search-input\" type=\"text\" placeholder=\"").concat(l.formatSearch(), "\">"),
-                            f = g;
-                        (l.showSearchButton || l.showSearchClearButton) && (f = yi.sprintf(this.constants.html.inputGroup, g, (l.showSearchButton ? u : "") + (l.showSearchClearButton ? h : ""))), o.push(yi.sprintf("\n        <div class=\"".concat(this.constants.classes.pull, "-").concat(l.searchAlign, " search ").concat(this.constants.classes.inputGroup, "\">\n          %s\n        </div>\n      "), f)), this.$toolbar.append(o.join(""));
-                        var m = this.$toolbar.find(".search input");
-                        n = l.showSearchButton ? this.$toolbar.find(".search button[name=search]") : m;
-                        var b = l.showSearchButton ? "click" : yi.isIEBrowser() ? "mouseup" : "keyup drop blur";
-                        n.off(b).on(b, function (e) {
-                            l.searchOnEnterKey && 13 !== e.keyCode || [37, 38, 39, 40].includes(e.keyCode) || (clearTimeout(i), i = setTimeout(function () {
-                                s.onSearch(l.showSearchButton ? {
-                                    currentTarget: m
-                                } : e)
-                            }, l.searchTimeOut))
-                        }), l.showSearchClearButton && this.$toolbar.find(".search button[name=clearSearch]").click(function () {
-                            s.resetSearch(), s.onSearch({
-                                currentTarget: s.$toolbar.find(".search input")
-                            })
-                        })
-                    }
-                }
-            }, {
-                key: "onSearch",
-                value: function () {
-                    var e = 0 < arguments.length && void 0 !== arguments[0] ? arguments[0] : {},
-                        o = e.currentTarget,
-                        a = e.firedByInitSearchText,
-                        n = !(1 < arguments.length && void 0 !== arguments[1]) || arguments[1];
-                    if (void 0 !== o && n) {
-                        var i = t(o).val().trim();
-                        if (this.options.trimOnSearch && t(o).val() !== i && t(o).val(i), this.searchText === i) return;
-                        t(o).hasClass("search-input") && (this.searchText = i, this.options.searchText = i)
-                    }
-                    a || (this.options.pageNumber = 1), this.initSearch(), a ? "client" === this.options.sidePagination && this.updatePagination() : this.updatePagination(), this.trigger("search", this.searchText)
-                }
-            }, {
-                key: "initSearch",
-                value: function () {
-                    var e = this;
-                    if (this.filterOptions = this.filterOptions || this.options.filterOptions, "server" !== this.options.sidePagination) {
-                        if (this.options.customSearch) return void (this.data = yi.calculateObjectValue(this.options, this.options.customSearch, [this.options.data, this.searchText]));
-                        var t = this.searchText && (this.options.escape ? yi.escapeHTML(this.searchText) : this.searchText).toLowerCase(),
-                            o = yi.isEmptyObject(this.filterColumns) ? null : this.filterColumns;
-                        "function" == typeof this.filterOptions.filterAlgorithm ? this.data = this.options.data.filter(function (t) {
-                            return e.filterOptions.filterAlgorithm.apply(null, [t, o])
-                        }) : "string" == typeof this.filterOptions.filterAlgorithm && (this.data = o ? this.options.data.filter(function (t) {
-                            var a = e.filterOptions.filterAlgorithm;
-                            if ("and" === a) {
-                                for (var n in o)
-                                    if (Array.isArray(o[n]) && !o[n].includes(t[n]) || !Array.isArray(o[n]) && t[n] !== o[n]) return !1;
-                            } else if ("or" === a) {
-                                var i = !1;
-                                for (var s in o) (Array.isArray(o[s]) && o[s].includes(t[s]) || !Array.isArray(o[s]) && t[s] === o[s]) && (i = !0);
-                                return i
-                            }
-                            return !0
-                        }) : this.options.data);
-                        var a = this.getVisibleFields();
-                        this.data = t ? this.data.filter(function (o, n) {
-                            for (var i = 0; i < e.header.fields.length; i++)
-                                if (e.header.searchables[i] && (!e.options.visibleSearch || -1 !== a.indexOf(e.header.fields[i]))) {
-                                    var s = yi.isNumeric(e.header.fields[i]) ? parseInt(e.header.fields[i], 10) : e.header.fields[i],
-                                        l = e.columns[e.fieldsColumnsIndex[s]],
-                                        r = void 0;
-                                    if ("string" == typeof s) {
-                                        r = o;
-                                        for (var c = s.split("."), d = 0; d < c.length; d++) null !== r[c[d]] && (r = r[c[d]])
-                                    } else r = o[s];
-                                    if (l && l.searchFormatter && (r = yi.calculateObjectValue(l, e.header.formatters[i], [r, o, n, l.field], r)), "string" == typeof r || "number" == typeof r)
-                                        if (!e.options.strictSearch) {
-                                            var p = /(?:(<=|=>|=<|>=|>|<)(?:\s+)?(\d+)?|(\d+)?(\s+)?(<=|=>|=<|>=|>|<))/gm,
-                                                u = p.exec(t),
-                                                h = !1;
-                                            if (u) {
-                                                var g = u[1] || "".concat(u[5], "l"),
-                                                    f = u[2] || u[3],
-                                                    m = parseInt(r, 10),
-                                                    b = parseInt(f, 10);
-                                                switch (g) {
-                                                    case ">":
-                                                    case "<l":
-                                                        h = m > b;
-                                                        break;
-                                                    case "<":
-                                                    case ">l":
-                                                        h = m < b;
-                                                        break;
-                                                    case "<=":
-                                                    case "=<":
-                                                    case ">=l":
-                                                    case "=>l":
-                                                        h = m <= b;
-                                                        break;
-                                                    case ">=":
-                                                    case "=>":
-                                                    case "<=l":
-                                                    case "=<l":
-                                                        h = m >= b;
-                                                        break;
-                                                    default:
-                                                }
-                                            }
-                                            if (h || "".concat(r).toLowerCase().includes(t)) return !0
-                                        } else if ("".concat(r).toLowerCase() === t) return !0
-                                }
-                            return !1
-                        }) : this.data
-                    }
-                }
-            }, {
-                key: "initPagination",
-                value: function () {
-                    var e = Math.round,
-                        t = this,
-                        a = this.options;
-                    if (!a.pagination) return void this.$pagination.hide();
-                    this.$pagination.show();
-                    var o, n, s, l, r, c, d, p = [],
-                        u = !1,
-                        h = this.getData({
-                            includeHiddenRows: !1
-                        }),
-                        g = a.pageList;
-                    if ("server" !== a.sidePagination && (a.totalRows = h.length), this.totalPages = 0, a.totalRows) {
-                        if (a.pageSize === a.formatAllRows()) a.pageSize = a.totalRows, u = !0;
-                        else if (a.pageSize === a.totalRows) {
-                            var f = "string" == typeof a.pageList ? a.pageList.replace("[", "").replace("]", "").replace(/ /g, "").toLowerCase().split(",") : a.pageList;
-                            f.includes(a.formatAllRows().toLowerCase()) && (u = !0)
-                        }
-                        this.totalPages = ~~((a.totalRows - 1) / a.pageSize) + 1, a.totalPages = this.totalPages
-                    }
-                    0 < this.totalPages && a.pageNumber > this.totalPages && (a.pageNumber = this.totalPages), this.pageFrom = (a.pageNumber - 1) * a.pageSize + 1, this.pageTo = a.pageNumber * a.pageSize, this.pageTo > a.totalRows && (this.pageTo = a.totalRows), this.options.pagination && "server" !== this.options.sidePagination && (this.options.totalNotFiltered = this.options.data.length), this.options.showExtendedPagination || (this.options.totalNotFiltered = void 0);
-                    var m = a.onlyInfoPagination ? a.formatDetailPagination(a.totalRows) : a.formatShowingRows(this.pageFrom, this.pageTo, a.totalRows, a.totalNotFiltered);
-                    if (p.push("<div class=\"".concat(this.constants.classes.pull, "-").concat(a.paginationDetailHAlign, " pagination-detail\">\n      <span class=\"pagination-info\">\n      ").concat(m, "\n      </span>")), !a.onlyInfoPagination) {
-                        p.push("<span class=\"page-list\">");
-                        var b = ["<span class=\"".concat(this.constants.classes.paginationDropdown, "\">\n        <button class=\"").concat(this.constants.buttonsClass, " dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">\n        <span class=\"page-size\">\n        ").concat(u ? a.formatAllRows() : a.pageSize, "\n        </span>\n        ").concat(this.constants.html.dropdownCaret, "\n        </button>\n        ").concat(this.constants.html.pageDropdown[0])];
-                        if ("string" == typeof a.pageList) {
-                            var y = a.pageList.replace("[", "").replace("]", "").replace(/ /g, "").split(",");
-                            g = [];
-                            var w = !0,
-                                S = !1,
-                                v = void 0;
-                            try {
-                                for (var x, k, T = y[Symbol.iterator](); !(w = (x = T.next()).done); w = !0) k = x.value, g.push(k.toLowerCase() === a.formatAllRows().toLowerCase() || ["all", "unlimited"].includes(k.toLowerCase()) ? a.formatAllRows() : +k)
-                            } catch (e) {
-                                S = !0, v = e
-                            } finally {
-                                try {
-                                    w || null == T.return || T.return()
-                                } finally {
-                                    if (S) throw v
-                                }
-                            }
-                        }
-                        g.forEach(function (e, o) {
-                            if (!a.smartDisplay || 0 === o || g[o - 1] < a.totalRows) {
-                                var n;
-                                n = u ? e === a.formatAllRows() ? t.constants.classes.dropdownActive : "" : e === a.pageSize ? t.constants.classes.dropdownActive : "", b.push(yi.sprintf(t.constants.html.pageDropdownItem, n, e))
-                            }
-                        }), b.push("".concat(this.constants.html.pageDropdown[1], "</span>")), p.push(a.formatRecordsPerPage(b.join(""))), p.push("</span></div>"), p.push("<div class=\"".concat(this.constants.classes.pull, "-").concat(a.paginationHAlign, " pagination\">"), yi.sprintf(this.constants.html.pagination[0], yi.sprintf(" pagination-%s", a.iconSize)), yi.sprintf(this.constants.html.paginationItem, " page-pre", a.formatSRPaginationPreText(), a.paginationPreText)), this.totalPages < a.paginationSuccessivelySize ? (n = 1, s = this.totalPages) : (n = a.pageNumber - a.paginationPagesBySide, s = n + 2 * a.paginationPagesBySide), a.pageNumber < a.paginationSuccessivelySize - 1 && (s = a.paginationSuccessivelySize), a.paginationSuccessivelySize > this.totalPages - n && (n = n - (a.paginationSuccessivelySize - (this.totalPages - n)) + 1), 1 > n && (n = 1), s > this.totalPages && (s = this.totalPages);
-                        var P = e(a.paginationPagesBySide / 2),
-                            O = function (e) {
-                                var o = 1 < arguments.length && void 0 !== arguments[1] ? arguments[1] : "";
-                                return yi.sprintf(t.constants.html.paginationItem, o + (e === a.pageNumber ? " ".concat(t.constants.classes.paginationActive) : ""), a.formatSRPaginationPageText(e), e)
-                            };
-                        if (1 < n) {
-                            var C = a.paginationPagesBySide;
-                            for (C >= n && (C = n - 1), o = 1; o <= C; o++) p.push(O(o));
-                            n - 1 === C + 1 ? (o = n - 1, p.push(O(o))) : n - 1 > C && (n - 2 * a.paginationPagesBySide > a.paginationPagesBySide && a.paginationUseIntermediate ? (o = e((n - P) / 2 + P), p.push(O(o, " page-intermediate"))) : p.push(yi.sprintf(this.constants.html.paginationItem, " page-first-separator disabled", "", "...")))
-                        }
-                        for (o = n; o <= s; o++) p.push(O(o));
-                        if (this.totalPages > s) {
-                            var I = this.totalPages - (a.paginationPagesBySide - 1);
-                            for (s >= I && (I = s + 1), s + 1 === I - 1 ? (o = s + 1, p.push(O(o))) : I > s + 1 && (this.totalPages - s > 2 * a.paginationPagesBySide && a.paginationUseIntermediate ? (o = e((this.totalPages - P - s) / 2 + s), p.push(O(o, " page-intermediate"))) : p.push(yi.sprintf(this.constants.html.paginationItem, " page-last-separator disabled", "", "..."))), o = I; o <= this.totalPages; o++) p.push(O(o))
-                        }
-                        p.push(yi.sprintf(this.constants.html.paginationItem, " page-next", a.formatSRPaginationNextText(), a.paginationNextText)), p.push(this.constants.html.pagination[1], "</div>")
-                    }
-                    this.$pagination.html(p.join(""));
-                    var $ = ["bottom", "both"].includes(a.paginationVAlign) ? " ".concat(this.constants.classes.dropup) : "";
-                    this.$pagination.last().find(".page-list > span").addClass($), a.onlyInfoPagination || (l = this.$pagination.find(".page-list a"), r = this.$pagination.find(".page-pre"), c = this.$pagination.find(".page-next"), d = this.$pagination.find(".page-item").not(".page-next, .page-pre, .page-last-separator, .page-first-separator"), 1 >= this.totalPages && this.$pagination.find("div.pagination").hide(), a.smartDisplay && (2 > g.length || a.totalRows <= g[0]) && this.$pagination.find("span.page-list").hide(), this.$pagination[this.getData().length ? "show" : "hide"](), !a.paginationLoop && (1 === a.pageNumber && r.addClass("disabled"), a.pageNumber === this.totalPages && c.addClass("disabled")), u && (a.pageSize = a.formatAllRows()), l.off("click").on("click", function (o) {
-                        return t.onPageListChange(o)
-                    }), r.off("click").on("click", function (o) {
-                        return t.onPagePre(o)
-                    }), c.off("click").on("click", function (o) {
-                        return t.onPageNext(o)
-                    }), d.off("click").on("click", function (o) {
-                        return t.onPageNumber(o)
-                    }))
-                }
-            }, {
-                key: "updatePagination",
-                value: function (e) {
-                    e && t(e.currentTarget).hasClass("disabled") || (!this.options.maintainMetaData && this.resetRows(), this.initPagination(), "server" === this.options.sidePagination ? this.initServer() : this.initBody(), this.trigger("page-change", this.options.pageNumber, this.options.pageSize))
-                }
-            }, {
-                key: "onPageListChange",
-                value: function (e) {
-                    e.preventDefault();
-                    var o = t(e.currentTarget);
-                    return o.parent().addClass(this.constants.classes.dropdownActive).siblings().removeClass(this.constants.classes.dropdownActive), this.options.pageSize = o.text().toUpperCase() === this.options.formatAllRows().toUpperCase() ? this.options.formatAllRows() : +o.text(), this.$toolbar.find(".page-size").text(this.options.pageSize), this.updatePagination(e), !1
-                }
-            }, {
-                key: "onPagePre",
-                value: function (e) {
-                    return e.preventDefault(), 0 == this.options.pageNumber - 1 ? this.options.pageNumber = this.options.totalPages : this.options.pageNumber-- , this.updatePagination(e), !1
-                }
-            }, {
-                key: "onPageNext",
-                value: function (e) {
-                    return e.preventDefault(), this.options.pageNumber + 1 > this.options.totalPages ? this.options.pageNumber = 1 : this.options.pageNumber++ , this.updatePagination(e), !1
-                }
-            }, {
-                key: "onPageNumber",
-                value: function (e) {
-                    if (e.preventDefault(), this.options.pageNumber !== +t(e.currentTarget).text()) return this.options.pageNumber = +t(e.currentTarget).text(), this.updatePagination(e), !1
-                }
-            }, {
-                key: "initRow",
-                value: function (e, t) {
-                    var o = this,
-                        n = [],
-                        i = {},
-                        s = [],
-                        r = "",
-                        c = {},
-                        d = [];
-                    if (!(-1 < yi.findIndex(this.hiddenRows, e))) {
-                        if (i = yi.calculateObjectValue(this.options, this.options.rowStyle, [e, t], i), i && i.css)
-                            for (var p = 0, u = Object.entries(i.css); p < u.length; p++) {
-                                var h = l(u[p], 2),
-                                    g = h[0],
-                                    f = h[1];
-                                s.push("".concat(g, ": ").concat(f))
-                            }
-                        if (c = yi.calculateObjectValue(this.options, this.options.rowAttributes, [e, t], c), c)
-                            for (var m = 0, b = Object.entries(c); m < b.length; m++) {
-                                var y = l(b[m], 2),
-                                    g = y[0],
-                                    f = y[1];
-                                d.push("".concat(g, "=\"").concat(yi.escapeHTML(f), "\""))
-                            }
-                        if (e._data && !yi.isEmptyObject(e._data))
-                            for (var w = 0, S = Object.entries(e._data); w < S.length; w++) {
-                                var x = l(S[w], 2),
-                                    T = x[0],
-                                    k = x[1];
-                                if ("index" === T) return;
-                                r += " data-".concat(T, "='").concat("object" === a(k) ? JSON.stringify(k) : k, "'")
-                            }
-                        return n.push("<tr", yi.sprintf(" %s", d.length ? d.join(" ") : void 0), yi.sprintf(" id=\"%s\"", Array.isArray(e) ? void 0 : e._id), yi.sprintf(" class=\"%s\"", i.classes || (Array.isArray(e) ? void 0 : e._class)), " data-index=\"".concat(t, "\""), yi.sprintf(" data-uniqueid=\"%s\"", yi.getItemField(e, this.options.uniqueId, !1)), yi.sprintf(" data-has-detail-view=\"%s\"", !this.options.cardView && this.options.detailView && yi.calculateObjectValue(null, this.options.detailFilter, [t, e]) ? "true" : void 0), yi.sprintf("%s", r), ">"), this.options.cardView && n.push("<td colspan=\"".concat(this.header.fields.length, "\"><div class=\"card-views\">")), !this.options.cardView && this.options.detailView && this.options.detailViewIcon && (n.push("<td>"), yi.calculateObjectValue(null, this.options.detailFilter, [t, e]) && n.push("\n          <a class=\"detail-icon\" href=\"#\">\n          ".concat(yi.sprintf(this.constants.html.icon, this.options.iconsPrefix, this.options.icons.detailOpen), "\n          </a>\n        ")), n.push("</td>")), this.header.fields.forEach(function (a, i) {
-                            var r = "",
-                                d = yi.getItemField(e, a, o.options.escape),
-                                p = "",
-                                u = "",
-                                h = {},
-                                g = "",
-                                f = o.header.classes[i],
-                                m = "",
-                                b = "",
-                                y = "",
-                                w = "",
-                                S = "",
-                                x = o.columns[i];
-                            if ((!o.fromHtml || "undefined" != typeof d || x.checkbox || x.radio) && x.visible && (!o.options.cardView || x.cardVisible)) {
-                                if (x.escape && (d = yi.escapeHTML(d)), s.concat([o.header.styles[i]]).length && (m = " style=\"".concat(s.concat([o.header.styles[i]]).join("; "), "\"")), e["_".concat(a, "_id")] && (g = yi.sprintf(" id=\"%s\"", e["_".concat(a, "_id")])), e["_".concat(a, "_class")] && (f = yi.sprintf(" class=\"%s\"", e["_".concat(a, "_class")])), e["_".concat(a, "_rowspan")] && (y = yi.sprintf(" rowspan=\"%s\"", e["_".concat(a, "_rowspan")])), e["_".concat(a, "_colspan")] && (w = yi.sprintf(" colspan=\"%s\"", e["_".concat(a, "_colspan")])), e["_".concat(a, "_title")] && (S = yi.sprintf(" title=\"%s\"", e["_".concat(a, "_title")])), h = yi.calculateObjectValue(o.header, o.header.cellStyles[i], [d, e, t, a], h), h.classes && (f = " class=\"".concat(h.classes, "\"")), h.css) {
-                                    for (var T = [], P = 0, O = Object.entries(h.css); P < O.length; P++) {
-                                        var C = l(O[P], 2),
-                                            I = C[0],
-                                            $ = C[1];
-                                        T.push("".concat(I, ": ").concat($))
-                                    }
-                                    m = " style=\"".concat(T.concat(o.header.styles[i]).join("; "), "\"")
-                                }
-                                if (p = yi.calculateObjectValue(x, o.header.formatters[i], [d, e, t, a], d), e["_".concat(a, "_data")] && !yi.isEmptyObject(e["_".concat(a, "_data")]))
-                                    for (var A = 0, E = Object.entries(e["_".concat(a, "_data")]); A < E.length; A++) {
-                                        var R = l(E[A], 2),
-                                            _ = R[0],
-                                            k = R[1];
-                                        if ("index" === _) return;
-                                        b += " data-".concat(_, "=\"").concat(k, "\"")
-                                    }
-                                if (x.checkbox || x.radio) {
-                                    u = x.checkbox ? "checkbox" : u, u = x.radio ? "radio" : u;
-                                    var v = x["class"] || "",
-                                        c = (!0 === p || d || p && p.checked) && !1 !== p,
-                                        N = !x.checkboxEnabled || p && p.disabled;
-                                    r = [o.options.cardView ? "<div class=\"card-view ".concat(v, "\">") : "<td class=\"bs-checkbox ".concat(v, "\"").concat(f).concat(m, ">"), "<label>\n            <input\n            data-index=\"".concat(t, "\"\n            name=\"").concat(o.options.selectItemName, "\"\n            type=\"").concat(u, "\"\n            ").concat(yi.sprintf("value=\"%s\"", e[o.options.idField]), "\n            ").concat(yi.sprintf("checked=\"%s\"", c ? "checked" : void 0), "\n            ").concat(yi.sprintf("disabled=\"%s\"", N ? "disabled" : void 0), " />\n            <span></span>\n            </label>"), o.header.formatters[i] && "string" == typeof p ? p : "", o.options.cardView ? "</div>" : "</td>"].join(""), e[o.header.stateField] = !0 === p || !!d || p && p.checked
-                                } else if (p = "undefined" == typeof p || null === p ? o.options.undefinedText : p, o.options.cardView) {
-                                    var D = o.options.showHeader ? "<span class=\"card-view-title\"".concat(m, ">").concat(yi.getFieldTitle(o.columns, a), "</span>") : "";
-                                    r = "<div class=\"card-view\">".concat(D, "<span class=\"card-view-value\">").concat(p, "</span></div>"), o.options.smartDisplay && "" === p && (r = "<div class=\"card-view\"></div>")
-                                } else r = "<td".concat(g).concat(f).concat(m).concat(b).concat(y).concat(w).concat(S, ">").concat(p, "</td>");
-                                n.push(r)
-                            }
-                        }), this.options.cardView && n.push("</div></td>"), n.push("</tr>"), n.join("")
-                    }
-                }
-            }, {
-                key: "initBody",
-                value: function (e) {
-                    var o = this,
-                        a = this.getData();
-                    this.trigger("pre-body", a), this.$body = this.$el.find(">tbody"), this.$body.length || (this.$body = t("<tbody></tbody>").appendTo(this.$el)), this.options.pagination && "server" !== this.options.sidePagination || (this.pageFrom = 1, this.pageTo = a.length);
-                    for (var n = [], s = t(document.createDocumentFragment()), l = !1, r = this.pageFrom - 1; r < this.pageTo; r++) {
-                        var c = a[r],
-                            d = this.initRow(c, r, a, s);
-                        l = l || !!d, d && "string" == typeof d && (this.options.virtualScroll ? n.push(d) : s.append(d))
-                    }
-                    l ? this.options.virtualScroll ? (this.virtualScroll && this.virtualScroll.destroy(), this.virtualScroll = new vi({
-                        rows: n,
-                        scrollEl: this.$tableBody[0],
-                        contentEl: this.$body[0],
-                        itemHeight: this.options.virtualScrollItemHeight,
-                        callback: function () {
-                            o.fitHeader()
-                        }
-                    })) : this.$body.html(s) : this.$body.html("<tr class=\"no-records-found\">".concat(yi.sprintf("<td colspan=\"%s\">%s</td>", this.$header.find("th").length, this.options.formatNoMatches()), "</tr>")), e || this.scrollTo(0), this.$body.find("> tr[data-index] > td").off("click dblclick").on("click dblclick", function (a) {
-                        var e = t(a.currentTarget),
-                            n = e.parent(),
-                            i = t(a.target).parents(".card-views").children(),
-                            s = t(a.target).parents(".card-view"),
-                            l = n.data("index"),
-                            r = o.data[l],
-                            c = o.options.cardView ? i.index(s) : e[0].cellIndex,
-                            d = o.getVisibleFields(),
-                            p = d[o.options.detailView && !o.options.cardView ? c - 1 : c],
-                            u = o.columns[o.fieldsColumnsIndex[p]],
-                            h = yi.getItemField(r, p, o.options.escape);
-                        if (!e.find(".detail-icon").length) {
-                            if (o.trigger("click" === a.type ? "click-cell" : "dbl-click-cell", p, h, r, e), o.trigger("click" === a.type ? "click-row" : "dbl-click-row", r, n, p), "click" === a.type && o.options.clickToSelect && u.clickToSelect && !yi.calculateObjectValue(o.options, o.options.ignoreClickToSelectOn, [a.target])) {
-                                var g = n.find(yi.sprintf("[name=\"%s\"]", o.options.selectItemName));
-                                g.length && g[0].click()
-                            }
-                            "click" === a.type && o.options.detailViewByClick && o.toggleDetailView(l, o.header.detailFormatters[c])
-                        }
-                    }).off("mousedown").on("mousedown", function (t) {
-                        o.multipleSelectRowCtrlKey = t.ctrlKey || t.metaKey, o.multipleSelectRowShiftKey = t.shiftKey
-                    }), this.$body.find("> tr[data-index] > td > .detail-icon").off("click").on("click", function (a) {
-                        return a.preventDefault(), o.toggleDetailView(t(a.currentTarget).parent().parent().data("index")), !1
-                    }), this.$selectItem = this.$body.find(yi.sprintf("[name=\"%s\"]", this.options.selectItemName)), this.$selectItem.off("click").on("click", function (a) {
-                        a.stopImmediatePropagation();
-                        var e = t(a.currentTarget);
-                        o._toggleCheck(e.prop("checked"), e.data("index"))
-                    }), this.header.events.forEach(function (e, a) {
-                        var n = e;
-                        if (n) {
-                            "string" == typeof n && (n = yi.calculateObjectValue(null, n));
-                            var i = o.header.fields[a],
-                                s = o.getVisibleFields().indexOf(i);
-                            if (-1 !== s) {
-                                o.options.detailView && !o.options.cardView && (s += 1);
-                                var l = function (e) {
-                                    if (!n.hasOwnProperty(e)) return "continue";
-                                    var a = n[e];
-                                    o.$body.find(">tr:not(.no-records-found)").each(function (n, l) {
-                                        var r = t(l),
-                                            c = r.find(o.options.cardView ? ".card-view" : "td").eq(s),
-                                            d = e.indexOf(" "),
-                                            p = e.substring(0, d),
-                                            u = e.substring(d + 1);
-                                        c.find(u).off(p).on(p, function (t) {
-                                            var e = r.data("index"),
-                                                n = o.data[e],
-                                                s = n[i];
-                                            a.apply(o, [t, s, n, e])
-                                        })
-                                    })
-                                };
-                                for (var r in n) {
-                                    var c = l(r)
-                                }
-                            }
-                        }
-                    }), this.updateSelected(), this.initFooter(), this.resetView(), "server" !== this.options.sidePagination && (this.options.totalRows = a.length), this.trigger("post-body", a)
-                }
-            }, {
-                key: "initServer",
-                value: function (e, o, a) {
-                    var n = this,
-                        i = {},
-                        s = this.header.fields.indexOf(this.options.sortName),
-                        l = {
-                            searchText: this.searchText,
-                            sortName: this.options.sortName,
-                            sortOrder: this.options.sortOrder
-                        };
-                    if ((this.header.sortNames[s] && (l.sortName = this.header.sortNames[s]), this.options.pagination && "server" === this.options.sidePagination && (l.pageSize = this.options.pageSize === this.options.formatAllRows() ? this.options.totalRows : this.options.pageSize, l.pageNumber = this.options.pageNumber), a || this.options.url || this.options.ajax) && ("limit" === this.options.queryParamsType && (l = {
-                        search: l.searchText,
-                        sort: l.sortName,
-                        order: l.sortOrder
-                    }, this.options.pagination && "server" === this.options.sidePagination && (l.offset = this.options.pageSize === this.options.formatAllRows() ? 0 : this.options.pageSize * (this.options.pageNumber - 1), l.limit = this.options.pageSize === this.options.formatAllRows() ? this.options.totalRows : this.options.pageSize, 0 === l.limit && delete l.limit)), yi.isEmptyObject(this.filterColumnsPartial) || (l.filter = JSON.stringify(this.filterColumnsPartial, null)), i = yi.calculateObjectValue(this.options, this.options.queryParams, [l], i), t.extend(i, o || {}), !1 !== i)) {
-                        e || this.showLoading();
-                        var r = t.extend({}, yi.calculateObjectValue(null, this.options.ajaxOptions), {
-                            type: this.options.method,
-                            url: a || this.options.url,
-                            data: "application/json" === this.options.contentType && "post" === this.options.method ? JSON.stringify(i) : i,
-                            cache: this.options.cache,
-                            contentType: this.options.contentType,
-                            dataType: this.options.dataType,
-                            success: function (t) {
-                                var o = yi.calculateObjectValue(n.options, n.options.responseHandler, [t], t);
-                                n.load(o), n.trigger("load-success", o), e || n.hideLoading()
-                            },
-                            error: function (t) {
-                                var o = [];
-                                "server" === n.options.sidePagination && (o = {}, o[n.options.totalField] = 0, o[n.options.dataField] = []), n.load(o), n.trigger("load-error", t.status, t), e || n.$tableLoading.hide()
-                            }
-                        });
-                        return this.options.ajax ? yi.calculateObjectValue(this, this.options.ajax, [r], null) : (this._xhr && 4 !== this._xhr.readyState && this._xhr.abort(), this._xhr = t.ajax(r)), i
-                    }
-                }
-            }, {
-                key: "initSearchText",
-                value: function () {
-                    if (this.options.search && (this.searchText = "", "" !== this.options.searchText)) {
-                        var e = this.$toolbar.find(".search input");
-                        e.val(this.options.searchText), this.onSearch({
-                            currentTarget: e,
-                            firedByInitSearchText: !0
-                        })
-                    }
-                }
-            }, {
-                key: "getCaret",
-                value: function () {
-                    var e = this;
-                    this.$header.find("th").each(function (o, a) {
-                        t(a).find(".sortable").removeClass("desc asc").addClass(t(a).data("field") === e.options.sortName ? e.options.sortOrder : "both")
-                    })
-                }
-            }, {
-                key: "updateSelected",
-                value: function () {
-                    var e = this.$selectItem.filter(":enabled").length && this.$selectItem.filter(":enabled").length === this.$selectItem.filter(":enabled").filter(":checked").length;
-                    this.$selectAll.add(this.$selectAll_).prop("checked", e), this.$selectItem.each(function (e, o) {
-                        t(o).closest("tr")[t(o).prop("checked") ? "addClass" : "removeClass"]("selected")
-                    })
-                }
-            }, {
-                key: "updateRows",
-                value: function () {
-                    var e = this;
-                    this.$selectItem.each(function (o, a) {
-                        e.data[t(a).data("index")][e.header.stateField] = t(a).prop("checked")
-                    })
-                }
-            }, {
-                key: "resetRows",
-                value: function () {
-                    var e = !0,
-                        t = !1,
-                        o = void 0;
-                    try {
-                        for (var a, n, i = this.data[Symbol.iterator](); !(e = (a = i.next()).done); e = !0) n = a.value, this.$selectAll.prop("checked", !1), this.$selectItem.prop("checked", !1), this.header.stateField && (n[this.header.stateField] = !1)
-                    } catch (e) {
-                        t = !0, o = e
-                    } finally {
-                        try {
-                            e || null == i.return || i.return()
-                        } finally {
-                            if (t) throw o
-                        }
-                    }
-                    this.initHiddenRows()
-                }
-            }, {
-                key: "trigger",
-                value: function (o) {
-                    for (var a, n = "".concat(o, ".bs.table"), i = arguments.length, s = Array(1 < i ? i - 1 : 0), l = 1; l < i; l++) s[l - 1] = arguments[l];
-                    (a = this.options)[e.EVENTS[n]].apply(a, s), this.$el.trigger(t.Event(n), s), this.options.onAll(n, s), this.$el.trigger(t.Event("all.bs.table"), [n, s])
-                }
-            }, {
-                key: "resetHeader",
-                value: function () {
-                    var e = this;
-                    clearTimeout(this.timeoutId_), this.timeoutId_ = setTimeout(function () {
-                        return e.fitHeader()
-                    }, this.$el.is(":hidden") ? 100 : 0)
-                }
-            }, {
-                key: "fitHeader",
-                value: function () {
-                    var e = this;
-                    if (this.$el.is(":hidden")) return void (this.timeoutId_ = setTimeout(function () {
-                        return e.fitHeader()
-                    }, 100));
-                    var o = this.$tableBody.get(0),
-                        a = o.scrollWidth > o.clientWidth && o.scrollHeight > o.clientHeight + this.$header.outerHeight() ? yi.getScrollBarWidth() : 0;
-                    this.$el.css("margin-top", -this.$header.outerHeight());
-                    var n = t(":focus");
-                    if (0 < n.length) {
-                        var i = n.parents("th");
-                        if (0 < i.length) {
-                            var s = i.attr("data-field");
-                            if (void 0 !== s) {
-                                var l = this.$header.find("[data-field='".concat(s, "']"));
-                                0 < l.length && l.find(":input").addClass("focus-temp")
-                            }
-                        }
-                    }
-                    this.$header_ = this.$header.clone(!0, !0), this.$selectAll_ = this.$header_.find("[name=\"btSelectAll\"]"), this.$tableHeader.css("margin-right", a).find("table").css("width", this.$el.outerWidth()).html("").attr("class", this.$el.attr("class")).append(this.$header_), this.$tableLoading.css("width", this.$el.outerWidth());
-                    var r = t(".focus-temp:visible:eq(0)");
-                    0 < r.length && (r.focus(), this.$header.find(".focus-temp").removeClass("focus-temp")), this.$header.find("th[data-field]").each(function (o, a) {
-                        e.$header_.find(yi.sprintf("th[data-field=\"%s\"]", t(a).data("field"))).data(t(a).data())
-                    });
-                    for (var c = this.getVisibleFields(), d = this.$header_.find("th"), p = this.$body.find(">tr:not(.no-records-found,.virtual-scroll-top)").eq(0); p.length && p.find(">td[colspan]:not([colspan=\"1\"])").length;) p = p.next();
-                    p.find("> *").each(function (o, a) {
-                        var n = t(a),
-                            i = o;
-                        if (e.options.detailView && e.options.detailViewIcon && !e.options.cardView) {
-                            if (0 === o) {
-                                var s = d.filter(".detail"),
-                                    l = s.width() - s.find(".fht-cell").width();
-                                s.find(".fht-cell").width(n.innerWidth() - l)
-                            }
-                            i = o - 1
-                        }
-                        if (-1 !== i) {
-                            var r = e.$header_.find(yi.sprintf("th[data-field=\"%s\"]", c[i]));
-                            1 < r.length && (r = t(d[n[0].cellIndex]));
-                            var p = r.width() - r.find(".fht-cell").width();
-                            r.find(".fht-cell").width(n.innerWidth() - p)
-                        }
-                    }), this.horizontalScroll(), this.trigger("post-header")
-                }
-            }, {
-                key: "initFooter",
-                value: function () {
-                    if (this.options.showFooter && !this.options.cardView) {
-                        var e = this.getData(),
-                            t = [];
-                        !this.options.cardView && this.options.detailView && this.options.detailViewIcon && t.push("<th class=\"detail\"><div class=\"th-inner\"></div><div class=\"fht-cell\"></div></th>");
-                        var o = !0,
-                            a = !1,
-                            n = void 0;
-                        try {
-                            for (var i, s = this.columns[Symbol.iterator](); !(o = (i = s.next()).done); o = !0) {
-                                var r = i.value,
-                                    c = "",
-                                    d = "",
-                                    p = [],
-                                    u = {},
-                                    h = yi.sprintf(" class=\"%s\"", r["class"]);
-                                if (r.visible) {
-                                    if (this.options.cardView && !r.cardVisible) return;
-                                    if (c = yi.sprintf("text-align: %s; ", r.falign ? r.falign : r.align), d = yi.sprintf("vertical-align: %s; ", r.valign), u = yi.calculateObjectValue(null, this.options.footerStyle, [r]), u && u.css)
-                                        for (var g = 0, f = Object.entries(u.css); g < f.length; g++) {
-                                            var m = l(f[g], 2),
-                                                b = m[0],
-                                                y = m[1];
-                                            p.push("".concat(b, ": ").concat(y))
-                                        }
-                                    u && u.classes && (h = yi.sprintf(" class=\"%s\"", r["class"] ? [r["class"], u.classes].join(" ") : u.classes)), t.push("<th", h, yi.sprintf(" style=\"%s\"", c + d + p.concat().join("; ")), ">"), t.push("<div class=\"th-inner\">"), t.push(yi.calculateObjectValue(r, r.footerFormatter, [e], this.footerData[0] && this.footerData[0][r.field] || "")), t.push("</div>"), t.push("<div class=\"fht-cell\"></div>"), t.push("</div>"), t.push("</th>")
-                                }
-                            }
-                        } catch (e) {
-                            a = !0, n = e
-                        } finally {
-                            try {
-                                o || null == s.return || s.return()
-                            } finally {
-                                if (a) throw n
-                            }
-                        }
-                        this.$tableFooter.find("tr").html(t.join("")), this.trigger("post-footer", this.$tableFooter)
-                    }
-                }
-            }, {
-                key: "fitFooter",
-                value: function () {
-                    var e = this;
-                    if (this.$el.is(":hidden")) return void setTimeout(function () {
-                        return e.fitFooter()
-                    }, 100);
-                    var o = this.$tableBody.get(0),
-                        a = o.scrollWidth > o.clientWidth && o.scrollHeight > o.clientHeight + this.$header.outerHeight() ? yi.getScrollBarWidth() : 0;
-                    this.$tableFooter.css("margin-right", a).find("table").css("width", this.$el.outerWidth()).attr("class", this.$el.attr("class"));
-                    for (var n = this.getVisibleFields(), s = this.$tableFooter.find("th"), l = this.$body.find(">tr:first-child:not(.no-records-found)"); l.length && l.find(">td[colspan]:not([colspan=\"1\"])").length;) l = l.next();
-                    l.find("> *").each(function (o, a) {
-                        var n = t(a),
-                            i = o;
-                        if (e.options.detailView && !e.options.cardView) {
-                            if (0 === o) {
-                                var l = s.filter(".detail"),
-                                    r = l.width() - l.find(".fht-cell").width();
-                                l.find(".fht-cell").width(n.innerWidth() - r)
-                            }
-                            i = o - 1
-                        }
-                        if (-1 !== i) {
-                            var c = s.eq(o),
-                                d = c.width() - c.find(".fht-cell").width();
-                            c.find(".fht-cell").width(n.innerWidth() - d)
-                        }
-                    }), this.horizontalScroll()
-                }
-            }, {
-                key: "horizontalScroll",
-                value: function () {
-                    var e = this;
-                    this.trigger("scroll-body"), this.$tableBody.off("scroll").on("scroll", function (o) {
-                        var a = o.currentTarget;
-                        e.options.showHeader && e.options.height && e.$tableHeader.scrollLeft(t(a).scrollLeft()), e.options.showFooter && !e.options.cardView && e.$tableFooter.scrollLeft(t(a).scrollLeft())
-                    })
-                }
-            }, {
-                key: "getVisibleFields",
-                value: function () {
-                    var e = [],
-                        t = !0,
-                        o = !1,
-                        a = void 0;
-                    try {
-                        for (var n, i = this.header.fields[Symbol.iterator](); !(t = (n = i.next()).done); t = !0) {
-                            var s = n.value,
-                                l = this.columns[this.fieldsColumnsIndex[s]];
-                            l.visible && e.push(s)
-                        }
-                    } catch (e) {
-                        o = !0, a = e
-                    } finally {
-                        try {
-                            t || null == i.return || i.return()
-                        } finally {
-                            if (o) throw a
-                        }
-                    }
-                    return e
-                }
-            }, {
-                key: "initHiddenRows",
-                value: function () {
-                    this.hiddenRows = []
-                }
-            }, {
-                key: "getOptions",
-                value: function () {
-                    var e = JSON.parse(JSON.stringify(this.options));
-                    return delete e.data, e
-                }
-            }, {
-                key: "refreshOptions",
-                value: function (e) {
-                    yi.compareObjects(this.options, e, !0) || (this.options = t.extend(this.options, e), this.trigger("refresh-options", this.options), this.destroy(), this.init())
-                }
-            }, {
-                key: "getData",
-                value: function (e) {
-                    var t = this.options.data;
-                    if ((this.searchText || this.options.sortName || !yi.isEmptyObject(this.filterColumns) || !yi.isEmptyObject(this.filterColumnsPartial)) && (t = this.data), e && e.useCurrentPage && (t = t.slice(this.pageFrom - 1, this.pageTo)), e && !e.includeHiddenRows) {
-                        var o = this.getHiddenRows();
-                        t = t.filter(function (e) {
-                            return -1 === yi.findIndex(o, e)
-                        })
-                    }
-                    return t
-                }
-            }, {
-                key: "getSelections",
-                value: function () {
-                    var e = this;
-                    return this.data.filter(function (t) {
-                        return !0 === t[e.header.stateField]
-                    })
-                }
-            }, {
-                key: "getAllSelections",
-                value: function () {
-                    var e = this;
-                    return this.options.data.filter(function (t) {
-                        return !0 === t[e.header.stateField]
-                    })
-                }
-            }, {
-                key: "load",
-                value: function (e) {
-                    var t = !1,
-                        o = e;
-                    this.options.pagination && "server" === this.options.sidePagination && (this.options.totalRows = o[this.options.totalField]), this.options.pagination && "server" === this.options.sidePagination && (this.options.totalNotFiltered = o[this.options.totalNotFilteredField]), t = o.fixedScroll, o = Array.isArray(o) ? o : o[this.options.dataField], this.initData(o), this.initSearch(), this.initPagination(), this.initBody(t)
-                }
-            }, {
-                key: "append",
-                value: function (e) {
-                    this.initData(e, "append"), this.initSearch(), this.initPagination(), this.initSort(), this.initBody(!0)
-                }
-            }, {
-                key: "prepend",
-                value: function (e) {
-                    this.initData(e, "prepend"), this.initSearch(), this.initPagination(), this.initSort(), this.initBody(!0)
-                }
-            }, {
-                key: "remove",
-                value: function (e) {
-                    var t, o, a = this.options.data.length;
-                    if (e.hasOwnProperty("field") && e.hasOwnProperty("values")) {
-                        for (t = a - 1; 0 <= t; t--)(o = this.options.data[t], !!o.hasOwnProperty(e.field)) && e.values.includes(o[e.field]) && (this.options.data.splice(t, 1), "server" === this.options.sidePagination && (this.options.totalRows -= 1));
-                        a === this.options.data.length || (this.initSearch(), this.initPagination(), this.initSort(), this.initBody(!0))
-                    }
-                }
-            }, {
-                key: "removeAll",
-                value: function () {
-                    0 < this.options.data.length && (this.options.data.splice(0, this.options.data.length), this.initSearch(), this.initPagination(), this.initBody(!0))
-                }
-            }, {
-                key: "insertRow",
-                value: function (e) {
-                    e.hasOwnProperty("index") && e.hasOwnProperty("row") && (this.options.data.splice(e.index, 0, e.row), this.initSearch(), this.initPagination(), this.initSort(), this.initBody(!0))
-                }
-            }, {
-                key: "updateRow",
-                value: function (e) {
-                    var o = Array.isArray(e) ? e : [e],
-                        a = !0,
-                        n = !1,
-                        i = void 0;
-                    try {
-                        for (var s, l, r = o[Symbol.iterator](); !(a = (s = r.next()).done); a = !0)(l = s.value, l.hasOwnProperty("index") && l.hasOwnProperty("row")) && (t.extend(this.options.data[l.index], l.row), l.hasOwnProperty("replace") && l.replace ? this.options.data[l.index] = l.row : t.extend(this.options.data[l.index], l.row))
-                    } catch (e) {
-                        n = !0, i = e
-                    } finally {
-                        try {
-                            a || null == r.return || r.return()
-                        } finally {
-                            if (n) throw i
-                        }
-                    }
-                    this.initSearch(), this.initPagination(), this.initSort(), this.initBody(!0)
-                }
-            }, {
-                key: "getRowByUniqueId",
-                value: function (e) {
-                    var t, o, a, n = this.options.uniqueId,
-                        s = this.options.data.length,
-                        l = e,
-                        r = null;
-                    for (t = s - 1; 0 <= t; t--) {
-                        if (o = this.options.data[t], o.hasOwnProperty(n)) a = o[n];
-                        else if (o._data && o._data.hasOwnProperty(n)) a = o._data[n];
-                        else continue;
-                        if ("string" == typeof a ? l = l.toString() : "number" == typeof a && (+a === a && 0 == a % 1 ? l = parseInt(l) : a === +a && 0 !== a && (l = parseFloat(l))), a === l) {
-                            r = o;
-                            break
-                        }
-                    }
-                    return r
-                }
-            }, {
-                key: "updateByUniqueId",
-                value: function (e) {
-                    var o = Array.isArray(e) ? e : [e],
-                        a = !0,
-                        n = !1,
-                        i = void 0;
-                    try {
-                        for (var s, l, r = o[Symbol.iterator](); !(a = (s = r.next()).done); a = !0)
-                            if (l = s.value, l.hasOwnProperty("id") && l.hasOwnProperty("row")) {
-                                var c = this.options.data.indexOf(this.getRowByUniqueId(l.id)); - 1 !== c && (l.hasOwnProperty("replace") && l.replace ? this.options.data[c] = l.row : t.extend(this.options.data[c], l.row))
-                            }
-                    } catch (e) {
-                        n = !0, i = e
-                    } finally {
-                        try {
-                            a || null == r.return || r.return()
-                        } finally {
-                            if (n) throw i
-                        }
-                    }
-                    this.initSearch(), this.initPagination(), this.initSort(), this.initBody(!0)
-                }
-            }, {
-                key: "removeByUniqueId",
-                value: function (e) {
-                    var t = this.options.data.length,
-                        o = this.getRowByUniqueId(e);
-                    o && this.options.data.splice(this.options.data.indexOf(o), 1), t === this.options.data.length || (this.initSearch(), this.initPagination(), this.initBody(!0))
-                }
-            }, {
-                key: "updateCell",
-                value: function (e) {
-                    e.hasOwnProperty("index") && e.hasOwnProperty("field") && e.hasOwnProperty("value") && (this.data[e.index][e.field] = e.value, !1 === e.reinit || (this.initSort(), this.initBody(!0)))
-                }
-            }, {
-                key: "updateCellByUniqueId",
-                value: function (e) {
-                    var t = this;
-                    if (e.hasOwnProperty("id") && e.hasOwnProperty("field") && e.hasOwnProperty("value")) {
-                        var o = Array.isArray(e) ? e : [e];
-                        o.forEach(function (e) {
-                            var o = e.id,
-                                a = e.field,
-                                n = e.value,
-                                i = t.options.data.indexOf(t.getRowByUniqueId(o)); - 1 === i || (t.data[i][a] = n)
-                        }), !1 === e.reinit || (this.initSort(), this.initBody(!0))
-                    }
-                }
-            }, {
-                key: "showRow",
-                value: function (e) {
-                    this._toggleRow(e, !0)
-                }
-            }, {
-                key: "hideRow",
-                value: function (e) {
-                    this._toggleRow(e, !1)
-                }
-            }, {
-                key: "_toggleRow",
-                value: function (e, t) {
-                    var o;
-                    if (e.hasOwnProperty("index") ? o = this.getData()[e.index] : e.hasOwnProperty("uniqueId") && (o = this.getRowByUniqueId(e.uniqueId)), !!o) {
-                        var a = yi.findIndex(this.hiddenRows, o);
-                        t || -1 !== a ? t && -1 < a && this.hiddenRows.splice(a, 1) : this.hiddenRows.push(o), t ? this.updatePagination() : (this.initBody(!0), this.initPagination())
-                    }
-                }
-            }, {
-                key: "getHiddenRows",
-                value: function (e) {
-                    if (e) return this.initHiddenRows(), void this.initBody(!0);
-                    var t = this.getData(),
-                        o = [],
-                        a = !0,
-                        n = !1,
-                        i = void 0;
-                    try {
-                        for (var s, l, r = t[Symbol.iterator](); !(a = (s = r.next()).done); a = !0) l = s.value, this.hiddenRows.includes(l) && o.push(l)
-                    } catch (e) {
-                        n = !0, i = e
-                    } finally {
-                        try {
-                            a || null == r.return || r.return()
-                        } finally {
-                            if (n) throw i
-                        }
-                    }
-                    return this.hiddenRows = o, o
-                }
-            }, {
-                key: "showColumn",
-                value: function (e) {
-                    var t = this,
-                        o = Array.isArray(e) ? e : [e];
-                    o.forEach(function (e) {
-                        t._toggleColumn(t.fieldsColumnsIndex[e], !0, !0)
-                    })
-                }
-            }, {
-                key: "hideColumn",
-                value: function (e) {
-                    var t = this,
-                        o = Array.isArray(e) ? e : [e];
-                    o.forEach(function (e) {
-                        t._toggleColumn(t.fieldsColumnsIndex[e], !1, !0)
-                    })
-                }
-            }, {
-                key: "_toggleColumn",
-                value: function (e, t, o) {
-                    if (-1 !== e && this.columns[e].visible !== t && (this.columns[e].visible = t, this.initHeader(), this.initSearch(), this.initPagination(), this.initBody(), this.options.showColumns)) {
-                        var a = this.$toolbar.find(".keep-open input").prop("disabled", !1);
-                        o && a.filter(yi.sprintf("[value=\"%s\"]", e)).prop("checked", t), a.filter(":checked").length <= this.options.minimumCountColumns && a.filter(":checked").prop("disabled", !0)
-                    }
-                }
-            }, {
-                key: "getVisibleColumns",
-                value: function () {
-                    return this.columns.filter(function (e) {
-                        var t = e.visible;
-                        return t
-                    })
-                }
-            }, {
-                key: "getHiddenColumns",
-                value: function () {
-                    return this.columns.filter(function (e) {
-                        var t = e.visible;
-                        return !t
-                    })
-                }
-            }, {
-                key: "showAllColumns",
-                value: function () {
-                    this._toggleAllColumns(!0)
-                }
-            }, {
-                key: "hideAllColumns",
-                value: function () {
-                    this._toggleAllColumns(!1)
-                }
-            }, {
-                key: "_toggleAllColumns",
-                value: function (e) {
-                    var o = this,
-                        a = !0,
-                        n = !1,
-                        i = void 0;
-                    try {
-                        for (var s, l, r = this.columns.slice().reverse()[Symbol.iterator](); !(a = (s = r.next()).done); a = !0)
-                            if (l = s.value, l.switchable) {
-                                if (!e && this.options.showColumns && this.getVisibleColumns().length === this.options.minimumCountColumns) continue;
-                                l.visible = e
-                            }
-                    } catch (e) {
-                        n = !0, i = e
-                    } finally {
-                        try {
-                            a || null == r.return || r.return()
-                        } finally {
-                            if (n) throw i
-                        }
-                    }
-                    if (this.initHeader(), this.initSearch(), this.initPagination(), this.initBody(), this.options.showColumns) {
-                        var c = this.$toolbar.find(".keep-open input:not(\".toggle-all\")").prop("disabled", !1);
-                        e ? c.prop("checked", e) : c.get().reverse().forEach(function (a) {
-                            c.filter(":checked").length > o.options.minimumCountColumns && t(a).prop("checked", e)
-                        }), c.filter(":checked").length <= this.options.minimumCountColumns && c.filter(":checked").prop("disabled", !0)
-                    }
-                }
-            }, {
-                key: "mergeCells",
-                value: function (e) {
-                    var t, o, a = e.index,
-                        n = this.getVisibleFields().indexOf(e.field),
-                        s = e.rowspan || 1,
-                        l = e.colspan || 1,
-                        r = this.$body.find(">tr");
-                    this.options.detailView && !this.options.cardView && (n += 1);
-                    var c = r.eq(a).find(">td").eq(n);
-                    if (!(0 > a || 0 > n || a >= this.data.length)) {
-                        for (t = a; t < a + s; t++)
-                            for (o = n; o < n + l; o++) r.eq(t).find(">td").eq(o).hide();
-                        c.attr("rowspan", s).attr("colspan", l).show()
-                    }
-                }
-            }, {
-                key: "checkAll",
-                value: function () {
-                    this._toggleCheckAll(!0)
-                }
-            }, {
-                key: "uncheckAll",
-                value: function () {
-                    this._toggleCheckAll(!1)
-                }
-            }, {
-                key: "_toggleCheckAll",
-                value: function (e) {
-                    var t = this.getSelections();
-                    this.$selectAll.add(this.$selectAll_).prop("checked", e), this.$selectItem.filter(":enabled").prop("checked", e), this.updateRows();
-                    var o = this.getSelections();
-                    return e ? void this.trigger("check-all", o, t) : void this.trigger("uncheck-all", o, t)
-                }
-            }, {
-                key: "checkInvert",
-                value: function () {
-                    var e = this.$selectItem.filter(":enabled"),
-                        o = e.filter(":checked");
-                    e.each(function (e, o) {
-                        t(o).prop("checked", !t(o).prop("checked"))
-                    }), this.updateRows(), this.updateSelected(), this.trigger("uncheck-some", o), o = this.getSelections(), this.trigger("check-some", o)
-                }
-            }, {
-                key: "check",
-                value: function (e) {
-                    this._toggleCheck(!0, e)
-                }
-            }, {
-                key: "uncheck",
-                value: function (e) {
-                    this._toggleCheck(!1, e)
-                }
-            }, {
-                key: "_toggleCheck",
-                value: function (e, t) {
-                    var o = this.$selectItem.filter("[data-index=\"".concat(t, "\"]")),
-                        a = this.data[t];
-                    if (o.is(":radio") || this.options.singleSelect || this.options.multipleSelectRow && !this.multipleSelectRowCtrlKey && !this.multipleSelectRowShiftKey) {
-                        var n = !0,
-                            s = !1,
-                            l = void 0;
-                        try {
-                            for (var c, d, p = this.options.data[Symbol.iterator](); !(n = (c = p.next()).done); n = !0) d = c.value, d[this.header.stateField] = !1
-                        } catch (e) {
-                            s = !0, l = e
-                        } finally {
-                            try {
-                                n || null == p.return || p.return()
-                            } finally {
-                                if (s) throw l
-                            }
-                        }
-                        this.$selectItem.filter(":checked").not(o).prop("checked", !1)
-                    }
-                    if (a[this.header.stateField] = e, this.options.multipleSelectRow) {
-                        if (this.multipleSelectRowShiftKey && 0 <= this.multipleSelectRowLastSelectedIndex)
-                            for (var u = [this.multipleSelectRowLastSelectedIndex, t].sort(), h = u[0] + 1; h < u[1]; h++) this.data[h][this.header.stateField] = !0, this.$selectItem.filter("[data-index=\"".concat(h, "\"]")).prop("checked", !0);
-                        this.multipleSelectRowCtrlKey = !1, this.multipleSelectRowShiftKey = !1, this.multipleSelectRowLastSelectedIndex = e ? t : -1
-                    }
-                    o.prop("checked", e), this.updateSelected(), this.trigger(e ? "check" : "uncheck", this.data[t], o)
-                }
-            }, {
-                key: "checkBy",
-                value: function (e) {
-                    this._toggleCheckBy(!0, e)
-                }
-            }, {
-                key: "uncheckBy",
-                value: function (e) {
-                    this._toggleCheckBy(!1, e)
-                }
-            }, {
-                key: "_toggleCheckBy",
-                value: function (e, t) {
-                    var o = this;
-                    if (t.hasOwnProperty("field") && t.hasOwnProperty("values")) {
-                        var a = [];
-                        this.data.forEach(function (n, s) {
-                            if (!n.hasOwnProperty(t.field)) return !1;
-                            if (t.values.includes(n[t.field])) {
-                                var i = o.$selectItem.filter(":enabled").filter(yi.sprintf("[data-index=\"%s\"]", s)).prop("checked", e);
-                                n[o.header.stateField] = e, a.push(n), o.trigger(e ? "check" : "uncheck", n, i)
-                            }
-                        }), this.updateSelected(), this.trigger(e ? "check-some" : "uncheck-some", a)
-                    }
-                }
-            }, {
-                key: "refresh",
-                value: function (e) {
-                    e && e.url && (this.options.url = e.url), e && e.pageNumber && (this.options.pageNumber = e.pageNumber), e && e.pageSize && (this.options.pageSize = e.pageSize), this.trigger("refresh", this.initServer(e && e.silent, e && e.query, e && e.url))
-                }
-            }, {
-                key: "destroy",
-                value: function () {
-                    this.$el.insertBefore(this.$container), t(this.options.toolbar).insertBefore(this.$el), this.$container.next().remove(), this.$container.remove(), this.$el.html(this.$el_.html()).css("margin-top", "0").attr("class", this.$el_.attr("class") || "")
-                }
-            }, {
-                key: "resetView",
-                value: function (e) {
-                    var t = 0;
-                    if (e && e.height && (this.options.height = e.height), this.$selectAll.prop("checked", 0 < this.$selectItem.length && this.$selectItem.length === this.$selectItem.filter(":checked").length), this.$tableContainer.toggleClass("has-card-view", this.options.cardView), !this.options.cardView && this.options.showHeader && this.options.height ? (this.$tableHeader.show(), this.resetHeader(), t += this.$header.outerHeight(!0)) : (this.$tableHeader.hide(), this.trigger("post-header")), !this.options.cardView && this.options.showFooter && (this.$tableFooter.show(), this.fitFooter(), this.options.height && (t += this.$tableFooter.outerHeight(!0))), this.options.height) {
-                        var o = this.$toolbar.outerHeight(!0),
-                            a = this.$pagination.outerHeight(!0),
-                            n = this.options.height - o - a,
-                            i = this.$tableBody.find("table").outerHeight(!0);
-                        this.$tableContainer.css("height", "".concat(n, "px")), this.$tableBorder && this.$tableBorder.css("height", "".concat(n - i - t - 1, "px"))
-                    }
-                    this.options.cardView ? (this.$el.css("margin-top", "0"), this.$tableContainer.css("padding-bottom", "0"), this.$tableFooter.hide()) : (this.getCaret(), this.$tableContainer.css("padding-bottom", "".concat(t, "px"))), this.trigger("reset-view")
-                }
-            }, {
-                key: "resetWidth",
-                value: function () {
-                    this.options.showHeader && this.options.height && this.fitHeader(), this.options.showFooter && !this.options.cardView && this.fitFooter()
-                }
-            }, {
-                key: "showLoading",
-                value: function () {
-                    this.$tableLoading.css("display", "flex")
-                }
-            }, {
-                key: "hideLoading",
-                value: function () {
-                    this.$tableLoading.css("display", "none")
-                }
-            }, {
-                key: "togglePagination",
-                value: function () {
-                    this.options.pagination = !this.options.pagination;
-                    var e = this.options.showButtonIcons ? this.options.pagination ? this.options.icons.paginationSwitchDown : this.options.icons.paginationSwitchUp : "",
-                        t = this.options.showButtonText ? this.options.pagination ? this.options.formatPaginationSwitchUp() : this.options.formatPaginationSwitchDown() : "";
-                    this.$toolbar.find("button[name=\"paginationSwitch\"]").html(yi.sprintf(this.constants.html.icon, this.options.iconsPrefix, e) + " " + t), this.updatePagination()
-                }
-            }, {
-                key: "toggleFullscreen",
-                value: function () {
-                    this.$el.closest(".bootstrap-table").toggleClass("fullscreen"), this.resetView()
-                }
-            }, {
-                key: "toggleView",
-                value: function () {
-                    this.options.cardView = !this.options.cardView, this.initHeader();
-                    var e = this.options.showButtonIcons ? this.options.cardView ? this.options.icons.toggleOn : this.options.icons.toggleOff : "",
-                        t = this.options.showButtonText ? this.options.cardView ? this.options.formatToggleOff() : this.options.formatToggleOn() : "";
-                    this.$toolbar.find("button[name=\"toggle\"]").html(yi.sprintf(this.constants.html.icon, this.options.iconsPrefix, e) + " " + t), this.initBody(), this.trigger("toggle", this.options.cardView)
-                }
-            }, {
-                key: "resetSearch",
-                value: function (e) {
-                    var t = this.$toolbar.find(".search input");
-                    t.val(e || ""), this.onSearch({
-                        currentTarget: t
-                    })
-                }
-            }, {
-                key: "filterBy",
-                value: function (e, o) {
-                    this.filterOptions = yi.isEmptyObject(o) ? this.options.filterOptions : t.extend(this.options.filterOptions, o), this.filterColumns = yi.isEmptyObject(e) ? {} : e, this.options.pageNumber = 1, this.initSearch(), this.updatePagination()
-                }
-            }, {
-                key: "scrollTo",
-                value: function e(o) {
-                    if ("undefined" == typeof o) return this.$tableBody.scrollTop();
-                    var n = {
-                        unit: "px",
-                        value: 0
-                    };
-                    "object" === a(o) ? n = Object.assign(n, o) : "string" == typeof o && "bottom" === o ? n.value = this.$tableBody[0].scrollHeight : "string" == typeof o && (n.value = o);
-                    var e = n.value;
-                    "rows" === n.unit && (e = 0, this.$body.find("> tr:lt(".concat(n.value, ")")).each(function (o, a) {
-                        e += t(a).outerHeight(!0)
-                    })), this.$tableBody.scrollTop(e)
-                }
-            }, {
-                key: "getScrollPosition",
-                value: function () {
-                    return this.scrollTo()
-                }
-            }, {
-                key: "selectPage",
-                value: function (e) {
-                    0 < e && e <= this.options.totalPages && (this.options.pageNumber = e, this.updatePagination())
-                }
-            }, {
-                key: "prevPage",
-                value: function () {
-                    1 < this.options.pageNumber && (this.options.pageNumber-- , this.updatePagination())
-                }
-            }, {
-                key: "nextPage",
-                value: function () {
-                    this.options.pageNumber < this.options.totalPages && (this.options.pageNumber++ , this.updatePagination())
-                }
-            }, {
-                key: "toggleDetailView",
-                value: function (e, t) {
-                    var o = this.$body.find(yi.sprintf("> tr[data-index=\"%s\"]", e));
-                    o.next().is("tr.detail-view") ? this.collapseRow(e) : this.expandRow(e, t), this.resetView()
-                }
-            }, {
-                key: "expandRow",
-                value: function (e, t) {
-                    var o = this.data[e],
-                        a = this.$body.find(yi.sprintf("> tr[data-index=\"%s\"][data-has-detail-view]", e));
-                    if (!a.next().is("tr.detail-view")) {
-                        this.options.detailViewIcon && a.find("a.detail-icon").html(yi.sprintf(this.constants.html.icon, this.options.iconsPrefix, this.options.icons.detailClose)), a.after(yi.sprintf("<tr class=\"detail-view\"><td colspan=\"%s\"></td></tr>", a.children("td").length));
-                        var n = a.next().find("td"),
-                            i = t || this.options.detailFormatter,
-                            s = yi.calculateObjectValue(this.options, i, [e, o, n], "");
-                        1 === n.length && n.append(s), this.trigger("expand-row", e, o, n)
-                    }
-                }
-            }, {
-                key: "collapseRow",
-                value: function (e) {
-                    var t = this.data[e],
-                        o = this.$body.find(yi.sprintf("> tr[data-index=\"%s\"][data-has-detail-view]", e));
-                    o.next().is("tr.detail-view") && (this.options.detailViewIcon && o.find("a.detail-icon").html(yi.sprintf(this.constants.html.icon, this.options.iconsPrefix, this.options.icons.detailOpen)), this.trigger("collapse-row", e, t, o.next()), o.next().remove())
-                }
-            }, {
-                key: "expandAllRows",
-                value: function () {
-                    for (var e = this.$body.find("> tr[data-index][data-has-detail-view]"), o = 0; o < e.length; o++) this.expandRow(t(e[o]).data("index"))
-                }
-            }, {
-                key: "collapseAllRows",
-                value: function () {
-                    for (var e = this.$body.find("> tr[data-index][data-has-detail-view]"), o = 0; o < e.length; o++) this.collapseRow(t(e[o]).data("index"))
-                }
-            }, {
-                key: "updateColumnTitle",
-                value: function (e) {
-                    if (e.hasOwnProperty("field") && e.hasOwnProperty("title") && (this.columns[this.fieldsColumnsIndex[e.field]].title = this.options.escape ? yi.escapeHTML(e.title) : e.title, this.columns[this.fieldsColumnsIndex[e.field]].visible)) {
-                        var o = void 0 === this.options.height ? this.$header : this.$tableHeader;
-                        o.find("th[data-field]").each(function (o, a) {
-                            if (t(a).data("field") === e.field) return t(t(a).find(".th-inner")[0]).text(e.title), !1
-                        })
-                    }
-                }
-            }, {
-                key: "updateFormatText",
-                value: function (e, t) {
-                    /^format/.test(e) && this.options[e] && ("string" == typeof t ? this.options[e] = function () {
-                        return t
-                    } : "function" == typeof t && (this.options[e] = t), this.initToolbar(), this.initPagination(), this.initBody())
-                }
-            }]), e
-        }();
-    return xi.VERSION = mi.VERSION, xi.DEFAULTS = mi.DEFAULTS, xi.LOCALES = mi.LOCALES, xi.COLUMN_DEFAULTS = mi.COLUMN_DEFAULTS, xi.METHODS = mi.METHODS, xi.EVENTS = mi.EVENTS, t.BootstrapTable = xi, t.fn.bootstrapTable = function (e) {
-        for (var o = arguments.length, n = Array(1 < o ? o - 1 : 0), i = 1; i < o; i++) n[i - 1] = arguments[i];
-        var s;
-        return this.each(function (o, i) {
-            var l = t(i).data("bootstrap.table"),
-                r = t.extend({}, xi.DEFAULTS, t(i).data(), "object" === a(e) && e);
-            if ("string" == typeof e) {
-                var c;
-                if (!mi.METHODS.includes(e)) throw new Error("Unknown method: ".concat(e));
-                if (!l) return;
-                s = (c = l)[e].apply(c, n), "destroy" == e && t(i).removeData("bootstrap.table")
+
+            _this8.trigger(type === 'click' ? 'click-cell' : 'dbl-click-cell', field, value, item, $td);
+            _this8.trigger(type === 'click' ? 'click-row' : 'dbl-click-row', item, $tr, field);
+
+            // if click to select - then trigger the checkbox/radio click
+            //if (type === 'click' && _this8.options.clickToSelect && column.clickToSelect && !Utils.calculateObjectValue(_this8.options, _this8.options.ignoreClickToSelectOn, [target])) {
+            //  var $selectItem = $tr.find(Utils.sprintf('[name="%s"]', _this8.options.selectItemName));
+            //  if ($selectItem.length) {
+            //    $selectItem[0].click(); // #144: .trigger('click') bug
+            //  }
+            //}
+          });
+
+          this.$body.find('> tr[data-index] > td > .detail-icon').off('click').on('click', function (e) {
+            e.preventDefault();
+
+            var $this = $(e.currentTarget); // Fix #980 Detail view, when searching, returns wrong row
+            var $tr = $this.parent().parent();
+            var index = $tr.data('index');
+            var row = data[index];
+
+            // remove and update
+            if ($tr.next().is('tr.detail-view')) {
+              $this.html(Utils.sprintf(_this8.constants.html.icon, _this8.options.iconsPrefix, _this8.options.icons.detailOpen));
+              _this8.trigger('collapse-row', index, row, $tr.next());
+              $tr.next().remove();
+            } else {
+              $this.html(Utils.sprintf(_this8.constants.html.icon, _this8.options.iconsPrefix, _this8.options.icons.detailClose));
+              $tr.after(Utils.sprintf('<tr class="detail-view"><td colspan="%s"></td></tr>', $tr.children('td').length));
+              var $element = $tr.next().find('td');
+              var content = Utils.calculateObjectValue(_this8.options, _this8.options.detailFormatter, [index, row, $element], '');
+              if ($element.length === 1) {
+                $element.append(content);
+              }
+              _this8.trigger('expand-row', index, row, $element);
             }
-            l || t(i).data("bootstrap.table", l = new t.BootstrapTable(i, r))
-        }), "undefined" == typeof s ? this : s
-    }, t.fn.bootstrapTable.Constructor = xi, t.fn.bootstrapTable.theme = mi.THEME, t.fn.bootstrapTable.VERSION = mi.VERSION, t.fn.bootstrapTable.defaults = xi.DEFAULTS, t.fn.bootstrapTable.columnDefaults = xi.COLUMN_DEFAULTS, t.fn.bootstrapTable.events = xi.EVENTS, t.fn.bootstrapTable.locales = xi.LOCALES, t.fn.bootstrapTable.methods = xi.METHODS, t.fn.bootstrapTable.utils = yi, t(function () {
-        t("[data-toggle=\"table\"]").bootstrapTable()
-    }), xi
+            _this8.resetView();
+            return false;
+          });
+
+          this.$selectItem = this.$body.find(Utils.sprintf('[name="%s"]', this.options.selectItemName));
+          this.$selectItem.off('click').on('click', function (e) {
+            e.stopImmediatePropagation();
+
+            var $this = $(e.currentTarget);
+            _this8.check_($this.prop('checked'), $this.data('index'));
+          });
+
+          this.header.events.forEach(function (_events, i) {
+            var events = _events;
+            if (!events) {
+              return;
+            }
+            // fix bug, if events is defined with namespace
+            if (typeof events === 'string') {
+              events = Utils.calculateObjectValue(null, events);
+            }
+
+            var field = _this8.header.fields[i];
+            var fieldIndex = _this8.getVisibleFields().indexOf(field);
+
+            if (fieldIndex === -1) {
+              return;
+            }
+
+            if (_this8.options.detailView && !_this8.options.cardView) {
+              fieldIndex += 1;
+            }
+
+            var _loop = function _loop() {
+              if (_isArray15) {
+                if (_i17 >= _iterator15.length) return 'break';
+                _ref33 = _iterator15[_i17++];
+              } else {
+                _i17 = _iterator15.next();
+                if (_i17.done) return 'break';
+                _ref33 = _i17.value;
+              }
+
+              var _ref34 = _ref33,
+                  _ref35 = _slicedToArray(_ref34, 2),
+                  key = _ref35[0],
+                  event = _ref35[1];
+
+              _this8.$body.find('>tr:not(.no-records-found)').each(function (i, tr) {
+                var $tr = $(tr);
+                var $td = $tr.find(_this8.options.cardView ? '.card-view' : 'td').eq(fieldIndex);
+                var index = key.indexOf(' ');
+                var name = key.substring(0, index);
+                var el = key.substring(index + 1);
+
+                $td.find(el).off(name).on(name, function (e) {
+                  var index = $tr.data('index');
+                  var row = _this8.data[index];
+                  var value = row[field];
+
+                  event.apply(_this8, [e, value, row, index]);
+                });
+              });
+            };
+
+            for (var _iterator15 = function (target) {
+              return Object.keys(target).map(function (key) {
+                return [key, target[key]];
+              });
+            }(events), _isArray15 = Array.isArray(_iterator15), _i17 = 0, _iterator15 = _isArray15 ? _iterator15 : _iterator15[Symbol.iterator]();;) {
+              var _ref33;
+
+              var _ret = _loop();
+
+              if (_ret === 'break') break;
+            }
+          });
+
+          this.updateSelected();
+          this.resetView();
+
+          this.trigger('post-body', data);
+        }
+      }, {
+        key: 'initServer',
+        value: function initServer(silent, query, url) {
+          var _this9 = this;
+
+          var data = {};
+          var index = this.header.fields.indexOf(this.options.sortName);
+
+          var params = {
+            searchText: this.searchText,
+            sortName: this.options.sortName,
+            sortOrder: this.options.sortOrder
+          };
+
+          if (this.header.sortNames[index]) {
+            params.sortName = this.header.sortNames[index];
+          }
+
+          if (this.options.pagination && this.options.sidePagination === 'server') {
+            params.pageSize = this.options.pageSize === this.options.formatAllRows() ? this.options.totalRows : this.options.pageSize;
+            params.pageNumber = this.options.pageNumber;
+          }
+
+          if (!(url || this.options.url) && !this.options.ajax) {
+            return;
+          }
+
+          if (this.options.queryParamsType === 'limit') {
+            params = {
+              search: params.searchText,
+              sort: params.sortName,
+              order: params.sortOrder
+            };
+
+            if (this.options.pagination && this.options.sidePagination === 'server') {
+              params.offset = this.options.pageSize === this.options.formatAllRows() ? 0 : this.options.pageSize * (this.options.pageNumber - 1);
+              params.limit = this.options.pageSize === this.options.formatAllRows() ? this.options.totalRows : this.options.pageSize;
+              if (params.limit === 0) {
+                delete params.limit;
+              }
+            }
+          }
+
+          if (!Utils.isEmptyObject(this.filterColumnsPartial)) {
+            params.filter = JSON.stringify(this.filterColumnsPartial, null);
+          }
+
+          data = Utils.calculateObjectValue(this.options, this.options.queryParams, [params], data);
+
+          $.extend(data, query || {});
+
+          // false to stop request
+          if (data === false) {
+            return;
+          }
+
+          if (!silent) {
+            this.showLoading();
+          }
+          var request = $.extend({}, Utils.calculateObjectValue(null, this.options.ajaxOptions), {
+            type: this.options.method,
+            url: url || this.options.url,
+            data: this.options.contentType === 'application/json' && this.options.method === 'post' ? JSON.stringify(data) : data,
+            cache: this.options.cache,
+            contentType: this.options.contentType,
+            dataType: this.options.dataType,
+            success: function success(_res) {
+              var res = Utils.calculateObjectValue(_this9.options, _this9.options.responseHandler, [_res], _res);
+
+              _this9.load(res);
+              _this9.trigger('load-success', res);
+              if (!silent) {
+                _this9.hideLoading();
+              }
+            },
+            error: function error(jqXHR) {
+              var data = [];
+              if (_this9.options.sidePagination === 'server') {
+                data = {};
+                data[_this9.options.totalField] = 0;
+                data[_this9.options.dataField] = [];
+              }
+              _this9.load(data);
+              _this9.trigger('load-error', jqXHR.status, jqXHR);
+              if (!silent) _this9.$tableLoading.hide();
+            }
+          });
+
+          if (this.options.ajax) {
+            Utils.calculateObjectValue(this, this.options.ajax, [request], null);
+          } else {
+            if (this._xhr && this._xhr.readyState !== 4) {
+              this._xhr.abort();
+            }
+            this._xhr = $.ajax(request);
+          }
+
+          return data;
+        }
+      }, {
+        key: 'initSearchText',
+        value: function initSearchText() {
+          if (this.options.search) {
+            this.searchText = '';
+            if (this.options.searchText !== '') {
+              var $search = this.$toolbar.find('.search input');
+              $search.val(this.options.searchText);
+              this.onSearch({ currentTarget: $search, firedByInitSearchText: true });
+            }
+          }
+        }
+      }, {
+        key: 'getCaret',
+        value: function getCaret() {
+          var _this10 = this;
+
+          this.$header.find('th').each(function (i, th) {
+            $(th).find('.sortable').removeClass('desc asc').addClass($(th).data('field') === _this10.options.sortName ? _this10.options.sortOrder : 'both');
+          });
+        }
+      }, {
+        key: 'updateSelected',
+        value: function updateSelected() {
+          var checkAll = this.$selectItem.filter(':enabled').length && this.$selectItem.filter(':enabled').length === this.$selectItem.filter(':enabled').filter(':checked').length;
+
+          this.$selectAll.add(this.$selectAll_).prop('checked', checkAll);
+
+          this.$selectItem.each(function (i, el) {
+            $(el).closest('tr')[$(el).prop('checked') ? 'addClass' : 'removeClass']('selected');
+          });
+        }
+      }, {
+        key: 'updateRows',
+        value: function updateRows() {
+          var _this11 = this;
+
+          this.$selectItem.each(function (i, el) {
+            _this11.data[$(el).data('index')][_this11.header.stateField] = $(el).prop('checked');
+          });
+        }
+      }, {
+        key: 'resetRows',
+        value: function resetRows() {
+          for (var _iterator16 = this.data, _isArray16 = Array.isArray(_iterator16), _i18 = 0, _iterator16 = _isArray16 ? _iterator16 : _iterator16[Symbol.iterator]();;) {
+            var _ref36;
+
+            if (_isArray16) {
+              if (_i18 >= _iterator16.length) break;
+              _ref36 = _iterator16[_i18++];
+            } else {
+              _i18 = _iterator16.next();
+              if (_i18.done) break;
+              _ref36 = _i18.value;
+            }
+
+            var row = _ref36;
+
+            this.$selectAll.prop('checked', false);
+            this.$selectItem.prop('checked', false);
+            if (this.header.stateField) {
+              row[this.header.stateField] = false;
+            }
+          }
+          this.initHiddenRows();
+        }
+      }, {
+        key: 'trigger',
+        value: function trigger(_name) {
+          var _options;
+
+          var name = _name + '.bs.table';
+
+          for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key4 = 1; _key4 < _len2; _key4++) {
+            args[_key4 - 1] = arguments[_key4];
+          }
+
+          (_options = this.options)[BootstrapTable.EVENTS[name]].apply(_options, args);
+          this.$el.trigger($.Event(name), args);
+
+          this.options.onAll(name, args);
+          this.$el.trigger($.Event('all.bs.table'), [name, args]);
+        }
+      }, {
+        key: 'resetHeader',
+        value: function resetHeader() {
+          var _this12 = this;
+
+          // fix #61: the hidden table reset header bug.
+          // fix bug: get $el.css('width') error sometime (height = 500)
+          clearTimeout(this.timeoutId_);
+          this.timeoutId_ = setTimeout(function () {
+            return _this12.fitHeader();
+          }, this.$el.is(':hidden') ? 100 : 0);
+        }
+      }, {
+        key: 'fitHeader',
+        value: function fitHeader() {
+          var _this13 = this;
+
+          if (this.$el.is(':hidden')) {
+            this.timeoutId_ = setTimeout(function () {
+              return _this13.fitHeader();
+            }, 100);
+            return;
+          }
+
+          var fixedBody = this.$tableBody.get(0);
+          var scrollWidth = fixedBody.scrollWidth > fixedBody.clientWidth && fixedBody.scrollHeight > fixedBody.clientHeight + this.$header.outerHeight() ? Utils.getScrollBarWidth() : 0;
+
+          this.$el.css('margin-top', -this.$header.outerHeight());
+
+          var focused = $(':focus');
+          if (focused.length > 0) {
+            var $th = focused.parents('th');
+            if ($th.length > 0) {
+              var dataField = $th.attr('data-field');
+              if (dataField !== undefined) {
+                var $headerTh = this.$header.find('[data-field=\'' + dataField + '\']');
+                if ($headerTh.length > 0) {
+                  $headerTh.find(':input').addClass('focus-temp');
+                }
+              }
+            }
+          }
+
+          this.$header_ = this.$header.clone(true, true);
+          this.$selectAll_ = this.$header_.find('[name="btSelectAll"]');
+          this.$tableHeader.css('margin-right', scrollWidth).find('table').css('width', this.$el.outerWidth()).html('').attr('class', this.$el.attr('class')).append(this.$header_);
+
+          this.$tableLoading.css('width', this.$el.outerWidth());
+
+          var focusedTemp = $('.focus-temp:visible:eq(0)');
+          if (focusedTemp.length > 0) {
+            focusedTemp.focus();
+            this.$header.find('.focus-temp').removeClass('focus-temp');
+          }
+
+          // fix bug: $.data() is not working as expected after $.append()
+          this.$header.find('th[data-field]').each(function (i, el) {
+            _this13.$header_.find(Utils.sprintf('th[data-field="%s"]', $(el).data('field'))).data($(el).data());
+          });
+
+          var visibleFields = this.getVisibleFields();
+          var $ths = this.$header_.find('th');
+          var $tr = this.$body.find('>tr:first-child:not(.no-records-found)');
+
+          while ($tr.length && $tr.find('>td[colspan]:not([colspan="1"])').length) {
+            $tr = $tr.next();
+          }
+
+          $tr.find('> *').each(function (i, el) {
+            var $this = $(el);
+            var index = i;
+
+            if (_this13.options.detailView && !_this13.options.cardView) {
+              if (i === 0) {
+                var $thDetail = $ths.filter('.detail');
+                var _zoomWidth = $thDetail.width() - $thDetail.find('.fht-cell').width();
+                $thDetail.find('.fht-cell').width($this.innerWidth() - _zoomWidth);
+              }
+              index = i - 1;
+            }
+
+            if (index === -1) {
+              return;
+            }
+
+            var $th = _this13.$header_.find(Utils.sprintf('th[data-field="%s"]', visibleFields[index]));
+            if ($th.length > 1) {
+              $th = $($ths[$this[0].cellIndex]);
+            }
+
+            var zoomWidth = $th.width() - $th.find('.fht-cell').width();
+            $th.find('.fht-cell').width($this.innerWidth() - zoomWidth);
+          });
+
+          this.horizontalScroll();
+          this.trigger('post-header');
+        }
+      }, {
+        key: 'resetFooter',
+        value: function resetFooter() {
+          var data = this.getData();
+          var html = [];
+
+          if (!this.options.showFooter || this.options.cardView) {
+            // do nothing
+            return;
+          }
+
+          if (!this.options.cardView && this.options.detailView) {
+            html.push('<th class="detail"><div class="th-inner"></div><div class="fht-cell"></div></th>');
+          }
+
+          for (var _iterator17 = this.columns, _isArray17 = Array.isArray(_iterator17), _i19 = 0, _iterator17 = _isArray17 ? _iterator17 : _iterator17[Symbol.iterator]();;) {
+            var _ref37;
+
+            if (_isArray17) {
+              if (_i19 >= _iterator17.length) break;
+              _ref37 = _iterator17[_i19++];
+            } else {
+              _i19 = _iterator17.next();
+              if (_i19.done) break;
+              _ref37 = _i19.value;
+            }
+
+            var column = _ref37;
+
+            var falign = '';
+
+            var valign = '';
+            var csses = [];
+            var style = {};
+            var class_ = Utils.sprintf(' class="%s"', column['class']);
+
+            if (!column.visible) {
+              continue;
+            }
+
+            if (this.options.cardView && !column.cardVisible) {
+              return;
+            }
+
+            falign = Utils.sprintf('text-align: %s; ', column.falign ? column.falign : column.align);
+            valign = Utils.sprintf('vertical-align: %s; ', column.valign);
+
+            style = Utils.calculateObjectValue(null, this.options.footerStyle, [column]);
+
+            if (style && style.css) {
+              for (var _iterator18 = function (target) {
+                return Object.keys(target).map(function (key) {
+                  return [key, target[key]];
+                });
+              }(style.css), _isArray18 = Array.isArray(_iterator18), _i20 = 0, _iterator18 = _isArray18 ? _iterator18 : _iterator18[Symbol.iterator]();;) {
+                var _ref38;
+
+                if (_isArray18) {
+                  if (_i20 >= _iterator18.length) break;
+                  _ref38 = _iterator18[_i20++];
+                } else {
+                  _i20 = _iterator18.next();
+                  if (_i20.done) break;
+                  _ref38 = _i20.value;
+                }
+
+                var _ref39 = _ref38,
+                    _ref40 = _slicedToArray(_ref39, 2),
+                    _key5 = _ref40[0],
+                    value = _ref40[1];
+
+                csses.push(_key5 + ': ' + value);
+              }
+            }
+            if (style && style.classes) {
+              class_ = Utils.sprintf(' class="%s"', column['class'] ? [column['class'], style.classes].join(' ') : style.classes);
+            }
+
+            html.push('<th', class_, Utils.sprintf(' style="%s"', falign + valign + csses.concat().join('; ')), '>');
+            html.push('<div class="th-inner">');
+
+            html.push(Utils.calculateObjectValue(column, column.footerFormatter, [data], ''));
+
+            html.push('</div>');
+            html.push('<div class="fht-cell"></div>');
+            html.push('</div>');
+            html.push('</th>');
+          }
+
+          this.$tableFooter.find('tr').html(html.join(''));
+          this.$tableFooter.show();
+          this.fitFooter();
+        }
+      }, {
+        key: 'fitFooter',
+        value: function fitFooter() {
+          var _this14 = this;
+
+          if (this.$el.is(':hidden')) {
+            setTimeout(function () {
+              return _this14.fitFooter();
+            }, 100);
+            return;
+          }
+
+          var fixedBody = this.$tableBody.get(0);
+          var scrollWidth = fixedBody.scrollWidth > fixedBody.clientWidth && fixedBody.scrollHeight > fixedBody.clientHeight + this.$header.outerHeight() ? Utils.getScrollBarWidth() : 0;
+
+          this.$tableFooter.css('margin-right', scrollWidth).find('table').css('width', this.$el.outerWidth()).attr('class', this.$el.attr('class'));
+
+          var visibleFields = this.getVisibleFields();
+          var $ths = this.$tableFooter.find('th');
+          var $tr = this.$body.find('>tr:first-child:not(.no-records-found)');
+
+          while ($tr.length && $tr.find('>td[colspan]:not([colspan="1"])').length) {
+            $tr = $tr.next();
+          }
+
+          $tr.find('> *').each(function (i, el) {
+            var $this = $(el);
+            var index = i;
+
+            if (_this14.options.detailView && !_this14.options.cardView) {
+              if (i === 0) {
+                var $thDetail = $ths.filter('.detail');
+                var _zoomWidth2 = $thDetail.width() - $thDetail.find('.fht-cell').width();
+                $thDetail.find('.fht-cell').width($this.innerWidth() - _zoomWidth2);
+              }
+              index = i - 1;
+            }
+
+            if (index === -1) {
+              return;
+            }
+
+            var $th = $ths.eq(i);
+            var zoomWidth = $th.width() - $th.find('.fht-cell').width();
+            $th.find('.fht-cell').width($this.innerWidth() - zoomWidth);
+          });
+
+          this.horizontalScroll();
+        }
+      }, {
+        key: 'horizontalScroll',
+        value: function horizontalScroll() {
+          var _this15 = this;
+
+          // horizontal scroll event
+          // TODO: it's probably better improving the layout than binding to scroll event
+
+          this.trigger('scroll-body');
+          this.$tableBody.off('scroll').on('scroll', function (_ref41) {
+            var currentTarget = _ref41.currentTarget;
+
+            if (_this15.options.showHeader && _this15.options.height) {
+              _this15.$tableHeader.scrollLeft($(currentTarget).scrollLeft());
+            }
+
+            if (_this15.options.showFooter && !_this15.options.cardView) {
+              _this15.$tableFooter.scrollLeft($(currentTarget).scrollLeft());
+            }
+          });
+        }
+      }, {
+        key: 'toggleColumn',
+        value: function toggleColumn(index, checked, needUpdate) {
+          if (index === -1) {
+            return;
+          }
+          this.columns[index].visible = checked;
+          this.initHeader();
+          this.initSearch();
+          this.initPagination();
+          this.initBody();
+
+          if (this.options.showColumns) {
+            var $items = this.$toolbar.find('.keep-open input').prop('disabled', false);
+
+            if (needUpdate) {
+              $items.filter(Utils.sprintf('[value="%s"]', index)).prop('checked', checked);
+            }
+
+            if ($items.filter(':checked').length <= this.options.minimumCountColumns) {
+              $items.filter(':checked').prop('disabled', true);
+            }
+          }
+        }
+      }, {
+        key: 'getVisibleFields',
+        value: function getVisibleFields() {
+          var visibleFields = [];
+
+          for (var _iterator19 = this.header.fields, _isArray19 = Array.isArray(_iterator19), _i21 = 0, _iterator19 = _isArray19 ? _iterator19 : _iterator19[Symbol.iterator]();;) {
+            var _ref42;
+
+            if (_isArray19) {
+              if (_i21 >= _iterator19.length) break;
+              _ref42 = _iterator19[_i21++];
+            } else {
+              _i21 = _iterator19.next();
+              if (_i21.done) break;
+              _ref42 = _i21.value;
+            }
+
+            var field = _ref42;
+
+            var column = this.columns[this.fieldsColumnsIndex[field]];
+
+            if (!column.visible) {
+              continue;
+            }
+            visibleFields.push(field);
+          }
+          return visibleFields;
+        }
+      }, {
+        key: 'resetView',
+        value: function resetView(params) {
+          var padding = 0;
+
+          if (params && params.height) {
+            this.options.height = params.height;
+          }
+
+          this.$selectAll.prop('checked', this.$selectItem.length > 0 && this.$selectItem.length === this.$selectItem.filter(':checked').length);
+
+          if (this.options.cardView) {
+            // remove the element css
+            this.$el.css('margin-top', '0');
+            this.$tableContainer.css('padding-bottom', '0');
+            this.$tableFooter.hide();
+            return;
+          }
+
+          if (this.options.showHeader && this.options.height) {
+            this.$tableHeader.show();
+            this.resetHeader();
+            padding += this.$header.outerHeight(true);
+          } else {
+            this.$tableHeader.hide();
+            this.trigger('post-header');
+          }
+
+          if (this.options.showFooter) {
+            this.resetFooter();
+            if (this.options.height) {
+              padding += this.$tableFooter.outerHeight(true);
+            }
+          }
+
+          if (this.options.height) {
+            var toolbarHeight = this.$toolbar.outerHeight(true);
+            var paginationHeight = this.$pagination.outerHeight(true);
+            var height = this.options.height - toolbarHeight - paginationHeight;
+            var tableHeight = this.$tableBody.find('table').outerHeight(true);
+            this.$tableContainer.css('height', height + 'px');
+            this.$tableBorder && this.$tableBorder.css('height', height - tableHeight - padding - 1 + 'px');
+          }
+
+          // Assign the correct sortable arrow
+          this.getCaret();
+          this.$tableContainer.css('padding-bottom', padding + 'px');
+          this.trigger('reset-view');
+        }
+      }, {
+        key: 'getData',
+        value: function getData(useCurrentPage) {
+          var data = this.options.data;
+          if (this.searchText || this.options.sortName || !Utils.isEmptyObject(this.filterColumns) || !Utils.isEmptyObject(this.filterColumnsPartial)) {
+            data = this.data;
+          }
+
+          if (useCurrentPage) {
+            return data.slice(this.pageFrom - 1, this.pageTo);
+          }
+
+          return data;
+        }
+      }, {
+        key: 'load',
+        value: function load(_data) {
+          var fixedScroll = false;
+          var data = _data;
+
+          // #431: support pagination
+          if (this.options.pagination && this.options.sidePagination === 'server') {
+            this.options.totalRows = data[this.options.totalField];
+          }
+
+          fixedScroll = data.fixedScroll;
+          data = Array.isArray(data) ? data : data[this.options.dataField];
+
+          this.initData(data);
+          this.initSearch();
+          this.initPagination();
+          this.initBody(fixedScroll);
+        }
+      }, {
+        key: 'append',
+        value: function append(data) {
+          this.initData(data, 'append');
+          this.initSearch();
+          this.initPagination();
+          this.initSort();
+          this.initBody(true);
+        }
+      }, {
+        key: 'prepend',
+        value: function prepend(data) {
+          this.initData(data, 'prepend');
+          this.initSearch();
+          this.initPagination();
+          this.initSort();
+          this.initBody(true);
+        }
+      }, {
+        key: 'remove',
+        value: function remove(params) {
+          var len = this.options.data.length;
+          var i = void 0;
+          var row = void 0;
+
+          if (!params.hasOwnProperty('field') || !params.hasOwnProperty('values')) {
+            return;
+          }
+
+          for (i = len - 1; i >= 0; i--) {
+            row = this.options.data[i];
+
+            if (!row.hasOwnProperty(params.field)) {
+              continue;
+            }
+            if (params.values.indexOf(row[params.field]) !== -1) {
+              this.options.data.splice(i, 1);
+              if (this.options.sidePagination === 'server') {
+                this.options.totalRows -= 1;
+              }
+            }
+          }
+
+          if (len === this.options.data.length) {
+            return;
+          }
+
+          this.initSearch();
+          this.initPagination();
+          this.initSort();
+          this.initBody(true);
+        }
+      }, {
+        key: 'removeAll',
+        value: function removeAll() {
+          if (this.options.data.length > 0) {
+            this.options.data.splice(0, this.options.data.length);
+            this.initSearch();
+            this.initPagination();
+            this.initBody(true);
+          }
+        }
+      }, {
+        key: 'getRowByUniqueId',
+        value: function getRowByUniqueId(_id) {
+          var uniqueId = this.options.uniqueId;
+          var len = this.options.data.length;
+          var id = _id;
+          var dataRow = null;
+          var i = void 0;
+          var row = void 0;
+          var rowUniqueId = void 0;
+
+          for (i = len - 1; i >= 0; i--) {
+            row = this.options.data[i];
+
+            if (row.hasOwnProperty(uniqueId)) {
+              // uniqueId is a column
+              rowUniqueId = row[uniqueId];
+            } else if (row._data && row._data.hasOwnProperty(uniqueId)) {
+              // uniqueId is a row data property
+              rowUniqueId = row._data[uniqueId];
+            } else {
+              continue;
+            }
+
+            if (typeof rowUniqueId === 'string') {
+              id = id.toString();
+            } else if (typeof rowUniqueId === 'number') {
+              if (Number(rowUniqueId) === rowUniqueId && rowUniqueId % 1 === 0) {
+                id = parseInt(id);
+              } else if (rowUniqueId === Number(rowUniqueId) && rowUniqueId !== 0) {
+                id = parseFloat(id);
+              }
+            }
+
+            if (rowUniqueId === id) {
+              dataRow = row;
+              break;
+            }
+          }
+
+          return dataRow;
+        }
+      }, {
+        key: 'removeByUniqueId',
+        value: function removeByUniqueId(id) {
+          var len = this.options.data.length;
+          var row = this.getRowByUniqueId(id);
+
+          if (row) {
+            this.options.data.splice(this.options.data.indexOf(row), 1);
+          }
+
+          if (len === this.options.data.length) {
+            return;
+          }
+
+          this.initSearch();
+          this.initPagination();
+          this.initBody(true);
+        }
+      }, {
+        key: 'updateByUniqueId',
+        value: function updateByUniqueId(params) {
+          var allParams = Array.isArray(params) ? params : [params];
+
+          for (var _iterator20 = allParams, _isArray20 = Array.isArray(_iterator20), _i22 = 0, _iterator20 = _isArray20 ? _iterator20 : _iterator20[Symbol.iterator]();;) {
+            var _ref43;
+
+            if (_isArray20) {
+              if (_i22 >= _iterator20.length) break;
+              _ref43 = _iterator20[_i22++];
+            } else {
+              _i22 = _iterator20.next();
+              if (_i22.done) break;
+              _ref43 = _i22.value;
+            }
+
+            var _params = _ref43;
+
+            if (!_params.hasOwnProperty('id') || !_params.hasOwnProperty('row')) {
+              continue;
+            }
+
+            var rowId = this.options.data.indexOf(this.getRowByUniqueId(_params.id));
+
+            if (rowId === -1) {
+              continue;
+            }
+            $.extend(this.options.data[rowId], _params.row);
+          }
+
+          this.initSearch();
+          this.initPagination();
+          this.initSort();
+          this.initBody(true);
+        }
+      }, {
+        key: 'refreshColumnTitle',
+        value: function refreshColumnTitle(params) {
+          if (!params.hasOwnProperty('field') || !params.hasOwnProperty('title')) {
+            return;
+          }
+
+          this.columns[this.fieldsColumnsIndex[params.field]].title = this.options.escape ? Utils.escapeHTML(params.title) : params.title;
+
+          if (this.columns[this.fieldsColumnsIndex[params.field]].visible) {
+            var header = this.options.height !== undefined ? this.$tableHeader : this.$header;
+            header.find('th[data-field]').each(function (i, el) {
+              if ($(el).data('field') === params.field) {
+                $($(el).find('.th-inner')[0]).text(params.title);
+                return false;
+              }
+            });
+          }
+        }
+      }, {
+        key: 'insertRow',
+        value: function insertRow(params) {
+          if (!params.hasOwnProperty('index') || !params.hasOwnProperty('row')) {
+            return;
+          }
+          this.options.data.splice(params.index, 0, params.row);
+          this.initSearch();
+          this.initPagination();
+          this.initSort();
+          this.initBody(true);
+        }
+      }, {
+        key: 'updateRow',
+        value: function updateRow(params) {
+          var allParams = Array.isArray(params) ? params : [params];
+
+          for (var _iterator21 = allParams, _isArray21 = Array.isArray(_iterator21), _i23 = 0, _iterator21 = _isArray21 ? _iterator21 : _iterator21[Symbol.iterator]();;) {
+            var _ref44;
+
+            if (_isArray21) {
+              if (_i23 >= _iterator21.length) break;
+              _ref44 = _iterator21[_i23++];
+            } else {
+              _i23 = _iterator21.next();
+              if (_i23.done) break;
+              _ref44 = _i23.value;
+            }
+
+            var _params2 = _ref44;
+
+            if (!_params2.hasOwnProperty('index') || !_params2.hasOwnProperty('row')) {
+              continue;
+            }
+            $.extend(this.options.data[_params2.index], _params2.row);
+          }
+
+          this.initSearch();
+          this.initPagination();
+          this.initSort();
+          this.initBody(true);
+        }
+      }, {
+        key: 'initHiddenRows',
+        value: function initHiddenRows() {
+          this.hiddenRows = [];
+        }
+      }, {
+        key: 'showRow',
+        value: function showRow(params) {
+          this.toggleRow(params, true);
+        }
+      }, {
+        key: 'hideRow',
+        value: function hideRow(params) {
+          this.toggleRow(params, false);
+        }
+      }, {
+        key: 'toggleRow',
+        value: function toggleRow(params, visible) {
+          var row = void 0;
+
+          if (params.hasOwnProperty('index')) {
+            row = this.getData()[params.index];
+          } else if (params.hasOwnProperty('uniqueId')) {
+            row = this.getRowByUniqueId(params.uniqueId);
+          }
+
+          if (!row) {
+            return;
+          }
+
+          var index = Utils.findIndex(this.hiddenRows, row);
+
+          if (!visible && index === -1) {
+            this.hiddenRows.push(row);
+          } else if (visible && index > -1) {
+            this.hiddenRows.splice(index, 1);
+          }
+          this.initBody(true);
+        }
+      }, {
+        key: 'getHiddenRows',
+        value: function getHiddenRows(show) {
+          if (show) {
+            this.initHiddenRows();
+            this.initBody(true);
+            return;
+          }
+          var data = this.getData();
+          var rows = [];
+
+          for (var _iterator22 = data, _isArray22 = Array.isArray(_iterator22), _i24 = 0, _iterator22 = _isArray22 ? _iterator22 : _iterator22[Symbol.iterator]();;) {
+            var _ref45;
+
+            if (_isArray22) {
+              if (_i24 >= _iterator22.length) break;
+              _ref45 = _iterator22[_i24++];
+            } else {
+              _i24 = _iterator22.next();
+              if (_i24.done) break;
+              _ref45 = _i24.value;
+            }
+
+            var row = _ref45;
+
+            if (this.hiddenRows.indexOf(row) !== -1) {
+              rows.push(row);
+            }
+          }
+          this.hiddenRows = rows;
+          return rows;
+        }
+      }, {
+        key: 'mergeCells',
+        value: function mergeCells(options) {
+          var row = options.index;
+          var col = this.getVisibleFields().indexOf(options.field);
+          var rowspan = options.rowspan || 1;
+          var colspan = options.colspan || 1;
+          var i = void 0;
+          var j = void 0;
+          var $tr = this.$body.find('>tr');
+
+          if (this.options.detailView && !this.options.cardView) {
+            col += 1;
+          }
+
+          var $td = $tr.eq(row).find('>td').eq(col);
+
+          if (row < 0 || col < 0 || row >= this.data.length) {
+            return;
+          }
+
+          for (i = row; i < row + rowspan; i++) {
+            for (j = col; j < col + colspan; j++) {
+              $tr.eq(i).find('>td').eq(j).hide();
+            }
+          }
+
+          $td.attr('rowspan', rowspan).attr('colspan', colspan).show();
+        }
+      }, {
+        key: 'updateCell',
+        value: function updateCell(params) {
+          if (!params.hasOwnProperty('index') || !params.hasOwnProperty('field') || !params.hasOwnProperty('value')) {
+            return;
+          }
+          this.data[params.index][params.field] = params.value;
+
+          if (params.reinit === false) {
+            return;
+          }
+          this.initSort();
+          this.initBody(true);
+        }
+      }, {
+        key: 'updateCellById',
+        value: function updateCellById(params) {
+          var _this16 = this;
+
+          if (!params.hasOwnProperty('id') || !params.hasOwnProperty('field') || !params.hasOwnProperty('value')) {
+            return;
+          }
+          var allParams = Array.isArray(params) ? params : [params];
+
+          allParams.forEach(function (_ref46) {
+            var id = _ref46.id,
+                field = _ref46.field,
+                value = _ref46.value;
+
+            var rowId = _this16.options.data.indexOf(_this16.getRowByUniqueId(id));
+
+            if (rowId === -1) {
+              return;
+            }
+            _this16.data[rowId][field] = value;
+          });
+
+          if (params.reinit === false) {
+            return;
+          }
+          this.initSort();
+          this.initBody(true);
+        }
+      }, {
+        key: 'getOptions',
+        value: function getOptions() {
+          // deep copy and remove data
+          var options = JSON.parse(JSON.stringify(this.options));
+          delete options.data;
+          return options;
+        }
+      }, {
+        key: 'getSelections',
+        value: function getSelections() {
+          var _this17 = this;
+
+          // fix #2424: from html with checkbox
+          return this.options.data.filter(function (row) {
+            return row[_this17.header.stateField] === true;
+          });
+        }
+      }, {
+        key: 'getAllSelections',
+        value: function getAllSelections() {
+          var _this18 = this;
+
+          return this.options.data.filter(function (row) {
+            return row[_this18.header.stateField];
+          });
+        }
+      }, {
+        key: 'checkAll',
+        value: function checkAll() {
+          this.checkAll_(true);
+        }
+      }, {
+        key: 'uncheckAll',
+        value: function uncheckAll() {
+          this.checkAll_(false);
+        }
+      }, {
+        key: 'checkInvert',
+        value: function checkInvert() {
+          var $items = this.$selectItem.filter(':enabled');
+          var checked = $items.filter(':checked');
+          $items.each(function (i, el) {
+            $(el).prop('checked', !$(el).prop('checked'));
+          });
+          this.updateRows();
+          this.updateSelected();
+          this.trigger('uncheck-some', checked);
+          checked = this.getSelections();
+          this.trigger('check-some', checked);
+        }
+      }, {
+        key: 'checkAll_',
+        value: function checkAll_(checked) {
+          var rows = void 0;
+          if (!checked) {
+            rows = this.getSelections();
+          }
+          this.$selectAll.add(this.$selectAll_).prop('checked', checked);
+          this.$selectItem.filter(':enabled').prop('checked', checked);
+          this.updateRows();
+          if (checked) {
+            rows = this.getSelections();
+          }
+          this.trigger(checked ? 'check-all' : 'uncheck-all', rows);
+        }
+      }, {
+        key: 'check',
+        value: function check(index) {
+          this.check_(true, index);
+        }
+      }, {
+        key: 'uncheck',
+        value: function uncheck(index) {
+          this.check_(false, index);
+        }
+      }, {
+        key: 'check_',
+        value: function check_(checked, index) {
+          var $el = this.$selectItem.filter('[data-index="' + index + '"]');
+          var row = this.data[index];
+
+          if ($el.is(':radio') || this.options.singleSelect) {
+            for (var _iterator23 = this.options.data, _isArray23 = Array.isArray(_iterator23), _i25 = 0, _iterator23 = _isArray23 ? _iterator23 : _iterator23[Symbol.iterator]();;) {
+              var _ref47;
+
+              if (_isArray23) {
+                if (_i25 >= _iterator23.length) break;
+                _ref47 = _iterator23[_i25++];
+              } else {
+                _i25 = _iterator23.next();
+                if (_i25.done) break;
+                _ref47 = _i25.value;
+              }
+
+              var r = _ref47;
+
+              r[this.header.stateField] = false;
+            }
+            this.$selectItem.filter(':checked').not($el).prop('checked', false);
+          }
+
+          row[this.header.stateField] = checked;
+          $el.prop('checked', checked);
+          this.updateSelected();
+          this.trigger(checked ? 'check' : 'uncheck', this.data[index], $el);
+        }
+      }, {
+        key: 'checkBy',
+        value: function checkBy(obj) {
+          this.checkBy_(true, obj);
+        }
+      }, {
+        key: 'uncheckBy',
+        value: function uncheckBy(obj) {
+          this.checkBy_(false, obj);
+        }
+      }, {
+        key: 'checkBy_',
+        value: function checkBy_(checked, obj) {
+          var _this19 = this;
+
+          if (!obj.hasOwnProperty('field') || !obj.hasOwnProperty('values')) {
+            return;
+          }
+
+          var rows = [];
+          this.options.data.forEach(function (row, i) {
+            if (!row.hasOwnProperty(obj.field)) {
+              return false;
+            }
+            if (obj.values.indexOf(row[obj.field]) !== -1) {
+              var $el = _this19.$selectItem.filter(':enabled').filter(Utils.sprintf('[data-index="%s"]', i)).prop('checked', checked);
+              row[_this19.header.stateField] = checked;
+              rows.push(row);
+              _this19.trigger(checked ? 'check' : 'uncheck', row, $el);
+            }
+          });
+          this.updateSelected();
+          this.trigger(checked ? 'check-some' : 'uncheck-some', rows);
+        }
+      }, {
+        key: 'destroy',
+        value: function destroy() {
+          this.$el.insertBefore(this.$container);
+          $(this.options.toolbar).insertBefore(this.$el);
+          this.$container.next().remove();
+          this.$container.remove();
+          this.$el.html(this.$el_.html()).css('margin-top', '0').attr('class', this.$el_.attr('class') || ''); // reset the class
+        }
+      }, {
+        key: 'showLoading',
+        value: function showLoading() {
+          this.$tableLoading.css('display', 'flex');
+        }
+      }, {
+        key: 'hideLoading',
+        value: function hideLoading() {
+          this.$tableLoading.css('display', 'none');
+        }
+      }, {
+        key: 'togglePagination',
+        value: function togglePagination() {
+          this.options.pagination = !this.options.pagination;
+          this.$toolbar.find('button[name="paginationSwitch"]').html(Utils.sprintf(this.constants.html.icon, this.options.iconsPrefix, this.options.pagination ? this.options.icons.paginationSwitchDown : this.options.icons.paginationSwitchUp));
+          this.updatePagination();
+        }
+      }, {
+        key: 'toggleFullscreen',
+        value: function toggleFullscreen() {
+          this.$el.closest('.bootstrap-table').toggleClass('fullscreen');
+          this.resetView();
+        }
+      }, {
+        key: 'refresh',
+        value: function refresh(params) {
+          if (params && params.url) {
+            this.options.url = params.url;
+          }
+          if (params && params.pageNumber) {
+            this.options.pageNumber = params.pageNumber;
+          }
+          if (params && params.pageSize) {
+            this.options.pageSize = params.pageSize;
+          }
+          this.trigger('refresh', this.initServer(params && params.silent, params && params.query, params && params.url));
+        }
+      }, {
+        key: 'resetWidth',
+        value: function resetWidth() {
+          if (this.options.showHeader && this.options.height) {
+            this.fitHeader();
+          }
+          if (this.options.showFooter && !this.options.cardView) {
+            this.fitFooter();
+          }
+        }
+      }, {
+        key: 'showColumn',
+        value: function showColumn(field) {
+          this.toggleColumn(this.fieldsColumnsIndex[field], true, true);
+        }
+      }, {
+        key: 'hideColumn',
+        value: function hideColumn(field) {
+          this.toggleColumn(this.fieldsColumnsIndex[field], false, true);
+        }
+      }, {
+        key: 'getHiddenColumns',
+        value: function getHiddenColumns() {
+          return this.columns.filter(function (_ref48) {
+            var visible = _ref48.visible;
+            return !visible;
+          });
+        }
+      }, {
+        key: 'getVisibleColumns',
+        value: function getVisibleColumns() {
+          return this.columns.filter(function (_ref49) {
+            var visible = _ref49.visible;
+            return visible;
+          });
+        }
+      }, {
+        key: 'toggleAllColumns',
+        value: function toggleAllColumns(visible) {
+          for (var _iterator24 = this.columns, _isArray24 = Array.isArray(_iterator24), _i26 = 0, _iterator24 = _isArray24 ? _iterator24 : _iterator24[Symbol.iterator]();;) {
+            var _ref50;
+
+            if (_isArray24) {
+              if (_i26 >= _iterator24.length) break;
+              _ref50 = _iterator24[_i26++];
+            } else {
+              _i26 = _iterator24.next();
+              if (_i26.done) break;
+              _ref50 = _i26.value;
+            }
+
+            var column = _ref50;
+
+            column.visible = visible;
+          }
+
+          this.initHeader();
+          this.initSearch();
+          this.initPagination();
+          this.initBody();
+          if (this.options.showColumns) {
+            var $items = this.$toolbar.find('.keep-open input').prop('disabled', false);
+
+            if ($items.filter(':checked').length <= this.options.minimumCountColumns) {
+              $items.filter(':checked').prop('disabled', true);
+            }
+          }
+        }
+      }, {
+        key: 'showAllColumns',
+        value: function showAllColumns() {
+          this.toggleAllColumns(true);
+        }
+      }, {
+        key: 'hideAllColumns',
+        value: function hideAllColumns() {
+          this.toggleAllColumns(false);
+        }
+      }, {
+        key: 'filterBy',
+        value: function filterBy(columns) {
+          this.filterColumns = Utils.isEmptyObject(columns) ? {} : columns;
+          this.options.pageNumber = 1;
+          this.initSearch();
+          this.updatePagination();
+        }
+      }, {
+        key: 'scrollTo',
+        value: function scrollTo(_value) {
+          if (typeof _value === 'undefined') {
+            return this.$tableBody.scrollTop();
+          }
+
+          var value = _value;
+          if (typeof _value === 'string' && _value === 'bottom') {
+            value = this.$tableBody[0].scrollHeight;
+          }
+          this.$tableBody.scrollTop(value);
+        }
+      }, {
+        key: 'getScrollPosition',
+        value: function getScrollPosition() {
+          return this.scrollTo();
+        }
+      }, {
+        key: 'selectPage',
+        value: function selectPage(page) {
+          if (page > 0 && page <= this.options.totalPages) {
+            this.options.pageNumber = page;
+            this.updatePagination();
+          }
+        }
+      }, {
+        key: 'prevPage',
+        value: function prevPage() {
+          if (this.options.pageNumber > 1) {
+            this.options.pageNumber--;
+            this.updatePagination();
+          }
+        }
+      }, {
+        key: 'nextPage',
+        value: function nextPage() {
+          if (this.options.pageNumber < this.options.totalPages) {
+            this.options.pageNumber++;
+            this.updatePagination();
+          }
+        }
+      }, {
+        key: 'toggleView',
+        value: function toggleView() {
+          this.options.cardView = !this.options.cardView;
+          this.initHeader();
+          // Fixed remove toolbar when click cardView button.
+          // this.initToolbar();
+          this.$toolbar.find('button[name="toggle"]').html(Utils.sprintf(this.constants.html.icon, this.options.iconsPrefix, this.options.cardView ? this.options.icons.toggleOn : this.options.icons.toggleOff));
+          this.initBody();
+          this.trigger('toggle', this.options.cardView);
+        }
+      }, {
+        key: 'refreshOptions',
+        value: function refreshOptions(options) {
+          // If the objects are equivalent then avoid the call of destroy / init methods
+          if (Utils.compareObjects(this.options, options, true)) {
+            return;
+          }
+          this.options = $.extend(this.options, options);
+          this.trigger('refresh-options', this.options);
+          this.destroy();
+          this.init();
+        }
+      }, {
+        key: 'resetSearch',
+        value: function resetSearch(text) {
+          var $search = this.$toolbar.find('.search input');
+          $search.val(text || '');
+          this.onSearch({ currentTarget: $search });
+        }
+      }, {
+        key: 'expandRow_',
+        value: function expandRow_(expand, index) {
+          var $tr = this.$body.find(Utils.sprintf('> tr[data-index="%s"]', index));
+          if ($tr.next().is('tr.detail-view') === !expand) {
+            $tr.find('> td > .detail-icon').click();
+          }
+        }
+      }, {
+        key: 'expandRow',
+        value: function expandRow(index) {
+          this.expandRow_(true, index);
+        }
+      }, {
+        key: 'collapseRow',
+        value: function collapseRow(index) {
+          this.expandRow_(false, index);
+        }
+      }, {
+        key: 'expandAllRows',
+        value: function expandAllRows(isSubTable) {
+          var _this20 = this;
+
+          if (isSubTable) {
+            var $tr = this.$body.find(Utils.sprintf('> tr[data-index="%s"]', 0));
+            var detailIcon = null;
+            var executeInterval = false;
+            var idInterval = -1;
+
+            if (!$tr.next().is('tr.detail-view')) {
+              $tr.find('> td > .detail-icon').click();
+              executeInterval = true;
+            } else if (!$tr.next().next().is('tr.detail-view')) {
+              $tr.next().find('.detail-icon').click();
+              executeInterval = true;
+            }
+
+            if (executeInterval) {
+              try {
+                idInterval = setInterval(function () {
+                  detailIcon = _this20.$body.find('tr.detail-view').last().find('.detail-icon');
+                  if (detailIcon.length > 0) {
+                    detailIcon.click();
+                  } else {
+                    clearInterval(idInterval);
+                  }
+                }, 1);
+              } catch (ex) {
+                clearInterval(idInterval);
+              }
+            }
+          } else {
+            var trs = this.$body.children();
+            for (var i = 0; i < trs.length; i++) {
+              this.expandRow_(true, $(trs[i]).data('index'));
+            }
+          }
+        }
+      }, {
+        key: 'collapseAllRows',
+        value: function collapseAllRows(isSubTable) {
+          if (isSubTable) {
+            this.expandRow_(false, 0);
+          } else {
+            var trs = this.$body.children();
+            for (var i = 0; i < trs.length; i++) {
+              this.expandRow_(false, $(trs[i]).data('index'));
+            }
+          }
+        }
+      }, {
+        key: 'updateFormatText',
+        value: function updateFormatText(name, text) {
+          if (this.options[Utils.sprintf('format%s', name)]) {
+            if (typeof text === 'string') {
+              this.options[Utils.sprintf('format%s', name)] = function () {
+                return text;
+              };
+            } else if (typeof text === 'function') {
+              this.options[Utils.sprintf('format%s', name)] = text;
+            }
+          }
+          this.initToolbar();
+          this.initPagination();
+          this.initBody();
+        }
+      }]);
+
+      return BootstrapTable;
+    }();
+
+    BootstrapTable.DEFAULTS = DEFAULTS;
+    BootstrapTable.LOCALES = LOCALES;
+    BootstrapTable.COLUMN_DEFAULTS = COLUMN_DEFAULTS;
+    BootstrapTable.EVENTS = EVENTS;
+
+    // BOOTSTRAP TABLE PLUGIN DEFINITION
+    // =======================
+
+    var allowedMethods = ['getOptions', 'getSelections', 'getAllSelections', 'getData', 'load', 'append', 'prepend', 'remove', 'removeAll', 'insertRow', 'updateRow', 'updateCell', 'updateByUniqueId', 'removeByUniqueId', 'getRowByUniqueId', 'showRow', 'hideRow', 'getHiddenRows', 'mergeCells', 'refreshColumnTitle', 'checkAll', 'uncheckAll', 'checkInvert', 'check', 'uncheck', 'checkBy', 'uncheckBy', 'refresh', 'resetView', 'resetWidth', 'destroy', 'showLoading', 'hideLoading', 'showColumn', 'hideColumn', 'getHiddenColumns', 'getVisibleColumns', 'showAllColumns', 'hideAllColumns', 'filterBy', 'scrollTo', 'getScrollPosition', 'selectPage', 'prevPage', 'nextPage', 'togglePagination', 'toggleView', 'refreshOptions', 'resetSearch', 'expandRow', 'collapseRow', 'expandAllRows', 'collapseAllRows', 'updateFormatText', 'updateCellById'];
+
+    $.BootstrapTable = BootstrapTable;
+    $.fn.bootstrapTable = function (option) {
+      for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key6 = 1; _key6 < _len3; _key6++) {
+        args[_key6 - 1] = arguments[_key6];
+      }
+
+      var value = void 0;
+
+      this.each(function (i, el) {
+        var data = $(el).data('bootstrap.table');
+        var options = $.extend({}, BootstrapTable.DEFAULTS, $(el).data(), (typeof option === 'undefined' ? 'undefined' : _typeof(option)) === 'object' && option);
+
+        if (typeof option === 'string') {
+          var _data2;
+
+          if (!(allowedMethods.indexOf(option) !== -1)) {
+            throw new Error('Unknown method: ' + option);
+          }
+
+          if (!data) {
+            return;
+          }
+
+          value = (_data2 = data)[option].apply(_data2, args);
+
+          if (option === 'destroy') {
+            $(el).removeData('bootstrap.table');
+          }
+        }
+
+        if (!data) {
+          $(el).data('bootstrap.table', data = new $.BootstrapTable(el, options));
+        }
+      });
+
+      return typeof value === 'undefined' ? this : value;
+    };
+
+    $.fn.bootstrapTable.Constructor = BootstrapTable;
+    $.fn.bootstrapTable.defaults = BootstrapTable.DEFAULTS;
+    $.fn.bootstrapTable.columnDefaults = BootstrapTable.COLUMN_DEFAULTS;
+    $.fn.bootstrapTable.locales = BootstrapTable.LOCALES;
+    $.fn.bootstrapTable.methods = allowedMethods;
+    $.fn.bootstrapTable.utils = Utils;
+
+    // BOOTSTRAP TABLE INIT
+    // =======================
+
+    $(function () {
+      $('[data-toggle="table"]').bootstrapTable();
+    });
+  })(jQuery);
 });

@@ -59,16 +59,17 @@
             return html.join('')
         }
 
-        function operateFormatter(value, row, index) {
-            return [
-                '<a class="like" href="javascript:void(0)" title="Like">',
-                '<i class="fa fa-heart"></i>',
-                '</a>  ',
-                '<a class="remove" href="javascript:void(0)" title="Remove">',
-                '<i class="fa fa-trash"></i>',
-                '</a>'
-            ].join('')
-        }
+ function operateFormatter(value, row, index) {
+        return [
+            '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderCategory", "Category")?categoryId=' + row.Id + ' title="ویرایش">',
+            '<i class="fa fa-edit"></i>',
+            '</button >',
+
+            '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "Category")/?categoryId=' + row.Id + ' title="حذف">',
+            '<i class="fa fa-trash"></i>',
+            '</button >'
+        ].join('')
+    }
 
 
         function totalTextFormatter(data) {

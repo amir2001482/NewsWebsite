@@ -16,6 +16,7 @@
 
 */
 @import url('fonts.css');
+
 .font_Vazir_Medium {
     font-family: Vazir_Medium !important;
 }
@@ -118,6 +119,7 @@ h5,
 h6 {
     margin-top: 0;
     margin-bottom: .5rem;
+    font-weight: 100;
 }
 
 p {
@@ -143,8 +145,7 @@ address {
 ol,
 ul,
 dl {
-    margin-top: 0;
-    margin-bottom: 1rem;
+    margin: 0;
 }
 
     ol ol,
@@ -271,7 +272,7 @@ th {
 label {
     display: inline-block;
     margin-bottom: .5rem;
-    font-size:14px;
+    font-size: 14px;
 }
 
 button {
@@ -428,9 +429,9 @@ h2,
 h3,
 .h3 {
     font-size: 1.0625rem;
-    font-family:Vazir_Medium;
-    font-weight:100;
-    margin:0px;
+    font-family: Vazir_Medium;
+    font-weight: 100;
+    margin: 0px;
 }
 
 h4,
@@ -1676,6 +1677,7 @@ pre {
         font-weight: 100 !important;
         font-size: 14px !important;
     }
+
     .table tbody + tbody {
         border-top: 2px solid #e9ecef;
     }
@@ -2502,7 +2504,7 @@ textarea.form-control {
 
 .btn {
     font-size: 0.75rem;
-    font-family:Vazir_Medium;
+    font-family: Vazir_Medium;
     line-height: 1.5;
     display: inline-block;
     padding: .625rem 1.25rem;
@@ -3487,6 +3489,8 @@ fieldset:disabled a.btn {
     font-weight: 400;
     color: #5e72e4;
     background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
     .btn-link:hover {
@@ -4677,15 +4681,18 @@ input[type='button'].btn-block {
         padding-right: 0;
         padding-left: 0;
     }
+
     .page-item .page-link, .page-item span {
         font-size: .675rem !important;
         width: 26px !important;
         height: 26px !important;
     }
+
     .btn {
         font-size: .775rem !important;
         padding: .525rem 0.65rem !important;
     }
+
     .bootstrap-table .fixed-table-pagination > .pagination ul.pagination {
         padding: 0px !important;
     }
@@ -5020,7 +5027,7 @@ input[type='button'].btn-block {
     }
 
 .card-body {
-    padding: 1.5rem;
+    padding: 0.9rem;
     flex: 1 1 auto;
 }
 
@@ -5292,8 +5299,8 @@ input[type='button'].btn-block {
     padding-left: 0;
     list-style: none;
     border-radius: .375rem;
-    float:right;
-    direction:ltr;
+    float: right;
+    direction: ltr;
 }
 
 .page-link {
@@ -5575,7 +5582,6 @@ input[type='button'].btn-block {
 
 .alert {
     position: relative;
-    margin-bottom: 1rem;
     padding: 1rem 1.5rem;
     border: 1px solid transparent;
     border-radius: .375rem;
@@ -6229,8 +6235,9 @@ button.close {
     border-top-right-radius: .4375rem;
     align-items: flex-start;
     justify-content: space-between;
-    border-bottom:1px solid #e7e7e7;
+    border-bottom: 1px solid #e7e7e7;
 }
+
 .modal-title {
     line-height: 1.1;
     margin-bottom: 0;
@@ -6248,7 +6255,7 @@ button.close {
     border-top: 0 solid #e9ecef;
     align-items: center;
     justify-content: flex-end;
-    border-top:1px solid #e7e7e7;
+    border-top: 1px solid #e7e7e7;
 }
 
     .modal-footer > :not(:first-child) {
@@ -6934,7 +6941,7 @@ button.bg-danger:focus {
 }
 
 .bg-light {
-    background-color: #adb5bd !important;
+    background-color: #e7e7e7 !important;
 }
 
 a.bg-light:hover,
@@ -13495,9 +13502,7 @@ button.bg-gray-dark:focus {
     background-color: #20203c !important;
 }
 
-.bg-light {
-    background-color: #ced4da !important;
-}
+
 
 a.bg-light:hover,
 a.bg-light:focus,
@@ -16775,13 +16780,14 @@ textarea[resize='horizontal'] {
     .nav-pills:not(.nav-pills-circle) .nav-item {
         padding-right: 0;
     }
+
     .header.bg-gradient-primary {
         margin-bottom: 80px !important;
     }
 
-    .header.bg-gradient-primary .h4 {
-        font-size: 13px !important;
-    }
+        .header.bg-gradient-primary .h4 {
+            font-size: 13px !important;
+        }
 }
 
 .nav-pills-circle .nav-link {
@@ -17774,7 +17780,7 @@ textarea[resize='horizontal'] {
             height: 20px;
             padding: 0;
             cursor: pointer;
-            float:left;
+            float: left;
         }
 
             .navbar-collapse .navbar-toggler span {
@@ -18512,12 +18518,6 @@ textarea[resize='horizontal'] {
 .card .table {
     margin-bottom: 0;
 }
-
-    .card .table td,
-    .card .table th {
-        padding-right: 1.5rem;
-        padding-left: 1.5rem;
-    }
 
 p {
     font-size: 1rem;
@@ -19317,7 +19317,7 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle {
 }
 
 .bootstrap-table .fixed-table-container .table tbody tr .card-view .card-view-title {
-    min-width: 0!important;
+    min-width: 0 !important;
     padding-left: 15px !important;
 }
 
@@ -19327,6 +19327,19 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle {
     padding: 0px 10px;
     border-radius: 2px;
 }
+
 #table td:nth-child(3) {
     font-family: Vazir_FD;
 }
+
+.tox[dir="rtl"] {
+    font-family: Vazir;
+}
+.tox[dir="rtl"] .tox-label {
+    margin-bottom: 5px !important;
+}
+
+.tox .tox-form__group {
+    margin-bottom: 12px !important;
+}
+    

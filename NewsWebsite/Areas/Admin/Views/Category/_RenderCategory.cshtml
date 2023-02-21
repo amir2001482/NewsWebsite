@@ -1,6 +1,5 @@
 ﻿
 @model NewsWebsite.ViewModels.Category.CategoryViewModel
-
 <link href="~/lib/comboTreePlugin/comboTreePlugin.css" rel="stylesheet" />
 <script src="~/lib/comboTreePlugin/comboTreePlugin.js"></script>
 
@@ -8,6 +7,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
+
                 @if (Model.CategoryId != null)
                 {
                     <h3 id="modal-title">ویرایش اطلاعات دسته بندی</h3>
@@ -16,13 +16,50 @@
                 {
                     <h3 id="modal-title">افزودن دسته بندی جدید</h3>
                 }
-
                 <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body clearfix">
                 <form asp-action="CreateOrUpdate">
+                    @if (ViewData.ModelState.IsValid.ToString() == "False")
+                    {
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    }
+
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                    <input type="hidden" asp-for="CategoryId" />
+
+                    <div class="row p-2 mt-2 mb-2">
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label asp-for="CategoryName" class="control-label"></label>
+                            </div>
+                            <div class="col-md-8">
+                                <input asp-for="CategoryName" class="form-control" />
+                                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label asp-for="ParentCategoryName" class="control-label"></label>
+                            </div>
+                            <div class="col-md-8">
+                                <input asp-for="ParentCategoryName" class="form-control" />
+                                <span asp-validation-for="ParentCategoryName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label asp-for="Url" class="control-label"></label>
+                            </div>
+                            <div class="col-md-6 pl-0">
+                                <input asp-for="Url" class="form-control" />
+                                <span asp-validation-for="Url" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 text-left pr-0">@string.Format("/{0}:://{1}", Context.Request.Scheme, Context.Request.Host)</div>
+                        </div>
+
+                    </div>
                 </form>
-                <h4>hello world</h4>
             </div>
 
             <div class="modal-footer">
@@ -52,4 +89,3 @@
 		});
     });
 </script>
-

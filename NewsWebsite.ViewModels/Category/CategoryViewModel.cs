@@ -19,11 +19,11 @@ namespace NewsWebsite.ViewModels.Category
         [JsonProperty("ردیف")]
         public int Row { get; set; }
 
-        [Display(Name ="دسته پدر"),JsonProperty("دسته پدر")]
+        [Display(Name ="دسته پدر"), JsonProperty("دسته پدر")]
         public string ParentCategoryName { get; set; }
 
 
-        [Display(Name = "آدرس"),JsonProperty("آدرس")]
+        [Display(Name = "آدرس"), JsonProperty("آدرس")]
         [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
         public string Url { get; set; }
     }

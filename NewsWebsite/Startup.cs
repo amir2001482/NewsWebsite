@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +27,15 @@ namespace NewsWebsite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<NewsDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
-            services.AddMvc(opptions => opptions.EnableEndpointRouting = false);
+            services.AddMvc(opptions =>
+            {
+                opptions.EnableEndpointRouting = false;
+            });
             services.AddCustomServices();
             services.AddControllers().AddNewtonsoftJson();
+            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()))
+;
+            //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +53,7 @@ namespace NewsWebsite
                   template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
             });
+
         }
     }
 }
