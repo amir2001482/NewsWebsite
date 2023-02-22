@@ -11,7 +11,8 @@ namespace NewsWebsite.IocConfig.Mapping
     {
         public MappingProfiles()
         {
-            CreateMap<Category, CategoryViewModel>().ReverseMap();
+            CreateMap<Category, CategoryViewModel>().ReverseMap()
+                .ForMember(c => c.Parent, op => op.Ignore());
         }
     }
 }

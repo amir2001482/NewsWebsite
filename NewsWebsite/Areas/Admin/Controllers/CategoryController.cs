@@ -74,13 +74,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 var category = await _uw.BaseRepository<Category>().FindByIdAsync(categoryId);
                 await _uw._Context.Entry(category).Reference(c => c.Parent).LoadAsync();
                 if (category != null)
-                {
-                    //categoryViewModel.CategoryId = category.CategoryId;
-                    //categoryViewModel.CategoryName = category.CategoryName;
-                    //categoryViewModel.ParentCategoryName = category.category?.CategoryName;
-                    //categoryViewModel.Url = category.Url;
                     categoryViewModel = _mapper.Map<CategoryViewModel>(category);
-                }
                 else
                     ModelState.AddModelError(string.Empty, CategoryNotFound);
             }
@@ -92,24 +86,25 @@ namespace NewsWebsite.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrUpdate(CategoryViewModel viewModel)
         {
+            try
+            {
                 if (ModelState.IsValid)
                 {
-                    string parentCategoryId = null;
                     if (viewModel.ParentCategoryName.HasValue())
                     {
                         var parentCategory = _uw.CategoryRepository.FindByCategoryName(viewModel.ParentCategoryName);
                         if (parentCategory != null)
-                            parentCategoryId = parentCategory.CategoryId;
+                            viewModel.ParentCategoryId = parentCategory.CategoryId;
                         else
                         {
                             Category parent = new Category()
                             {
                                 CategoryId = StringExtensions.GenerateId(10),
-                                CategoryName = viewModel.CategoryName,
-                                Url = viewModel.CategoryName,
+                                CategoryName = viewModel.ParentCategoryName,
+                                Url = viewModel.ParentCategoryName,
                             };
                             await _uw.BaseRepository<Category>().CreateAsync(parent);
-                            parentCategoryId = parent.CategoryId;
+                            viewModel.ParentCategoryId = parent.CategoryId;
                         }
                     }
 
@@ -118,10 +113,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         var category = await _uw.BaseRepository<Category>().FindByIdAsync(viewModel.CategoryId);
                         if (category != null)
                         {
-                            category.CategoryName = viewModel.CategoryName;
-                            category.ParentCategoryId = parentCategoryId;
-                            category.Url = viewModel.Url;
-                            _uw.BaseRepository<Category>().Update(category);
+                            _uw.BaseRepository<Category>().Update(_mapper.Map(viewModel,category));
                             await _uw.Commit();
                             TempData["notification"] = "ویرایش اطلاعات با موفقیت انجام شد.";
                         }
@@ -131,19 +123,19 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
                     else
                     {
-                        Category category = new Category()
-                        {
-                            CategoryId = StringExtensions.GenerateId(10),
-                            CategoryName = viewModel.CategoryName,
-                            ParentCategoryId = parentCategoryId,
-                            Url = viewModel.Url,
-                        };
-                        await _uw.BaseRepository<Category>().CreateAsync(category);
+                        viewModel.CategoryId = StringExtensions.GenerateId(10);
+                        await _uw.BaseRepository<Category>().CreateAsync(_mapper.Map<Category>(viewModel));
                         await _uw.Commit();
                         TempData["notification"] = "درج اطلاعات با موفقیت انجام شد.";
                     }
                 }
                 return PartialView("_RenderCategory", viewModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+                
         }
         [HttpGet]
         public async Task<IActionResult> Delete(string categoryId)
@@ -165,22 +157,29 @@ namespace NewsWebsite.Areas.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(Category model)
         {
-            if (model.CategoryId == null)
-                ModelState.AddModelError(string.Empty, CategoryNotFound);
-            else
+            try
             {
-                var category = await _uw.BaseRepository<Category>().FindByIdAsync(model.CategoryId);
-                if (category == null)
+                if (model.CategoryId == null)
                     ModelState.AddModelError(string.Empty, CategoryNotFound);
                 else
                 {
-                    _uw.BaseRepository<Category>().Delete(category);
-                    await _uw.Commit();
-                    TempData["notification"] = "حذف اطلاعات با موفقیت انجام شد.";
-                    return PartialView("_DeleteConfirmation", category);
+                    var category = await _uw.BaseRepository<Category>().FindByIdAsync(model.CategoryId);
+                    if (category == null)
+                        ModelState.AddModelError(string.Empty, CategoryNotFound);
+                    else
+                    {
+                        _uw.BaseRepository<Category>().Delete(category);
+                        await _uw.Commit();
+                        TempData["notification"] = "حذف اطلاعات با موفقیت انجام شد.";
+                        return PartialView("_DeleteConfirmation", category);
+                    }
                 }
+                return PartialView("_DeleteConfirmation");
             }
-            return PartialView("_DeleteConfirmation");
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
