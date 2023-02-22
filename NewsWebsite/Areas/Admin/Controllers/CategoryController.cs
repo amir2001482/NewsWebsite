@@ -16,10 +16,13 @@ namespace NewsWebsite.Areas.Admin.Controllers
         private readonly IUnitOfWork _uw;
         private readonly IMapper _mapper;
         private const string CategoryNotFound = "دسته ی درخواستی یافت نشد.";
+        private const string Categoryduplicated = "نام دسته تکراری است.";
         public CategoryController(IUnitOfWork uw , IMapper mapper)
         {
             _uw = uw;
+            _uw.CheckArgumentIsNull(nameof(_uw));
             _mapper = mapper;
+            _mapper.CheckArgumentIsNull(nameof(_mapper));
         }
 
         [HttpGet]
@@ -86,56 +89,53 @@ namespace NewsWebsite.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrUpdate(CategoryViewModel viewModel)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    if (viewModel.ParentCategoryName.HasValue())
+               if (_uw.CategoryRepository.IsExistCategory(viewModel.CategoryName, viewModel.CategoryId))
+                        ModelState.AddModelError(string.Empty, Categoryduplicated);
+                else
                     {
-                        var parentCategory = _uw.CategoryRepository.FindByCategoryName(viewModel.ParentCategoryName);
-                        if (parentCategory != null)
-                            viewModel.ParentCategoryId = parentCategory.CategoryId;
-                        else
+                        if (viewModel.ParentCategoryName.HasValue())
                         {
-                            Category parent = new Category()
+                            var parentCategory = _uw.CategoryRepository.FindByCategoryName(viewModel.ParentCategoryName);
+                            if (parentCategory != null)
+                                viewModel.ParentCategoryId = parentCategory.CategoryId;
+                            else
                             {
-                                CategoryId = StringExtensions.GenerateId(10),
-                                CategoryName = viewModel.ParentCategoryName,
-                                Url = viewModel.ParentCategoryName,
-                            };
-                            await _uw.BaseRepository<Category>().CreateAsync(parent);
-                            viewModel.ParentCategoryId = parent.CategoryId;
+                                Category parent = new Category()
+                                {
+                                    CategoryId = StringExtensions.GenerateId(10),
+                                    CategoryName = viewModel.ParentCategoryName,
+                                    Url = viewModel.ParentCategoryName,
+                                };
+                                await _uw.BaseRepository<Category>().CreateAsync(parent);
+                                viewModel.ParentCategoryId = parent.CategoryId;
+                            }
                         }
-                    }
 
-                    if (viewModel.CategoryId.HasValue())
-                    {
-                        var category = await _uw.BaseRepository<Category>().FindByIdAsync(viewModel.CategoryId);
-                        if (category != null)
+                        if (viewModel.CategoryId.HasValue())
                         {
-                            _uw.BaseRepository<Category>().Update(_mapper.Map(viewModel,category));
-                            await _uw.Commit();
-                            TempData["notification"] = "ویرایش اطلاعات با موفقیت انجام شد.";
+                            var category = await _uw.BaseRepository<Category>().FindByIdAsync(viewModel.CategoryId);
+                            if (category != null)
+                            {
+                                _uw.BaseRepository<Category>().Update(_mapper.Map(viewModel, category));
+                                await _uw.Commit();
+                                TempData["notification"] = "ویرایش اطلاعات با موفقیت انجام شد.";
+                            }
+                            else
+                                ModelState.AddModelError(string.Empty, CategoryNotFound);
                         }
-                        else
-                            ModelState.AddModelError(string.Empty, CategoryNotFound);
-                    }
 
-                    else
-                    {
-                        viewModel.CategoryId = StringExtensions.GenerateId(10);
-                        await _uw.BaseRepository<Category>().CreateAsync(_mapper.Map<Category>(viewModel));
-                        await _uw.Commit();
-                        TempData["notification"] = "درج اطلاعات با موفقیت انجام شد.";
+                        else
+                        {
+                            viewModel.CategoryId = StringExtensions.GenerateId(10);
+                            await _uw.BaseRepository<Category>().CreateAsync(_mapper.Map<Category>(viewModel));
+                            await _uw.Commit();
+                            TempData["notification"] = "درج اطلاعات با موفقیت انجام شد.";
+                        }
                     }
-                }
-                return PartialView("_RenderCategory", viewModel);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-                
+            return PartialView("_RenderCategory", viewModel);
         }
         [HttpGet]
         public async Task<IActionResult> Delete(string categoryId)
@@ -168,6 +168,12 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         ModelState.AddModelError(string.Empty, CategoryNotFound);
                     else
                     {
+                        var childCategory = _uw.BaseRepository<Category>().FindByConditionAsync(c => c.ParentCategoryId == category.CategoryId).Result.ToList();
+                        if(childCategory.Count() > 0)
+                        {
+                            _uw.BaseRepository<Category>().DeleteRange(childCategory);
+                            await _uw.Commit();
+                        }
                         _uw.BaseRepository<Category>().Delete(category);
                         await _uw.Commit();
                         TempData["notification"] = "حذف اطلاعات با موفقیت انجام شد.";
@@ -181,5 +187,38 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        public IActionResult DeleteGroup()
+        {
+            return PartialView("_DeleteGroup");
+        }
+
+
+        [HttpPost, ActionName("DeleteGroup")]
+        public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
+        {
+            if (btSelectItem.Count() == 0)
+                ModelState.AddModelError(string.Empty, "هیچ دسته بندی برای حذف انتخاب نشده است.");
+            else
+            {
+                foreach (var item in btSelectItem)
+                {
+                    var childCategory = _uw.BaseRepository<Category>().FindByConditionAsync(c => c.ParentCategoryId == item).Result.ToList();
+                    if (childCategory.Count() != 0)
+                    {
+                        _uw.BaseRepository<Category>().DeleteRange(childCategory);
+                        await _uw.Commit();
+                    }
+                    var category = await _uw.BaseRepository<Category>().FindByIdAsync(item);
+                    _uw.BaseRepository<Category>().Delete(category);
+                    await _uw.Commit();
+                }
+                TempData["notification"] = "حذف گروهی اطلاعات با موفقیت انجام شد.";
+            }
+
+            return PartialView("_DeleteGroup");
+        }
+
     }
 }

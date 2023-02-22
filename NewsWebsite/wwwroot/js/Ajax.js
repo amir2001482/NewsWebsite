@@ -19,6 +19,11 @@
         ShowLoading();
         var form = $(this).parents(".modal").find('form');
         var actionUrl = form.attr('action');
+        if (form.length == 0)
+        {
+            form = $(".card-body").find("form");
+            actionUrl = form.attr('action') + "/" + $(".modal").attr("id");
+        }
         var dataToSend = new FormData(form.get(0));
 
         $.ajax({

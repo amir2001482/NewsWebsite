@@ -1,0 +1,33 @@
+﻿<div class="modal fade" id="DeleteGroup" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">حذف گروهی</h3>
+                <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                @{var IsValid = ViewData.ModelState.IsValid.ToString();}
+                <input name="IsValid" type="hidden" value="@IsValid" />
+                @if (IsValid == "False")
+                {
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                }
+                else
+                {
+                    <h4>آیا شما میخواهید موارد انتخاب شده را حذف کنید؟</h4>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-labeled  btn-danger" data-dismiss="modal">
+                    @(IsValid=="True"?"خیر":"بستن")
+                </button>
+                @if (IsValid == "True")
+                {
+                    <button type="submit" class="btn btn-sm btn-labeled btn-success mr-1" data-save="modal">
+                        بله
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

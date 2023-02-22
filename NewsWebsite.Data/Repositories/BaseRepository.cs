@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace NewsWebsite.Data.Repositories
         public BaseRepository(TContext Context)
         {
             _Context = Context;
+            _Context.CheckArgumentIsNull(nameof(_Context));
             dbSet = _Context.Set<TEntity>();
         }
 

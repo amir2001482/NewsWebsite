@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Category;
+using NewsWebsite.Common;
 
 namespace NewsWebsite.Data.Repositories
 {
@@ -16,6 +17,7 @@ namespace NewsWebsite.Data.Repositories
         public CategoryRepository(NewsDBContext context)
         {
             _context = context;
+            _context.CheckArgumentIsNull(nameof(_context));
         }
         public async Task<List<CategoryViewModel>> GetPaginateCategoriesAsync(int offset, int limit, bool? categoryNameSortAsc,bool? parentCategoryNameSortAsc, string searchText)
         {
@@ -80,6 +82,24 @@ namespace NewsWebsite.Data.Repositories
         public Category FindByCategoryName(string categoryName)
         {
            return  _context.Categories.Where(c => c.CategoryName == categoryName.TrimStart().TrimEnd()).FirstOrDefault();
+        }
+        public bool IsExistCategory(string categoryName, string recentCategoryId = null)
+        {
+            if (!recentCategoryId.HasValue())
+                return _context.Categories.Any(c => c.CategoryName.Trim().Replace(" ", "") == categoryName.Trim().Replace(" ", ""));
+            else
+            {
+                var category = _context.Categories.Where(c => c.CategoryName.Trim().Replace(" ", "") == categoryName.Trim().Replace(" ", "")).FirstOrDefault();
+                if (category == null)
+                    return false;
+                else
+                {
+                    if (category.CategoryId != recentCategoryId)
+                        return true;
+                    else
+                        return false;
+                }
+            }
         }
 
     }
