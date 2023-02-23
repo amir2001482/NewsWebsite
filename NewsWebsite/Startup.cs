@@ -37,11 +37,13 @@ namespace NewsWebsite
             services.AddControllers().AddNewtonsoftJson();
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()));
             services.AddAutoMapper(typeof(MappingProfiles));
+            services.AddCustomIdentityServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCustomIdentityServices();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

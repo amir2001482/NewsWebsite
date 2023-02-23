@@ -8,7 +8,7 @@ namespace NewsWebsite.Entities
     public class Bookmark
     {
         public string NewsId { get; set; }
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public virtual News News { get; set; }
         public virtual User User { get; set; }
 

@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NewsWebsite.Data\NewsWebsite.Data.csproj" />
+    <ProjectReference Include="..\NewsWebsite.Services\NewsWebsite.Services.csproj" />
   </ItemGroup>
 
 </Project>

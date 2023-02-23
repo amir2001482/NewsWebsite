@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NewsWebsite.Entities.Identity
 {
-    public class UserClaim : IdentityUserClaim<string>
+    public class UserClaim : IdentityUserClaim<int>
     {
         public virtual User User { get; set; }
     }
