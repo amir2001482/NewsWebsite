@@ -19,6 +19,7 @@
                 <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body clearfix">
+                <p class="alert alert-warning"><i class="fa fa-exclamation-triangle ml-2"></i>آدرس نباید شامل فضای خالی و "/" و "\" باشد.</p>
                 <form asp-action="CreateOrUpdate">
                     @if (ViewData.ModelState.IsValid.ToString() == "False")
                     {
@@ -53,9 +54,9 @@
                             </div>
                             <div class="col-md-6 pl-0">
                                 <input asp-for="Url" class="form-control" />
-                                <span asp-validation-for="Url" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 text-left pr-0">@string.Format("/{0}:://{1}", Context.Request.Scheme, Context.Request.Host)</div>
+                            <span asp-validation-for="Url" class="text-danger mt-2"></span>
                         </div>
 
                     </div>

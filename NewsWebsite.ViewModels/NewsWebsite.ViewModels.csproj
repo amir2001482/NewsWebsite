@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.32" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NewsWebsite.Common\NewsWebsite.Common.csproj" />
+  </ItemGroup>
+
 </Project>

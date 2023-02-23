@@ -5,7 +5,7 @@
         $.ajax({
             url: url,
             beforeSend: function () { ShowLoading(); },
-            complete: function () { window.loading_screen.finish(); },
+            complete: function () { $("body").preloader("remove"); },
             error: function () {
                 ShowSweetErrorAlert();
             }
@@ -46,7 +46,7 @@
             }
         });
 
-        window.loading_screen.finish(); 
+        $("body").preloader("remove");
     });
 });
 
@@ -60,11 +60,7 @@ function ShowSweetErrorAlert() {
 }
 
 function ShowLoading() {
-    window.loading_screen = window.pleaseWait({
-        logo: "/assets/img/Logo.png",
-        backgroundColor: 'rgba(255, 255, 255, 0.75)',
-        loadingHtml: "<p class='loading-message'>لطفا صبر کنید...</p><div class='sk-spinner sk-spinner-wave'><div class='sk-rect1'></div><div class='sk-rect2'></div><div class='sk-rect3'></div><div class='sk-rect4'></div><div class='sk-rect5'></div></div>"
-    });
+    $("body").preloader({ text: "لطفا صبر کنید..." });
 }
 
 function ShowSweetSuccessAlert(message) {

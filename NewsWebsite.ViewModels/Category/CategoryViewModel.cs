@@ -1,4 +1,5 @@
 ﻿
+using NewsWebsite.Common.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace NewsWebsite.ViewModels.Category
 
         [Display(Name = "آدرس"), JsonProperty("آدرس")]
         [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
+        [UrlValidate("/" , @"\" , " ")]
         public string Url { get; set; }
     }
 }
