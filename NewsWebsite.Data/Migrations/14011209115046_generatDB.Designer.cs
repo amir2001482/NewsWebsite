@@ -10,8 +10,8 @@ using NewsWebsite.Data;
 namespace NewsWebsite.Data.Migrations
 {
     [DbContext(typeof(NewsDBContext))]
-    [Migration("14011125073015_GenerateDB")]
-    partial class GenerateDB
+    [Migration("14011209115046_generatDB")]
+    partial class generatDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace NewsWebsite.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider");
 
@@ -29,8 +29,7 @@ namespace NewsWebsite.Data.Migrations
 
                     b.Property<string>("ProviderDisplayName");
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<int>("UserId");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -39,9 +38,9 @@ namespace NewsWebsite.Data.Migrations
                     b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserId");
 
                     b.Property<string>("LoginProvider");
 
@@ -56,7 +55,7 @@ namespace NewsWebsite.Data.Migrations
 
             modelBuilder.Entity("NewsWebsite.Entities.Bookmark", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserId");
 
                     b.Property<string>("NewsId");
 
@@ -115,8 +114,9 @@ namespace NewsWebsite.Data.Migrations
 
             modelBuilder.Entity("NewsWebsite.Entities.Identity.Role", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -149,8 +149,7 @@ namespace NewsWebsite.Data.Migrations
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired();
+                    b.Property<int>("RoleId");
 
                     b.HasKey("Id");
 
@@ -161,8 +160,9 @@ namespace NewsWebsite.Data.Migrations
 
             modelBuilder.Entity("NewsWebsite.Entities.Identity.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccessFailedCount");
 
@@ -234,8 +234,7 @@ namespace NewsWebsite.Data.Migrations
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
@@ -246,9 +245,9 @@ namespace NewsWebsite.Data.Migrations
 
             modelBuilder.Entity("NewsWebsite.Entities.Identity.UserRole", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserId");
 
-                    b.Property<string>("RoleId");
+                    b.Property<int>("RoleId");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -291,7 +290,7 @@ namespace NewsWebsite.Data.Migrations
 
                     b.Property<string>("Url");
 
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserId");
 
                     b.HasKey("NewsId");
 
@@ -368,6 +367,24 @@ namespace NewsWebsite.Data.Migrations
                     b.ToTable("Tags");
                 });
 
+            modelBuilder.Entity("NewsWebsite.Entities.Video", b =>
+                {
+                    b.Property<string>("VideoId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Poster");
+
+                    b.Property<DateTime?>("PublishDateTime");
+
+                    b.Property<string>("Title");
+
+                    b.Property<string>("Url");
+
+                    b.HasKey("VideoId");
+
+                    b.ToTable("Videos");
+                });
+
             modelBuilder.Entity("NewsWebsite.Entities.Visit", b =>
                 {
                     b.Property<string>("IpAddress");
@@ -385,7 +402,7 @@ namespace NewsWebsite.Data.Migrations
                     b.ToTable("Visits");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.HasOne("NewsWebsite.Entities.Identity.User")
                         .WithMany()
@@ -393,7 +410,7 @@ namespace NewsWebsite.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("NewsWebsite.Entities.Identity.User")
                         .WithMany()
@@ -411,12 +428,12 @@ namespace NewsWebsite.Data.Migrations
                     b.HasOne("NewsWebsite.Entities.Identity.User", "User")
                         .WithMany("Bookmarks")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("NewsWebsite.Entities.Category", b =>
                 {
-                    b.HasOne("NewsWebsite.Entities.Category", "category")
+                    b.HasOne("NewsWebsite.Entities.Category", "Parent")
                         .WithMany("categories")
                         .HasForeignKey("ParentCategoryId");
                 });
@@ -473,7 +490,8 @@ namespace NewsWebsite.Data.Migrations
                 {
                     b.HasOne("NewsWebsite.Entities.Identity.User", "User")
                         .WithMany("News")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("NewsWebsite.Entities.NewsCategory", b =>

@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NewsWebsite.Data;
 using NewsWebsite.IocConfig;
 using NewsWebsite.IocConfig.Mapping;
+using NewsWebsite.ViewModels.Settings;
 
 namespace NewsWebsite
 {
@@ -28,6 +29,7 @@ namespace NewsWebsite
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<SiteSettings>(Configuration.GetSection(nameof(SiteSettings)));
             services.AddDbContext<NewsDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
             services.AddMvc(opptions =>
             {

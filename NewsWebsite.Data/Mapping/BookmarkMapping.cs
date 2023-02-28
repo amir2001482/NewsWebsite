@@ -20,7 +20,8 @@ namespace NewsWebsite.Data.Mapping
             builder
                .HasOne(p => p.User)
                .WithMany(t => t.Bookmarks)
-               .HasForeignKey(f => f.UserId);
+               .HasForeignKey(f => f.UserId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

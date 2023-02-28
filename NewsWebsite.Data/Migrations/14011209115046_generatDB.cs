@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace NewsWebsite.Data.Migrations
 {
-    public partial class GenerateDB : Migration
+    public partial class generatDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,8 @@ namespace NewsWebsite.Data.Migrations
                 name: "AppRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
@@ -27,7 +28,8 @@ namespace NewsWebsite.Data.Migrations
                 name: "AppUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
@@ -101,12 +103,27 @@ namespace NewsWebsite.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Videos",
+                columns: table => new
+                {
+                    VideoId = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    Url = table.Column<string>(nullable: true),
+                    Poster = table.Column<string>(nullable: true),
+                    PublishDateTime = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Videos", x => x.VideoId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<int>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
                 },
@@ -127,7 +144,7 @@ namespace NewsWebsite.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<string>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
                 },
@@ -146,8 +163,8 @@ namespace NewsWebsite.Data.Migrations
                 name: "AppUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
+                    RoleId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -173,7 +190,7 @@ namespace NewsWebsite.Data.Migrations
                     LoginProvider = table.Column<string>(nullable: false),
                     ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -190,7 +207,7 @@ namespace NewsWebsite.Data.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
                     LoginProvider = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
@@ -211,7 +228,7 @@ namespace NewsWebsite.Data.Migrations
                 columns: table => new
                 {
                     NewsId = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
+                    UserId = table.Column<int>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     PublishDateTime = table.Column<DateTime>(nullable: true, defaultValueSql: "CONVERT(datetime,GetDate())"),
@@ -228,7 +245,7 @@ namespace NewsWebsite.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -236,7 +253,7 @@ namespace NewsWebsite.Data.Migrations
                 columns: table => new
                 {
                     NewsId = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -252,7 +269,7 @@ namespace NewsWebsite.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -513,6 +530,9 @@ namespace NewsWebsite.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "NewsTags");
+
+            migrationBuilder.DropTable(
+                name: "Videos");
 
             migrationBuilder.DropTable(
                 name: "Visits");

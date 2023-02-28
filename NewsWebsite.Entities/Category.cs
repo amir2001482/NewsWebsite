@@ -9,7 +9,7 @@ namespace NewsWebsite.Entities
     {
         public string CategoryId { get; set; }
         public string CategoryName { get; set; }
-        [ForeignKey("category")]
+        [ForeignKey("Parent")]
         public string ParentCategoryId { get; set; }
         public string Url { get; set; }
        
