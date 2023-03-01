@@ -14,7 +14,7 @@ namespace NewsWebsite.Entities
         public string Url { get; set; }
        
         public Category Parent { get; set; }
-        public List<Category> categories { get; set; }
+        public List<Category> Categories { get; set; }
         public virtual ICollection<NewsCategory> NewsCategories { get; set; }
 
     }

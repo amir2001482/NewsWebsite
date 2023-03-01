@@ -9,6 +9,8 @@ namespace NewsWebsite.Data.Contracts
     {
         IBaseRepository<TEntity> BaseRepository<TEntity>() where TEntity : class;
         ICategoryRepository CategoryRepository { get; }
+        IVideoRepository VideoRepository { get; }
+        ITagRepository TagRepository { get; }
         NewsDBContext _Context { get; }
         Task Commit();
     }

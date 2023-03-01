@@ -68,7 +68,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return res;
         }
 
-        [HttpGet , AjaxOnly]
+        [HttpGet , AjaxOnly()]
         public async Task<IActionResult> RenderCategory(string categoryId)
         {
             var categoryViewModel = new CategoryViewModel();
@@ -86,7 +86,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return PartialView("_RenderCategory", categoryViewModel);
         }
 
-        [HttpPost , AjaxOnly]
+        [HttpPost , AjaxOnly()]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrUpdate(CategoryViewModel viewModel)
         {
@@ -155,7 +155,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Delete"), AjaxOnly()]
         public async Task<IActionResult> DeleteConfirmed(Category model)
         {
             try
@@ -189,14 +189,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult DeleteGroup()
-        {
-            return PartialView("_DeleteGroup");
-        }
-
-
-        [HttpPost, ActionName("DeleteGroup")]
+        [HttpPost, ActionName("DeleteGroup") , AjaxOnly()]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)

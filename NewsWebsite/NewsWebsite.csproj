@@ -23,6 +23,7 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Controller\" />
+    <Folder Include="wwwroot\posters\" />
   </ItemGroup>
 
 </Project>

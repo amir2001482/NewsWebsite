@@ -1,0 +1,62 @@
+﻿@model NewsWebsite.ViewModels.Tag.TagViewModel
+<link href="~/lib/comboTreePlugin/comboTreePlugin.css" rel="stylesheet" />
+<script src="~/lib/comboTreePlugin/comboTreePlugin.js"></script>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                @if (Model.TagId != null)
+                {
+                    <h3 id="modal-title">ویرایش اطلاعات برچسب</h3>
+                }
+                else
+                {
+                    <h3 id="modal-title">افزودن برچسب جدید</h3>
+                }
+                <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body clearfix">
+                <form asp-action="CreateOrUpdate">
+                    @if (ViewData.ModelState.IsValid.ToString() == "False")
+                    {
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    }
+
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                    <input type="hidden" asp-for="TagId" />
+
+                    <div class="row p-2 mt-2 mb-2">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label asp-for="TagName" class="control-label"></label>
+                            </div>
+                            <div class="col-md-9">
+                                <input asp-for="TagName" class="form-control" />
+                                <span asp-validation-for="TagName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">بستن</button>
+                @if (Model.TagId != null)
+                {
+                    <button type="submit" class="btn btn-sm btn-labeled btn-success mr-1" data-save="modal">
+                        ذخیره تغییرات
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-sm btn-labeled btn-success mr-1" data-save="modal">
+                        افزودن اطلاعات
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,137 @@
+﻿
+    <div id="toolbar">
+        <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderTag","Tag")">
+            <i class="fa fa-plus"></i> | افزودن برچسب جدید
+        </button>
+        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Tag")">
+            <i class="fa fa-trash"></i> | حذف گروهی
+        </button>
+    </div>
+<table id="table"
+       data-toolbar="#toolbar"
+       data-search="true"
+       data-show-refresh="true"
+       data-show-toggle="true"
+       data-show-fullscreen="true"
+       data-show-columns="true"
+       data-detail-view="true"
+       data-show-export="true"
+       data-click-to-select="true"
+       data-detail-formatter="detailFormatter"
+       data-minimum-count-columns="2"
+       data-show-pagination-switch="true"
+       data-pagination="true"
+       data-id-field="id"
+       data-page-list="[10, 25, 50, 100, all]"
+       data-show-footer="true"
+       data-side-pagination="server"
+       data-url="/Admin/Tag/GetTags"
+       data-response-handler="responseHandler"></table>
+
+
+<script>
+        var $table = $('#table')
+        var selections = []
+
+
+  function get_query_params(p) {
+    return {
+        extraParam: 'abc',
+        search: p.title,
+        sort: p.sort,
+        order: p.order,
+        limit: p.limit,
+        offset: p.offset
+    }
+}
+
+
+        function responseHandler(res) {
+            $.each(res.rows, function (i, row) {
+                row.state = $.inArray(row.id, selections) !== -1
+            })
+            return res
+    }
+
+    function detailFormatter(index, row) {
+            var html = []
+            $.each(row, function (key, value) {
+                if (key != "state" && key != "Id" && key!="ردیف")
+                    html.push('<p><b>' + key + ':</b> ' + value + '</p>')
+            })
+            return html.join('')
+        }
+
+
+
+
+     function operateFormatter(value, row, index) {
+        return [
+            '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderTag", "Tag")?tagId=' + row.Id + ' title="ویرایش">',
+            '<i class="fa fa-edit"></i>',
+            '</button >',
+
+            '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "Tag")/?tagId=' + row.Id + ' title="حذف">',
+            '<i class="fa fa-trash"></i>',
+            '</button >'
+        ].join('')
+    }
+
+     function checkBoxFormat(value, row) {
+       return '<input type="checkbox" name="btSelectItem" value="' + row.Id + '" />';
+    }
+
+
+        function totalTextFormatter(data) {
+            return 'تعداد'
+        }
+
+        function totalNameFormatter(data) {
+            return data.length
+        }
+
+
+        function initTable() {
+            $table.bootstrapTable('destroy').bootstrapTable({
+                height: 600,
+                locale: 'fa-IR',
+                columns: [
+                    [{
+                        field: 'state',
+                        checkbox: true,
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: checkBoxFormat
+                    }, {
+                        title: 'ردیف',
+                        field: 'ردیف',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        footerFormatter: totalTextFormatter
+                    }, {
+                        title: 'جزئیات اطلاعات برچسب ها',
+                        colspan: 3,
+                        align: 'center'
+                    }],
+                    [{
+                        field: 'برچسب',
+                        title: 'برچسب',
+                        sortable: true,
+                        footerFormatter: totalNameFormatter,
+                    },{
+                        field: 'operate',
+                        title: 'عملیات',
+                        align: 'center',
+                        events: window.operateEvents,
+                        formatter: operateFormatter
+                    }]
+                ]
+            })
+        }
+
+        $(function () {
+            initTable()
+            $('#locale').change(initTable)
+        })</script>

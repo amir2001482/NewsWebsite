@@ -12,8 +12,11 @@ namespace NewsWebsite.Data.UnitOfWork
     {
         public NewsDBContext _Context { get; }
         private ICategoryRepository _categoryRepository;
+        private IVideoRepository _videoRepository;
+        private ITagRepository _tagRepository;
         private IMapper _mapper;
-        public UnitOfWork(NewsDBContext context , IMapper mapper)
+        
+        public UnitOfWork(NewsDBContext context , IMapper mapper )
         {
             _Context = context;
             _mapper = mapper;
@@ -33,6 +36,26 @@ namespace NewsWebsite.Data.UnitOfWork
                     _categoryRepository = new CategoryRepository(_Context , _mapper);
 
                 return _categoryRepository;
+            }
+        }
+        public IVideoRepository VideoRepository
+        {
+            get
+            {
+                if (_videoRepository == null)
+                    _videoRepository = new VideoRepository(_Context);
+
+                return _videoRepository;
+            }
+        }
+        public ITagRepository TagRepository
+        {
+            get
+            {
+                if (_tagRepository == null)
+                    _tagRepository = new TagRepository(_Context);
+
+                return _tagRepository;
             }
         }
         public async Task Commit()
