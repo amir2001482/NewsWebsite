@@ -1,4 +1,5 @@
-﻿using NewsWebsite.Data.Contracts;
+﻿using AutoMapper;
+using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,11 @@ namespace NewsWebsite.Data.UnitOfWork
     {
         public NewsDBContext _Context { get; }
         private ICategoryRepository _categoryRepository;
-        public UnitOfWork(NewsDBContext context)
+        private IMapper _mapper;
+        public UnitOfWork(NewsDBContext context , IMapper mapper)
         {
             _Context = context;
+            _mapper = mapper;
         }
 
         public IBaseRepository<TEntity> BaseRepository<TEntity>() where TEntity : class
@@ -27,7 +30,7 @@ namespace NewsWebsite.Data.UnitOfWork
             get
             {
                 if (_categoryRepository == null)
-                    _categoryRepository = new CategoryRepository(_Context);
+                    _categoryRepository = new CategoryRepository(_Context , _mapper);
 
                 return _categoryRepository;
             }

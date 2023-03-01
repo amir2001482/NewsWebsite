@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\NewsWebsite.Data\NewsWebsite.Data.csproj" />
     <ProjectReference Include="..\NewsWebsite.Services\NewsWebsite.Services.csproj" />
   </ItemGroup>

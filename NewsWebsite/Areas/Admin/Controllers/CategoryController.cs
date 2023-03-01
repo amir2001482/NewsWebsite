@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common;
+using NewsWebsite.Common.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Category;
@@ -67,7 +68,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return res;
         }
 
-        [HttpGet]
+        [HttpGet , AjaxOnly]
         public async Task<IActionResult> RenderCategory(string categoryId)
         {
             var categoryViewModel = new CategoryViewModel();
@@ -85,7 +86,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return PartialView("_RenderCategory", categoryViewModel);
         }
 
-        [HttpPost]
+        [HttpPost , AjaxOnly]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrUpdate(CategoryViewModel viewModel)
         {
