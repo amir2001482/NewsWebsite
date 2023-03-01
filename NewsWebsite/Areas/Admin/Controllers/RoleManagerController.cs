@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Attributes;
-using NewsWebsite.Entities.Identity;
+using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.RoleManager;
 

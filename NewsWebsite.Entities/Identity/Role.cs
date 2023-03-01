@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NewsWebsite.Entities.Identity
+namespace NewsWebsite.Entities.identity
 {
     public class Role : IdentityRole<int>
     {

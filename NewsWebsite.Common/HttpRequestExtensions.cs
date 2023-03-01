@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NewsWebsite.Common.Attributes
+namespace NewsWebsite.Common
 {
     public static class HttpRequestExtensions
     {

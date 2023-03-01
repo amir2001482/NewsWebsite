@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NewsWebsite.ViewModels.RoleManager;
 using NewsWebsite.ViewModels.UserManager;
-using NewsWebsite.Entities.Identity;
+using NewsWebsite.Entities.identity;
 
 namespace NewsWebsite.Services.Contracts
 {

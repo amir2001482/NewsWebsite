@@ -1,0 +1,194 @@
+﻿@model NewsWebsite.ViewModels.Manage.ProfileViewModel;
+@using NewsWebsite.Entities.identity;
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link href="~/lib/bootstrap.datetimepicker/css/jquery.md.bootstrap.datetimepicker.style.css" rel="stylesheet" />
+<script src="~/lib/bootstrap.datetimepicker/js/jquery.md.bootstrap.datetimepicker.js"></script>
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <ul class="nav nav-sitemap justify-content-center justify-content-xl-end">
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html"> داشبورد </a>
+            </li>
+            <li class="pr-2 pl-2">
+                <i class="fa fa-angle-left text-white align-middle"></i>
+            </li>
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html">نمایه من</a>
+            </li>
+
+        </ul>
+
+        <!-- User -->
+        @await Html.PartialAsync("_AdminLogin")
+    </div>
+</nav>
+<!-- Header -->
+<div class="header bg-gradient-primary pb-4 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+    <div class="row mt-5">
+        <div class="card shadow w-100">
+            <div class="card-header font_Vazir_Medium">
+                نمایه من
+            </div>
+            <form asp-controller="Manage" asp-action="Profile" enctype="multipart/form-data">
+
+                <input type="hidden" asp-for="Id" />
+                <div class="card-body">
+                    @if (ViewData.ModelState.IsValid.ToString() == "False")
+                    {
+                        <div asp-validation-summary="All" class="alert alert-danger mb-4"></div>
+                    }
+                    @if (ViewBag.Alert != null)
+                    {
+                        <div class="alert alert-success alert-dismissable mb-3">
+                            @ViewBag.Alert
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    }
+                    <div class="row mt-2 mb-2">
+                        <div class="col-md-4 border-left">
+                            <div class="col-md-12 text-center">
+                                <p>
+                                    تصویر پروفایل
+                                </p>
+                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <div class="fileinput-new thumbnail" style="height: 150px;">
+                                        @if (Model.Image != null)
+                                        {
+                                            <img src="~/avatars/@Model.Image" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/assets/img/UserPic.png" />
+                                        }
+                                    </div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail" style="height:200px"> </div>
+                                    <div>
+                                        <span class="btn default btn-file">
+                                            <span class="fileinput-new btn btn-success"> انتخاب کنید </span>
+                                            <span class="fileinput-exists btn btn-default"> تغییر عکس </span>
+                                            <input type="file" asp-for="ImageFile" accept=".jpg, .png, .jpeg, .gif, .tif, .tiff, .JPG" />
+                                        </span>
+                                        <a href="javascript:;" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"> حذف </a>
+                                    </div>
+                                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="UserName" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="UserName" class="form-control" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="Email" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="FirstName" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="LastName" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="Gender" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-4 custom-control custom-radio mb-3">
+                                            <input asp-for="Gender" value="@GenderType.male" class="custom-control-input" id="customRadio1" type="radio">
+                                            <label class="custom-control-label" for="customRadio1">مرد</label>
+                                        </div>
+                                        <div class="col-md-4 custom-control custom-radio mb-3">
+                                            <input asp-for="Gender" value="@GenderType.famale" class="custom-control-input" id="customRadio2" type="radio">
+                                            <label class="custom-control-label" for="customRadio2">زن</label>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="PhoneNumber" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="PersianBirthDate" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text cursor-pointer" id="BirthDate">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <input asp-for="PersianBirthDate" class="form-control" id="InputBirthDate" style="direction:ltr" />
+
+                                    </div>
+                                </div>
+
+                                <span asp-validation-for="PersianBirthDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <input type="submit" value="ویرایش اطلاعات" class="btn btn-success float-left" />
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+<script>
+    $("#BirthDate").MdPersianDateTimePicker({
+         targetTextSelector:"#InputBirthDate",
+         placement:'top',
+    });
+</script>

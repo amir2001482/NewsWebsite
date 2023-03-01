@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NewsWebsite.Entities.Identity;
+using NewsWebsite.Entities.identity;
 using System;
 using System.Collections.Generic;
 using System.Text;

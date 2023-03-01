@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace NewsWebsite.Entities.Identity
+namespace NewsWebsite.Entities.identity
 {
     public class User : IdentityUser<int>
     {

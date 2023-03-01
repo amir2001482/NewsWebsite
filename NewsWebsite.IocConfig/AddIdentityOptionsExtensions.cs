@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using NewsWebsite.Data;
-using NewsWebsite.Entities.Identity;
+using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Identity;
 using System;
 using System.Collections.Generic;

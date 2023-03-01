@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using NewsWebsite.Services.Contracts;
-using NewsWebsite.Entities.Identity;
+using NewsWebsite.Entities.identity;
 using NewsWebsite.Common;
 using NewsWebsite.Data;
 using NewsWebsite.ViewModels.Settings;

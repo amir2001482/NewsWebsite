@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NewsWebsite
+namespace NewsWebsite.Common
 {
     public static class FileExtensions
     {

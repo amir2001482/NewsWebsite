@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data.Mapping;
 using NewsWebsite.Entities;
-using NewsWebsite.Entities.Identity;
+using NewsWebsite.Entities.identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +23,8 @@ namespace NewsWebsite.Data
             builder.AddCustomNewsWebsiteMapping();
             builder.Entity<News>().Property(b => b.PublishDateTime).HasDefaultValueSql("CONVERT(datetime,GetDate())");
             builder.Entity<Video>().Property(b => b.PublishDateTime).HasDefaultValueSql("CONVERT(datetime,GetDate())");
+            builder.Entity<User>().Property(b => b.RegisterDateTime).HasDefaultValueSql("CONVERT(datetime,GetDate())");
+            builder.Entity<User>().Property(b => b.IsActive).HasDefaultValueSql("1");
         }
         public virtual DbSet<Category> Categories { set; get; }
         public virtual DbSet<News> News { set; get; }

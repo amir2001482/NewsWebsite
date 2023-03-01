@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.UserManager;
 using System;
@@ -9,7 +10,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using NewsWebsite.Entities.Identity;
+using System.IO;
+using NewsWebsite.Common;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace NewsWebsite.Services.Identity
 {
@@ -24,6 +28,7 @@ namespace NewsWebsite.Services.Identity
         private readonly IServiceProvider _services;
         private readonly IUserStore<User> _userStore;
         private readonly IEnumerable<IUserValidator<User>> _userValidators;
+        private readonly IMapper _mapper;
 
         public ApplicationUserManager(
             ApplicationIdentityErrorDescriber errors,
@@ -34,8 +39,9 @@ namespace NewsWebsite.Services.Identity
             IEnumerable<IPasswordValidator<User>> passwordValidators,
             IServiceProvider services,
             IUserStore<User> userStore,
-            IEnumerable<IUserValidator<User>> userValidators)
-            : base(userStore,options,passwordHasher,userValidators,passwordValidators,keyNormalizer,errors,services,logger)
+            IEnumerable<IUserValidator<User>> userValidators,
+            IMapper mapper)
+            : base(userStore, options, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _userStore = userStore;
             _errors = errors;
@@ -46,6 +52,7 @@ namespace NewsWebsite.Services.Identity
             _options = options;
             _keyNormalizer = keyNormalizer;
             _passwordValidators = passwordValidators;
+            _mapper = mapper;
         }
 
         public async Task<List<User>> GetAllUsersAsync()
@@ -67,7 +74,7 @@ namespace NewsWebsite.Services.Identity
                 IsActive = user.IsActive,
                 Image = user.Image,
                 RegisterDateTime = user.RegisterDateTime,
-                Roles=user.Roles.Select(u=>u.Role.Name),
+                Roles = user.Roles,
 
             }).ToListAsync();
         }
@@ -86,14 +93,14 @@ namespace NewsWebsite.Services.Identity
                 IsActive = user.IsActive,
                 Image = user.Image,
                 RegisterDateTime = user.RegisterDateTime,
-                Roles = user.Roles.Select(u => u.Role.Name),
+                Roles = user.Roles,
                 AccessFailedCount = user.AccessFailedCount,
                 EmailConfirmed = user.EmailConfirmed,
                 LockoutEnabled = user.LockoutEnabled,
                 LockoutEnd = user.LockoutEnd,
                 PhoneNumberConfirmed = user.PhoneNumberConfirmed,
                 TwoFactorEnabled = user.TwoFactorEnabled,
-
+                Gender = user.Gender,
             }).FirstOrDefaultAsync();
         }
 
@@ -104,9 +111,9 @@ namespace NewsWebsite.Services.Identity
         }
 
 
-        public async Task<List<UsersViewModel>> GetPaginateUsersAsync(int offset, int limit, bool? firstnameSortAsc, bool? lastnameSortAsc, bool? emailSortAsc, bool? usernameSortAsc, string searchText)
+        public async Task<List<UsersViewModel>> GetPaginateUsersAsync(int offset, int limit, bool? firstnameSortAsc, bool? lastnameSortAsc, bool? emailSortAsc, bool? usernameSortAsc,bool? registerDateTimeSortAsc, string searchText)
         {
-            var users = await Users.Include(u => u.Roles).Where(t=>t.FirstName.Contains(searchText) || t.LastName.Contains(searchText) || t.Email.Contains(searchText) || t.PhoneNumber.Contains(searchText))
+            var users = await Users.Include(u => u.Roles).Where(t => t.FirstName.Contains(searchText) || t.LastName.Contains(searchText) || t.Email.Contains(searchText) || t.UserName.Contains(searchText) || t.RegisterDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss").Contains(searchText))
                     .Select(user => new UsersViewModel
                     {
                         Id = user.Id,
@@ -117,6 +124,11 @@ namespace NewsWebsite.Services.Identity
                         LastName = user.LastName,
                         IsActive = user.IsActive,
                         Image = user.Image,
+                        PersianBirthDate = user.BirthDate.ConvertMiladiToShamsi("yyyy/MM/dd"),
+                        PersianRegisterDateTime = user.RegisterDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss"),
+                        GenderName = user.Gender == GenderType.male ? "مرد" : "زن",
+                        RoleId = user.Roles.Select(r => r.Role.Id).FirstOrDefault(),
+                        RoleName = user.Roles.Select(r => r.Role.Name).FirstOrDefault()
                     }).Skip(offset).Take(limit).ToListAsync();
 
             if (firstnameSortAsc != null)
@@ -139,11 +151,30 @@ namespace NewsWebsite.Services.Identity
                 users = users.OrderBy(t => (usernameSortAsc == true && usernameSortAsc != null) ? t.PhoneNumber : "").OrderByDescending(t => (usernameSortAsc == false && usernameSortAsc != null) ? t.UserName : "").ToList();
             }
 
+            else if (registerDateTimeSortAsc != null)
+            {
+                users = users.OrderBy(t => (registerDateTimeSortAsc == true && registerDateTimeSortAsc != null) ? t.PersianRegisterDateTime : "").OrderByDescending(t => (registerDateTimeSortAsc == false && registerDateTimeSortAsc != null) ? t.PersianRegisterDateTime : "").ToList();
+            }
+
             foreach (var item in users)
                 item.Row = ++offset;
 
             return users;
         }
 
+        public string CheckAvatarFileName(string fileName)
+        {
+            string fileExtension = Path.GetExtension(fileName);
+            int fileNameCount = Users.Where(f => f.Image == fileName).Count();
+            int j = 1;
+            while (fileNameCount != 0)
+            {
+                fileName = fileName.Replace(fileExtension, "") + j + fileExtension;
+                fileNameCount = Users.Where(f => f.Image == fileName).Count();
+                j++;
+            }
+
+            return fileName;
+        }
     }
 }

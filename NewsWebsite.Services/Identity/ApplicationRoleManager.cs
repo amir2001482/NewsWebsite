@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
 using NewsWebsite.Common;
-using NewsWebsite.Entities.Identity;
+using NewsWebsite.Entities.identity;
 
 namespace NewsWebsite.Services.Identity
 {
@@ -133,7 +133,7 @@ namespace NewsWebsite.Services.Identity
                     IsActive = user.IsActive,
                     Image = user.Image,
                     RegisterDateTime = user.RegisterDateTime,
-                    Roles = user.Roles.Select(u => u.Role.Name),
+                    Roles = user.Roles
                 }).AsNoTracking().ToListAsync();
         }
 

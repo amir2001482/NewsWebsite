@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using NewsWebsite.Entities;
-using NewsWebsite.Entities.Identity;
+using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Category;
+using NewsWebsite.ViewModels.Manage;
 using NewsWebsite.ViewModels.RoleManager;
 using NewsWebsite.ViewModels.Tag;
+using NewsWebsite.ViewModels.UserManager;
 using NewsWebsite.ViewModels.Video;
 using System;
 using System.Collections.Generic;
@@ -29,6 +31,16 @@ namespace NewsWebsite.IocConfig.Mapping
 
             CreateMap<Video, VideoViewModel>().ReverseMap()
                 .ForMember(p => p.PublishDateTime, opt => opt.Ignore());
+
+            CreateMap<User, UsersViewModel>().ReverseMap()
+                .ForMember(p => p.Claims, opt => opt.Ignore())
+                .ForMember(p => p.Bookmarks, opt => opt.Ignore())
+                .ForMember(p => p.News, opt => opt.Ignore());
+
+            CreateMap<User, ProfileViewModel>().ReverseMap()
+               .ForMember(p => p.Claims, opt => opt.Ignore())
+               .ForMember(p => p.Bookmarks, opt => opt.Ignore())
+               .ForMember(p => p.News, opt => opt.Ignore());
         }
     }
 }

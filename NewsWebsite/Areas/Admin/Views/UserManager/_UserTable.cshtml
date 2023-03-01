@@ -1,0 +1,201 @@
+﻿
+
+
+<div id="toolbar">
+    <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderUser","UserManager")">
+        <i class="fa fa-plus"></i> | افزودن کاربر جدید
+    </button>
+    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","UserManager")">
+        <i class="fa fa-trash"></i> | حذف گروهی
+    </button>
+</div>
+
+<table id="table"
+       data-toolbar="#toolbar"
+       data-search="true"
+       data-show-refresh="true"
+       data-show-toggle="true"
+       data-show-fullscreen="true"
+       data-show-columns="true"
+       data-detail-view="true"
+       data-show-export="true"
+       data-click-to-select="true"
+       data-detail-formatter="detailFormatter"
+       data-minimum-count-columns="2"
+       data-show-pagination-switch="true"
+       data-pagination="true"
+       data-id-field="id"
+       data-page-list="[10, 25, 50, 100, all]"
+       data-show-footer="true"
+       data-side-pagination="server"
+       data-url="/Admin/UserManager/GetUsers"
+       data-response-handler="responseHandler"></table>
+
+
+<script>
+        var $table = $('#table')
+        var selections = []
+
+
+  function get_query_params(p) {
+    return {
+        extraParam: 'abc',
+        search: p.title,
+        sort: p.sort,
+        order: p.order,
+        limit: p.limit,
+        offset: p.offset
+    }
+}
+
+
+
+        function responseHandler(res) {
+            $.each(res.rows, function (i, row) {
+                row.state = $.inArray(row.id, selections) !== -1
+            })
+            return res
+        }
+
+    function isActiveFormatter(value, row, index) {
+    var spanClass = "badge badge-success";
+    var IsActive = "فعال";
+    if (!row.IsActive) {
+        IsActive = "غیرفعال";
+        spanClass = "badge badge-danger";
+    }
+
+    return [
+        '<span class="' + spanClass + '">' + IsActive + '</span>'
+    ].join('')
+    }
+
+
+    function roleFormatter(value, row, index) {
+        return [
+            '<span class="badge badge-primary">' + value + '</span>'
+    ].join('')
+  }
+
+
+         function detailFormatter(index, row) {
+            var html = []
+            $.each(row, function (key, value) {
+                if (key != "state" && key != "Id" && key!="ردیف" && key!="تصویر" && key!="IsActive")
+                    html.push('<p><b>' + key + ':</b> ' + value + '</p>')
+
+                if (key == "تصویر") {
+                    var url = '@string.Format("{0}://{1}", Context.Request.Scheme, Context.Request.Host)' + '/avatars/' + value;
+                    html.push('<p><b>' + key + ':</b> <img src="' + url + '" height="50" />')
+                }
+
+                   
+            })
+            return html.join('')
+        }
+
+
+         function operateFormatter(value, row, index) {
+        return [
+            '<a class="btn btn btn-primary btn-sm" href=@Url.Action("Details","UsersManager")/' + row.Id + ' title="Management">',
+            '<i class="fa fa-user"></i> | مدیریت ', '</a>',
+
+            '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderUser", "UserManager")?userId=' + row.Id + ' title="ویرایش">',
+            '<i class="fa fa-edit"></i>',
+            '</button >',
+
+            '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "UserManager")/?userId=' + row.Id + ' title="حذف">',
+            '<i class="fa fa-trash"></i>',
+            '</button >'
+        ].join('')
+    }
+
+     function checkBoxFormat(value, row) {
+       return '<input type="checkbox" name="btSelectItem" value="' + row.Id + '" />';
+    }
+
+
+        function totalTextFormatter(data) {
+            return 'تعداد'
+        }
+
+        function totalNameFormatter(data) {
+            return data.length
+        }
+
+
+        function initTable() {
+            $table.bootstrapTable('destroy').bootstrapTable({
+                height: 600,
+                locale: 'fa-IR',
+                columns: [
+                    [{
+                        field: 'state',
+                        checkbox: true,
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: checkBoxFormat
+                    }, {
+                        title: 'ردیف',
+                        field: 'ردیف',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        footerFormatter: totalTextFormatter
+                    }, {
+                        title: 'جزئیات اطلاعات کاربران',
+                        colspan: 8,
+                        align: 'center'
+                    }],
+                    [{
+                        field: 'نام',
+                        title: 'نام',
+                        sortable: true,
+                        footerFormatter: totalNameFormatter,
+                        align: 'center'
+                    },{
+                        field: 'نام خانوادگی',
+                        title: 'نام خانوادگی',
+                        sortable: true,
+                        align: 'center'
+                    },{
+                        field: 'ایمیل',
+                        title: 'ایمیل',
+                        sortable: true,
+                        align: 'center'
+                    },{
+                        field: 'نام کاربری',
+                        title: 'نام کاربری',
+                        sortable: true,
+                        align: 'center'
+                    },{
+                        field: 'تاریخ عضویت',
+                        title: 'تاریخ عضویت',
+                        sortable: true,
+                        align: 'center'
+                    },{
+                        field: 'نقش',
+                        title: 'نقش',
+                        align: 'center',
+                        formatter: roleFormatter
+                    },{
+                    field: '',
+                    title: 'وضعیت',
+                    align: 'center',
+                    formatter: isActiveFormatter
+                   },{
+                        field: 'operate',
+                        title: 'عملیات',
+                        align: 'center',
+                        events: window.operateEvents,
+                        formatter: operateFormatter
+                    }]
+                ]
+            })
+        }
+
+        $(function () {
+            initTable()
+            $('#locale').change(initTable)
+        })</script>
