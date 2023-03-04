@@ -548,5 +548,10 @@ namespace NewsWebsite.Common
             public bool? IsSuccess { get; set; }
             public List<string> Errors { get; set; }
         }
+        public static void UploadFileBase64(this string base64, string path)
+        {
+            byte[] bytes = Convert.FromBase64String(base64);
+            File.WriteAllBytes(path, bytes);
+        }
     }
 }

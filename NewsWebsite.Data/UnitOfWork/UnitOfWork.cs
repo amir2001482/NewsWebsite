@@ -14,6 +14,7 @@ namespace NewsWebsite.Data.UnitOfWork
         private ICategoryRepository _categoryRepository;
         private IVideoRepository _videoRepository;
         private ITagRepository _tagRepository;
+        private INewsRepository _newsRepository;
         private IMapper _mapper;
         
         public UnitOfWork(NewsDBContext context , IMapper mapper )
@@ -58,6 +59,17 @@ namespace NewsWebsite.Data.UnitOfWork
                 return _tagRepository;
             }
         }
+        public INewsRepository NewsRepository
+        {
+            get
+            {
+                if (_newsRepository == null)
+                    _newsRepository = new NewsRepository(_Context, _mapper);
+
+                return _newsRepository;
+            }
+        }
+
         public async Task Commit()
         {
             await _Context.SaveChangesAsync();

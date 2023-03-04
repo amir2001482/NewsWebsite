@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Tag;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,23 @@ namespace NewsWebsite.Data.Repositories
                         return false;
                 }
             }
+        }
+
+        public async Task<List<NewsTag>> InsertNewsTags(string[] tags, string newsId = null)
+        {
+            string tagId;
+            List<NewsTag> newsTags = new List<NewsTag>();
+            var allTags = _context.Tags.ToList();
+            newsTags.AddRange(allTags.Where(n => tags.Contains(n.TagName)).Select(c => new NewsTag { TagId = c.TagId, NewsId = newsId }).ToList());
+            var newTags = tags.Where(n => !allTags.Select(t => t.TagName).Contains(n)).ToList();
+            foreach (var item in newTags)
+            {
+                tagId = StringExtensions.GenerateId(10);
+                _context.Tags.Add(new Tag { TagName = item, TagId = tagId });
+                newsTags.Add(new NewsTag { TagId = tagId, NewsId = newsId });
+            }
+            await _context.SaveChangesAsync();
+            return newsTags;
         }
     }
 }

@@ -4097,7 +4097,7 @@ input[type='button'].btn-block {
     position: relative;
     display: block;
     min-height: 1.5rem;
-    padding-left: 1.75rem;
+    padding-right: 1.75rem;
 }
 
 .custom-control-inline {
@@ -4143,7 +4143,7 @@ input[type='button'].btn-block {
     .custom-control-label::before {
         position: absolute;
         top: .125rem;
-        left: -1.75rem;
+        right: -1.75rem;
         display: block;
         width: 1.25rem;
         height: 1.25rem;
@@ -4160,7 +4160,7 @@ input[type='button'].btn-block {
     .custom-control-label::after {
         position: absolute;
         top: .125rem;
-        left: -1.75rem;
+        right: -1.75rem;
         display: block;
         width: 1.25rem;
         height: 1.25rem;
@@ -6456,6 +6456,7 @@ button.close {
     box-shadow: 0 .5rem 2rem 0 rgba(0, 0, 0, .2);
     text-shadow: none;
     line-break: auto;
+    direction:ltr !important;
 }
 
     .popover .arrow {
@@ -18507,7 +18508,6 @@ textarea[resize='horizontal'] {
 }
 
 p {
-    font-size: 1rem;
     font-weight: 300;
     line-height: 1.7;
 }
@@ -19328,5 +19328,14 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle {
 
 .tox .tox-form__group {
     margin-bottom: 12px !important;
+}
+
+.modal-open {
+    overflow: auto !important;
+    padding-right: 0px !important;
+}
+
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+    overflow: auto !important;
 }
 

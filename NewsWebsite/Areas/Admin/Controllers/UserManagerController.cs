@@ -142,30 +142,35 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     if (viewModel.ImageFile != null)
                         viewModel.Image = _userManager.CheckAvatarFileName(viewModel.ImageFile.FileName);
 
-                    viewModel.BirthDate = viewModel.PersianBirthDate.ConvertShamsiToMiladi();
-                    viewModel.Roles = new List<UserRole> { new UserRole { RoleId = (int)viewModel.RoleId } };
                     if (viewModel.Id != null)
                     {
                         var user = await _userManager.FindByIdAsync(viewModel.Id.ToString());
-                        viewModel.RegisterDateTime = user.RegisterDateTime;
+                        user.FirstName = viewModel.FirstName;
+                        user.LastName = viewModel.LastName;
+                        user.BirthDate = viewModel.PersianBirthDate.ConvertShamsiToMiladi();
+                        user.Email = viewModel.Email;
+                        user.UserName = viewModel.UserName;
+                        user.Gender = viewModel.Gender.Value;
+                        user.PhoneNumber = viewModel.PhoneNumber;
+                        user.Roles = new List<UserRole> { new UserRole { RoleId = (int)viewModel.RoleId } };
                         var userRoles = await _userManager.GetRolesAsync(user);
                         if (viewModel.ImageFile != null)
                         {
                             await viewModel.ImageFile.UploadFileAsync($"{_env.WebRootPath}/avatars/{viewModel.Image}");
                             FileExtensions.DeleteFile($"{_env.WebRootPath}/avatars/{user.Image}");
+                            user.Image = viewModel.Image;
                         }
-                        else
-                            viewModel.Image = user.Image;
-
                         result = await _userManager.RemoveFromRolesAsync(user, userRoles);
                         if (result.Succeeded)
-                            result = await _userManager.UpdateAsync(_mapper.Map(viewModel, user));
+                            result = await _userManager.UpdateAsync(user);
                     }
 
                     else
                     {
                         await viewModel.ImageFile.UploadFileAsync($"{_env.WebRootPath}/avatars/{viewModel.Image}");
                         viewModel.EmailConfirmed = true;
+                        viewModel.Roles = new List<UserRole> { new UserRole { RoleId = (int)viewModel.RoleId } };
+                        viewModel.BirthDate = viewModel.PersianBirthDate.ConvertShamsiToMiladi();
                         result = await _userManager.CreateAsync(_mapper.Map<User>(viewModel), viewModel.Password);
                     }
 

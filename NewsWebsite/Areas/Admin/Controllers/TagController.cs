@@ -164,8 +164,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 {
                     var tag = await _uw.BaseRepository<Tag>().FindByIdAsync(item);
                     _uw.BaseRepository<Tag>().Delete(tag);
-                    await _uw.Commit();
                 }
+                await _uw.Commit();
                 TempData["notification"] = "حذف گروهی اطلاعات با موفقیت انجام شد.";
             }
 

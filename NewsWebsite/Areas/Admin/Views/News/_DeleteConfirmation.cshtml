@@ -1,0 +1,39 @@
+﻿@model  NewsWebsite.Entities.News
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">حذف اطلاعات</h3>
+                    <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body clearfix">
+                    @if (Model==null)
+                    {
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    }
+                    else
+                    {
+                       <h4>آیا شما می خواهید این خبر با عنوان "@Model.Title" را حذف کنید ؟</h4>
+                        <form asp-action="Delete">
+                            <input name="IsValid" type="hidden" value="True" />
+                            <input type="hidden" asp-for="NewsId"/>
+                        </form>
+                    }
+                </div>
+
+                <div class="modal-footer">
+                    @if (Model != null)
+                    {
+                        <button type="submit" class="btn btn-sm btn-labeled btn-success" data-save="modal">
+                            بله
+                        </button>
+                    }
+                    <button type="button" class="btn btn-sm btn-labeled  btn-danger  mr-1" data-dismiss="modal">
+                        @(Model != null ? "خیر" : "بستن")
+                    </button>
+
+                </div>
+            </div>
+        </div>
+</div>

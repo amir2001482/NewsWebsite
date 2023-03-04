@@ -1,0 +1,411 @@
+﻿@model NewsWebsite.ViewModels.News.NewsViewModel
+@using NewsWebsite.Common;
+@{
+    ViewData["Title"] = "RenderNews";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link href="~/lib/croppie/croppie.css" rel="stylesheet" />
+<script src="~/lib/croppie/croppie.min.js"></script>
+
+<link href="~/lib/treeView/TreeView.css" rel="stylesheet" />
+<script src="~/lib/treeView/TreeView.js"></script>
+
+<link href="~/lib/Bootstrap4-tags-inputmaster/css/typeahead.css" rel="stylesheet" />
+<script src="~/lib/Bootstrap4-tags-inputmaster/js/tagsinput.js"></script>
+<script src="~/lib/Bootstrap4-tags-inputmaster/js/typeahead.js"></script>
+
+<link href="~/lib/clockPicker/bootstrap-clockpicker.min.css" rel="stylesheet" />
+<script src="~/lib/clockPicker/bootstrap-clockpicker.min.js"></script>
+
+<script src="~/lib/tinymce/tinymce.min.js"></script>
+
+<style>
+
+    label.cabinet {
+        display: block;
+        cursor: pointer;
+    }
+
+        label.cabinet input.file {
+            position: relative;
+            opacity: 0;
+            -moz-opacity: 0;
+            filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+            margin-top: -30px;
+        }
+
+    #upload-demo {
+        width: 790px;
+        height: 550px;
+        padding-bottom: 25px;
+    }
+
+
+    .modal-dialog {
+        max-width: 57%;
+        margin: 1.75rem auto;
+    }
+
+    .tt-hint {
+        right: 0px !important;
+    }
+</style>
+<div id="modal-placeholder"></div>
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <ul class="nav nav-sitemap justify-content-center justify-content-xl-end">
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html"> داشبورد </a>
+            </li>
+            <li class="pr-2 pl-2">
+                <i class="fa fa-angle-left text-white align-middle"></i>
+            </li>
+
+            @if (Model.NewsId.HasValue())
+            {
+                <li>
+                    <a class="h4 mb-0 text-white d-lg-inline-block"  asp-action="CreateOrUpdate" asp-route-newsId="@Model.NewsId">ویرایش خبر </a>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <a class="h4 mb-0 text-white d-lg-inline-block" asp-action="CreateOrUpdate">افزودن خبر جدید</a>
+                </li>
+            }
+
+
+        </ul>
+
+        <!-- User -->
+        @await Html.PartialAsync("_AdminLogin")
+    </div>
+</nav>
+<!-- Header -->
+<div class="header bg-gradient-primary pb-4 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+    <div class="row mt-5">
+        <div class="card shadow w-100">
+            <div class="card-header font_Vazir_Medium">
+                @if (Model.NewsId.HasValue())
+                {
+                    <span>ویرایش خبر</span>
+                }
+                else
+                {
+                    <span>افزودن خبر </span>
+                }
+            </div>
+            <form asp-action="CreateOrUpdate" asp-controller="News">
+                <input type="hidden" asp-for="NewsId" />
+                <div class="card-body">
+                    @if (ViewBag.Alert != null)
+                    {
+                    <div class="col-md-12">
+                        <div class="alert alert-success mb-4 alert-dismissable">
+                            @ViewBag.Alert
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    }
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <input asp-for="Title" class="form-control" placeholder="عنوان خبر" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-9 p-0">
+                                    <input asp-for="Url" class="form-control text-left" placeholder="...Enter Url" />
+                                </div>
+                                <div class="col-md-3 text-left p-0">@string.Format("/{0}:://{1}", Context.Request.Scheme, Context.Request.Host)</div>
+                                <span asp-validation-for="Url" class="text-danger"></span>
+                            </div>
+                            <textarea id="mytextarea" asp-for="Description"></textarea>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card mb-2">
+                                <div class="card-header pt-2 pb-2 bg-light">انتشار</div>
+                                <div class="card-body">
+                                    <div class="custom-control custom-control-alternative custom-checkbox mb-3">
+                                        <input class="custom-control-input" asp-for="FuturePublish" id="futurePublish" type="checkbox">
+                                        <label class="custom-control-label" for="futurePublish">
+                                            انتشار خبر در آینده
+                                        </label>
+                                    </div>
+                                    <div class="futurePublishDiv" style="@(Model.FuturePublish==true?"":"display:none;")">
+                                        <div class="form-group">
+                                            <label asp-for="PersianPublishDate" class="control-label"></label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text cursor-pointer" id="PublishDate">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                                <input asp-for="PersianPublishDate" class="form-control" id="InputPublishDate" style="direction:ltr" />
+
+                                            </div>
+                                            <span asp-validation-for="PersianPublishDate" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="PersianPublishTime" class="control-label"></label>
+                                            <div class="input-group clockpicker">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text cursor-pointer">
+                                                        <i class="fa fa-clock"></i>
+                                                    </span>
+                                                </div>
+
+                                                <input asp-for="PersianPublishTime" class="form-control">
+                                            </div>
+                                           
+                                            <span asp-validation-for="PersianPublishTime" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <input type="submit" value="@(Model.NewsId.HasValue()?"به روزرسانی":"انتشار")" class="btn btn-primary text-white btn-sm" name="submitButton" />
+                                    <input type="submit" value="ذخیره پیش نویس" class="btn btn-success btn-sm" name="submitButton" />
+                                </div>
+                            </div>
+                            <div class="card mb-2">
+                                <div class="card-header pt-2 pb-2 bg-light">نوع خبر</div>
+                                <div class="card-body">
+                                    <p>نوع خبر را انتخاب کنید.</p>
+                                    <label class="col-md-8" style="vertical-align:20px;">داخلی</label>
+                                    <label class="custom-toggle">
+                                        <input type="radio" asp-for="IsInternal" value="true" />
+                                        <span class="custom-toggle-slider rounded-circle"></span>
+                                    </label>
+                                    <label class="col-md-8" style="vertical-align:20px;">خارجی</label>
+                                    <label class="custom-toggle">
+                                        <input type="radio" asp-for="IsInternal" value="false" />
+                                        <span class="custom-toggle-slider rounded-circle"></span>
+                                    </label>
+                                    <span class="clearfix"></span>
+                                    <span asp-validation-for="IsInternal" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="card mb-2">
+                                <div class="card-header pt-2 pb-2 bg-light">دسته بندی</div>
+                                <div class="card-body">
+                                    <ul id="category" class="demo1">
+                                        @foreach (var item in Model.NewsCategoriesViewModel.Categories)
+                                        {
+                                            <li>
+                                                @if (Model.NewsCategories != null)
+                                                {
+                                                    if (Model.NewsCategories.Select(c => c.CategoryId).Contains(item.id))
+                                                    {
+                                                        <input type="checkbox" name="CategoryIds" value="@item.id" checked /> @item.title
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="CategoryIds" value="@item.id" /> @item.title
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="CategoryIds" value="@item.id" /> @item.title
+                                                }
+
+                                                @{ Model.NewsCategoriesViewModel.Categories = item.subs;}
+                                                @await Html.PartialAsync("_SubCategories", Model.NewsCategoriesViewModel)
+
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="card mb-2">
+                                <div class="card-header pt-2 pb-2 bg-light">برچسب ها</div>
+                                <div class="card-body">
+                                    <p>برچسب ها را انتخاب  کنید و یا بنویسید و سپس  دکمه Enter را بزنید.</p>
+                                    <input type="text" id="tagstype" asp-for="NameOfTags" class="form-control" style="width:400px;">
+                                </div>
+                            </div>
+
+                            <div class="card mb-2">
+                                <div class="card-header pt-2 pb-2 bg-light">تصویر شاخص</div>
+                                <div class="card-body">
+                                    <label class="cabinet center-block">
+                                        <span>
+                                            @if (Model.ImageName.HasValue())
+                                            {
+                                                <img src="~/newsImage/@Model.ImageName" class="gambar img-responsive img-thumbnail" id="item-img-output" height="50" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/assets/img/SpecifiedImage.jpg" class="gambar img-responsive img-thumbnail" id="item-img-output" height="50" />
+                                            }
+                                            <input type="hidden" asp-for="ImageFile" id="base64" />
+                                            <a class="btn btn-success btn-sm btn-block mt-2 text-white">
+                                                <span><i class="fa fa-camera"></i></span> انتخاب کنید ...
+                                            </a>
+                                        </span>
+
+                                        <input type="file" class="item-img file center-block" name="file_photo" />
+                                    </label>
+                                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cropImagePop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    برش تصویر شاخص
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            </div>
+            <div class="modal-body">
+                <div id="upload-demo" class="center-block"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">بستن</button>
+                <button type="button" id="cropImageBtn" class="btn btn-sm btn-primary mr-2">برش</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+<script>
+
+    //tinymce
+    tinymce.init({
+        selector: '#mytextarea',
+        height: 950,
+        plugins:'print preview fullscreen image link media template codesample table charmap hr help',
+        toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat |fullscreen',
+        language: 'fa_IR',
+        directionality : 'rtl'
+   });
+
+   //clockpicker
+   $('.clockpicker').clockpicker({
+        placement: 'bottom',
+        donetext: 'انتخاب'
+  });
+
+    //treeView
+    $('.demo1').bonsai();
+
+
+    //DatePicker
+    $("#PublishDate").MdPersianDateTimePicker({
+         targetTextSelector:"#InputPublishDate",
+         placement:'top',
+    });
+
+    //Crop
+    var $uploadCrop,
+        tempFilename,
+        rawImg,
+        imageId;
+    function readFile(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('.upload-demo').addClass('ready');
+                $('#cropImagePop').modal('show');
+                rawImg = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+        else {
+            swal("Sorry - you're browser doesn't support the FileReader API");
+        }
+    }
+
+    $uploadCrop = $('#upload-demo').croppie({
+        viewport: {
+            width: 740,
+            height: 500,
+        },
+        enforceBoundary: false,
+        enableExif: true
+    });
+    $('#cropImagePop').on('shown.bs.modal', function () {
+        $uploadCrop.croppie('bind', {
+            url: rawImg
+        }).then(function () {
+            console.log('jQuery bind complete');
+        });
+    });
+
+    $('.item-img').on('change', function () {
+        imageId = $(this).data('id'); tempFilename = $(this).val();
+        $('#cancelCropBtn').data('id', imageId); readFile(this);
+    });
+
+    $('#cropImageBtn').on('click', function (ev) {
+        $uploadCrop.croppie('result', {
+            type: 'base64',
+            format: 'jpeg',
+            size: { width: 740, height: 500 }
+        }).then(function (resp) {
+            $('#item-img-output').attr('src', resp);
+            $("#base64").val(resp.split(',')[1]);
+            $('#cropImagePop').modal('hide');
+        });
+    });
+
+    $('#futurePublish').change(function(){
+    if(this.checked) {
+        $(".futurePublishDiv").show();
+    } else {
+        $(".futurePublishDiv").hide();
+    }
+});
+
+
+    // Select Tag
+     var substringMatcher = function(strs) {
+            return function findMatches(q, cb) {
+                var matches, substringRegex;
+                matches = [];
+                substrRegex = new RegExp(q, 'i');
+                $.each(strs, function(i, str) {
+                if (substrRegex.test(str)) {
+                    matches.push(str);
+                }
+                });
+
+                cb(matches);
+            };
+            };
+
+            var states = @Html.Raw(Json.Serialize(ViewBag.Tags));
+            $('#tagstype').tagsinput({
+                    typeaheadjs:({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },{
+                    name: 'states',
+                    source: substringMatcher(states)
+                })
+            });
+
+</script>
+
