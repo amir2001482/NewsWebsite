@@ -146,6 +146,7 @@ ol,
 ul,
 dl {
     margin: 0;
+    padding: 0px 0.7rem;
 }
 
     ol ol,
@@ -3977,8 +3978,8 @@ input[type='button'].btn-block {
 
         .input-group > .form-control:not(:first-child),
         .input-group > .custom-select:not(:first-child) {
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
         }
 
     .input-group > .custom-file {
@@ -4078,8 +4079,8 @@ input[type='button'].btn-block {
 .input-group > .input-group-append:not(:last-child) > .input-group-text,
 .input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle),
 .input-group > .input-group-append:last-child > .input-group-text:not(:last-child) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .input-group > .input-group-append > .btn,
@@ -5391,8 +5392,9 @@ input[type='button'].btn-block {
 }
 
 .badge {
-    font-size: 66%;
-    font-weight: 600;
+    font-size: 80%;
+    font-weight: 100;
+    font-family:Vazir_Medium;
     line-height: 1;
     display: inline-block;
     padding: .35rem .375rem;
@@ -8370,7 +8372,7 @@ button.bg-darker:focus {
 
 .ml-2,
 .mx-2 {
-    margin-left: .5rem !important;
+    margin-right: .5rem !important;
 }
 
 .m-3 {
@@ -14775,7 +14777,7 @@ a.text-lighter:focus {
 }
 
 .alert {
-    font-size: .875rem;
+    font-size: .775rem;
 }
 
 .alert-heading {
@@ -14969,7 +14971,7 @@ a.text-lighter:focus {
     }
 
 .btn {
-    font-size: .875rem;
+    font-size: .775rem;
     position: relative;
     transition: all .15s ease;
     letter-spacing: .025em;
@@ -16135,14 +16137,9 @@ textarea[resize='horizontal'] {
     }
 
         .input-group .form-control:not(:first-child) {
-            padding-right: 0;
             border-right: 0;
         }
 
-        .input-group .form-control:not(:last-child) {
-            padding-left: 0;
-            border-left: 0;
-        }
 
         .input-group .form-control:focus {
             box-shadow: none;
@@ -16341,12 +16338,6 @@ textarea[resize='horizontal'] {
     .input-group .form-control {
         box-shadow: none;
     }
-
-        .input-group .form-control:not(:first-child) {
-            padding-left: 0;
-            border-left: 0;
-        }
-
         .input-group .form-control:not(:last-child) {
             padding-right: 0;
             border-right: 0;
@@ -17889,10 +17880,6 @@ textarea[resize='horizontal'] {
     border: 0;
 }
 
-.popover-header {
-    font-weight: 600;
-}
-
 .popover-primary {
     background-color: #5e72e4;
 }
@@ -19342,4 +19329,4 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle {
 .tox .tox-form__group {
     margin-bottom: 12px !important;
 }
-    
+
