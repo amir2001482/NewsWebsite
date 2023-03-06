@@ -33,7 +33,7 @@ namespace NewsWebsite.Data.Repositories
             string NameOfCategories = "";
             string NameOfTags = "";
             List<NewsViewModel> newsViewModel = new List<NewsViewModel>();
-
+            // chon az join estefade mikonim date tekrari khahim dasht banabarin dar akhar az group by estefade karde ta data hay tekrari ra hazf konim
             var newsGroup = await (from n in _context.News.Include(v => v.Visits).Include(l => l.Likes).Include(u=>u.User)
                                    join e in _context.NewsCategories on n.NewsId equals e.NewsId into bc
                                    from bct in bc.DefaultIfEmpty()
@@ -67,6 +67,7 @@ namespace NewsWebsite.Data.Repositories
             {
                 NameOfCategories = "";
                 NameOfTags = "";
+                // ba estefade az halghe ha  dar group ha pimaiesh karde va data hay tekrari ra hazf 
                 foreach (var a in item.NewsGroup.Select(a => a.CategoryName).Distinct())
                 {
                     if (NameOfCategories == "")
@@ -143,6 +144,60 @@ namespace NewsWebsite.Data.Repositories
             }
 
             return fileName;
+        }
+
+        public async Task<List<NewsViewModel>> GetPaginateNews(int offset, int limit, bool? titleSortAsc, bool? visitSortAsc, bool? likeSortAsc, bool? dislikeSortAsc, bool? publishDateTimeSortAsc, string searchText)
+        {
+            var newsList = await _context.News
+                .Include(e => e.Likes)
+                .Include(e => e.User)
+                .Include(e => e.Visits)
+                .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
+                .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
+                .Skip(offset).Take(limit)
+                .AsNoTracking().ToListAsync();
+            var res = _mapper.Map<List<NewsViewModel>>(newsList);
+            foreach(var item in res)
+            {
+                foreach(var category in item.NewsCategories.Select(e => e.Category))
+                {
+                    if (item.NameOfCategories == null)
+                        item.NameOfCategories = category.CategoryName;
+                    else
+                        item.NameOfCategories = item.NameOfCategories + "-" + category.CategoryName;
+                }
+                foreach (var tag in item.NewsTags.Select(e => e.Tag))
+                {
+                    if (item.NameOfTags == null)
+                        item.NameOfTags = tag.TagName;
+                    else
+                        item.NameOfTags = item.NameOfTags + "-" + tag.TagName;
+                }
+            }
+
+            if (titleSortAsc != null)
+                res = res.OrderBy(c => (titleSortAsc == true && titleSortAsc != null) ? c.Title : "")
+                                     .OrderByDescending(c => (titleSortAsc == false && titleSortAsc != null) ? c.Title : "").ToList();
+
+            else if (visitSortAsc != null)
+                res = res.OrderBy(c => (visitSortAsc == true && visitSortAsc != null) ? c.NumberOfVisit : 0)
+                                   .OrderByDescending(c => (visitSortAsc == false && visitSortAsc != null) ? c.NumberOfVisit : 0).ToList();
+
+            else if (likeSortAsc != null)
+                res = res.OrderBy(c => (likeSortAsc == true && likeSortAsc != null) ? c.NumberOfLike : 0)
+                                   .OrderByDescending(c => (likeSortAsc == false && likeSortAsc != null) ? c.NumberOfLike : 0).ToList();
+
+            else if (dislikeSortAsc != null)
+                res = res.OrderBy(c => (dislikeSortAsc == true && dislikeSortAsc != null) ? c.NumberOfDisLike : 0)
+                                   .OrderByDescending(c => (dislikeSortAsc == false && dislikeSortAsc != null) ? c.NumberOfDisLike : 0).ToList();
+
+            else if (publishDateTimeSortAsc != null)
+                res = res.OrderBy(c => (publishDateTimeSortAsc == true && publishDateTimeSortAsc != null) ? c.PersianPublishDate : "")
+                                   .OrderByDescending(c => (publishDateTimeSortAsc == false && publishDateTimeSortAsc != null) ? c.PersianPublishDate : "").ToList();
+
+            foreach (var item in res)
+                item.Row = ++offset;
+            return res;
         }
     }
 }

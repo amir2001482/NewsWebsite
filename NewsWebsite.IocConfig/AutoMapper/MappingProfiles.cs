@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using NewsWebsite.Common;
 using NewsWebsite.Entities;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Category;
@@ -10,6 +11,7 @@ using NewsWebsite.ViewModels.UserManager;
 using NewsWebsite.ViewModels.Video;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace NewsWebsite.IocConfig.Mapping
@@ -41,7 +43,18 @@ namespace NewsWebsite.IocConfig.Mapping
                .ForMember(p => p.Claims, opt => opt.Ignore())
                .ForMember(p => p.Bookmarks, opt => opt.Ignore())
                .ForMember(p => p.News, opt => opt.Ignore());
-            CreateMap<News, NewsViewModel>().ReverseMap();
+            CreateMap<News, NewsViewModel>()
+                .ForMember(p => p.AuthorName, opt => opt.MapFrom(d => d.User.FirstName + " " + d.User.LastName))
+                .ForMember(p => p.ShortTitle, opt => opt.MapFrom(d => d.Title.Length > 60 ? d.Title.Substring(0, 60) : d.Title))
+                .ForMember(p => p.NumberOfVisit, opt => opt.MapFrom(d => d.Visits.Select(c => c.NumberOfVisit).Sum()))
+                .ForMember(p => p.NumberOfDisLike, opt => opt.MapFrom(d => d.Likes.Where(d => d.IsLiked == false).Count()))
+                .ForMember(p => p.NumberOfLike, opt => opt.MapFrom(d => d.Likes.Where(d => d.IsLiked == true).Count()))
+                .ForMember(p => p.PersianPublishDate, opt => opt.MapFrom(d => d.PublishDateTime == null ? "-" : d.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss")))
+                .ForMember(p => p.NewsType, opt => opt.MapFrom(d => d.IsInternal == true ? "داخلی" : "خارجی"))
+                .ForMember(p => p.Status, opt => opt.MapFrom(d => d.IsPublish == false ? "پیش نویس" : (d.PublishDateTime > DateTime.Now ? "انتشار در آینده" : "منتشر شده")));
+            CreateMap<NewsViewModel, News>();
+
+
         }
     }
 }
