@@ -1,4 +1,6 @@
-﻿@{
+﻿@model NewsWebsite.ViewModels.Home.HomePageViewModel
+@using NewsWebsite.Common
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -6,298 +8,69 @@
 
 <!-- ##### Hero Area Start ##### -->
 <section class="hero--area section-padding-60">
-    <div class="container">
-        <div class="row no-gutters">
-            <div class="col-12 col-md-7 col-lg-8">
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="post-1" role="tabpanel" aria-labelledby="post-1-tab">
-                        <!-- Single Feature Post -->
-                        <div class="single-feature-post video-post bg-img" style="background-image: url(/assets/img/bg-img/11.jpeg);">
-                            <!-- Post Content -->
-                            <div class="post-content">
-                                <a href="#" class="post-cata">ورزشی</a>
-                                <a href="single-post.html" class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </a>
-                                <div class="post-meta d-flex float-left">
-                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 25</a>
+    @if (Model._news.Count() != 0)
+    {
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-12 col-md-7 col-lg-8">
+                    <div class="tab-content">
+                        @{ var i = 1;}
+                        @foreach (var item in Model._news)
+                        {
+                            <div class="tab-pane fade show @(i == 1 ? "active" : "")" id="@("post-" + i)" role="tabpanel" aria-labelledby="@("post-" + i + "-tab")">
+                                <!-- Single Feature Post -->
+                                <div class="single-feature-post video-post bg-img" style="background-image: url(/newsImage/@item.ImageName);">
+                                    <!-- Post Content -->
+                                    <div class="post-content">
+                                        <a href="#" class="post-cata">@item.NameOfCategories</a>
+                                        <a href="single-post.html" class="post-title">@item.Title</a>
+                                        <div class="post-meta d-flex float-left">
+                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</a>
+                                            <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
+                                            <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
+                                            <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
+                                        </div>
+                                    </div>
+                                    <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
                                 </div>
                             </div>
-
-                            <!-- Video Duration -->
-                            <span class="video-duration">05.03</span>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="post-2" role="tabpanel" aria-labelledby="post-2-tab">
-                        <!-- Single Feature Post -->
-                        <div class="single-feature-post video-post bg-img" style="background-image: url(/assets/img/bg-img/12.jpeg);">
-                            <!-- Post Content -->
-                            <div class="post-content">
-                                <a href="#" class="post-cata">سیاسی</a>
-                                <a href="single-post.html" class="post-title">دیدار رئیس و مسئولان قوه قضائیه با رهبر انقلاب </a>
-                                <div class="post-meta d-flex">
-                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 25</a>
-                                </div>
-                            </div>
-
-                            <!-- Video Duration -->
-                            <span class="video-duration">05.03</span>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="post-3" role="tabpanel" aria-labelledby="post-3-tab">
-                        <!-- Single Feature Post -->
-                        <div class="single-feature-post video-post bg-img" style="background-image: url(/assets/img/bg-img/9.jpg);">
-                            <!-- Play Button -->
-                            <a href="video-post.html" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
-
-                            <!-- Post Content -->
-                            <div class="post-content">
-                                <a href="#" class="post-cata">Sports</a>
-                                <a href="single-post.html" class="post-title">Reunification of migrant toddlers, parents should be completed Thursday</a>
-                                <div class="post-meta d-flex">
-                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 25</a>
-                                </div>
-                            </div>
-
-                            <!-- Video Duration -->
-                            <span class="video-duration">05.03</span>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="post-4" role="tabpanel" aria-labelledby="post-4-tab">
-                        <!-- Single Feature Post -->
-                        <div class="single-feature-post video-post bg-img" style="background-image: url(/assets/img/bg-img/10.jpg);">
-                            <!-- Play Button -->
-                            <a href="video-post.html" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
-
-                            <!-- Post Content -->
-                            <div class="post-content">
-                                <a href="#" class="post-cata">Sports</a>
-                                <a href="single-post.html" class="post-title">Reunification of migrant toddlers, parents should be completed Thursday</a>
-                                <div class="post-meta d-flex">
-                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 25</a>
-                                </div>
-                            </div>
-
-                            <!-- Video Duration -->
-                            <span class="video-duration">05.03</span>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="post-5" role="tabpanel" aria-labelledby="post-5-tab">
-                        <!-- Single Feature Post -->
-                        <div class="single-feature-post video-post bg-img" style="background-image: url(/assets/img/bg-img/7.jpg);">
-                            <!-- Play Button -->
-                            <a href="video-post.html" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
-
-                            <!-- Post Content -->
-                            <div class="post-content">
-                                <a href="#" class="post-cata">Sports</a>
-                                <a href="single-post.html" class="post-title">Reunification of migrant toddlers, parents should be completed Thursday</a>
-                                <div class="post-meta d-flex">
-                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 25</a>
-                                </div>
-                            </div>
-
-                            <!-- Video Duration -->
-                            <span class="video-duration">05.03</span>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="post-6" role="tabpanel" aria-labelledby="post-6-tab">
-                        <!-- Single Feature Post -->
-                        <div class="single-feature-post video-post bg-img" style="background-image: url(/assets/img/bg-img/10.jpg);">
-                            <!-- Play Button -->
-                            <a href="video-post.html" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
-
-                            <!-- Post Content -->
-                            <div class="post-content">
-                                <a href="#" class="post-cata">Sports</a>
-                                <a href="single-post.html" class="post-title">Reunification of migrant toddlers, parents should be completed Thursday</a>
-                                <div class="post-meta d-flex">
-                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 25</a>
-                                </div>
-                            </div>
-
-                            <!-- Video Duration -->
-                            <span class="video-duration">05.03</span>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="post-7" role="tabpanel" aria-labelledby="post-7-tab">
-                        <!-- Single Feature Post -->
-                        <div class="single-feature-post video-post bg-img" style="background-image: url(/assets/img/bg-img/7.jpg);">
-                            <!-- Play Button -->
-                            <a href="video-post.html" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
-
-                            <!-- Post Content -->
-                            <div class="post-content">
-                                <a href="#" class="post-cata">Sports</a>
-                                <a href="single-post.html" class="post-title">Reunification of migrant toddlers, parents should be completed Thursday</a>
-                                <div class="post-meta d-flex">
-                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 25</a>
-                                </div>
-                            </div>
-
-                            <!-- Video Duration -->
-                            <span class="video-duration">05.03</span>
-                        </div>
+                            i++;
+                        }
                     </div>
                 </div>
-            </div>
-
-            <div class="col-12 col-md-5 col-lg-4">
-                <ul class="nav vizew-nav-tab" role="tablist">
-
-                    <li class="nav-item">
-                        <a class="nav-link active" id="post-1-tab" data-toggle="pill" href="#post-1" role="tab" aria-controls="post-1" aria-selected="true">
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post style-2 d-flex align-items-center">
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/11.jpeg" alt="">
-                                </div>
-                                <div class="post-content">
-                                    <h6 class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </h6>
-                                    <div class="post-meta d-flex justify-content-between">
-                                        <span><i class="fa fa-comments-o" aria-hidden="true"></i> 25</span>
-                                        <span><i class="fa fa-eye" aria-hidden="true"></i> 11</span>
-                                        <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 19</span>
+                @{ i = 1;}
+                <div class="col-12 col-md-5 col-lg-4">
+                    <ul class="nav vizew-nav-tab" role="tablist">
+                        @foreach (var item in Model._news)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(i == 1 ? "active" : "")" id="@("post-" + i)" data-toggle="pill" href="@("#post-" + i)" role="tab" aria-controls="@("post-" + i)" aria-selected="true">
+                                    <!-- Single Blog Post -->
+                                    <div class="single-blog-post style-2 d-flex align-items-center">
+                                        <div class="post-thumbnail">
+                                            <img src="/newsImage/@item.ImageName" alt="@item.ImageName">
+                                        </div>
+                                        <div class="post-content">
+                                            <h6 class="post-title">@item.Title</h6>
+                                            <div class="post-meta d-flex justify-content-between">
+                                                <span><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</span>
+                                                <span><i class="fa fa-eye" aria-hidden="true"></i>@item.NumberOfVisit</span>
+                                                <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>@item.NumberOfLike</span>
+                                                <span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>@item.NumberOfDisLike</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" id="post-2-tab" data-toggle="pill" href="#post-2" role="tab" aria-controls="post-2" aria-selected="false">
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post style-2 d-flex align-items-center">
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/12.jpeg" alt="">
-                                </div>
-                                <div class="post-content">
-                                    <h6 class="post-title"> دیدار رئیس و مسئولان قوه قضائیه با رهبر انقلاب </h6>
-                                    <div class="post-meta d-flex justify-content-between">
-                                        <span><i class="fa fa-comments-o" aria-hidden="true"></i> 14</span>
-                                        <span><i class="fa fa-eye" aria-hidden="true"></i> 34</span>
-                                        <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 84</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" id="post-3-tab" data-toggle="pill" href="#post-3" role="tab" aria-controls="post-3" aria-selected="false">
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post style-2 d-flex align-items-center">
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/13.jpg" alt="">
-                                </div>
-                                <div class="post-content">
-                                    <h6 class="post-title">تجاوز به مرزهای سرزمینی ایران؛ قصه‌ تکراری و بی‌پایان آمریکایی</h6>
-                                    <div class="post-meta d-flex justify-content-between">
-                                        <span><i class="fa fa-comments-o" aria-hidden="true"></i> 14</span>
-                                        <span><i class="fa fa-eye" aria-hidden="true"></i> 34</span>
-                                        <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 84</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" id="post-4-tab" data-toggle="pill" href="#post-4" role="tab" aria-controls="post-4" aria-selected="false">
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post style-2 d-flex align-items-center">
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/6.jpg" alt="">
-                                </div>
-                                <div class="post-content">
-                                    <h6 class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </h6>
-                                    <div class="post-meta d-flex justify-content-between">
-                                        <span><i class="fa fa-comments-o" aria-hidden="true"></i> 24</span>
-                                        <span><i class="fa fa-eye" aria-hidden="true"></i> 98</span>
-                                        <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 63</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" id="post-5-tab" data-toggle="pill" href="#post-5" role="tab" aria-controls="post-5" aria-selected="false">
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post style-2 d-flex align-items-center">
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/4.jpg" alt="">
-                                </div>
-                                <div class="post-content">
-                                    <h6 class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </h6>
-                                    <div class="post-meta d-flex justify-content-between">
-                                        <span><i class="fa fa-comments-o" aria-hidden="true"></i> 14</span>
-                                        <span><i class="fa fa-eye" aria-hidden="true"></i> 34</span>
-                                        <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 84</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" id="post-6-tab" data-toggle="pill" href="#post-6" role="tab" aria-controls="post-6" aria-selected="false">
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post style-2 d-flex align-items-center">
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/6.jpg" alt="">
-                                </div>
-                                <div class="post-content">
-                                    <h6 class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </h6>
-                                    <div class="post-meta d-flex justify-content-between">
-                                        <span><i class="fa fa-comments-o" aria-hidden="true"></i> 24</span>
-                                        <span><i class="fa fa-eye" aria-hidden="true"></i> 98</span>
-                                        <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 63</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" id="post-7-tab" data-toggle="pill" href="#post-7" role="tab" aria-controls="post-7" aria-selected="false">
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post style-2 d-flex align-items-center">
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/4.jpg" alt="">
-                                </div>
-                                <div class="post-content">
-                                    <h6 class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </h6>
-                                    <div class="post-meta d-flex justify-content-between">
-                                        <span><i class="fa fa-comments-o" aria-hidden="true"></i> 14</span>
-                                        <span><i class="fa fa-eye" aria-hidden="true"></i> 34</span>
-                                        <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 84</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                </ul>
+                                </a>
+                            </li>
+                            i++;
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
+
+    }
+
 </section>
 <!-- ##### Hero Area End ##### -->
 <!-- ##### Trending Posts Area Start ##### -->
@@ -559,188 +332,54 @@
                         <h4>آخرین اخبار</h4>
                         <div class="line"></div>
                     </div>
+                    @if (Model._news.Count() == 0)
+                    {
+                        <p class="alert alert-info text-center">هیچ خبری انتشار داده نشده است.</p>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model._news)
+                        {
+                            <!-- Single Post Area -->
+                            <div class="single-post-area mb-30">
+                                <div class="row align-items-center">
+                                    <div class="col-12 col-lg-6">
+                                        <!-- Post Thumbnail -->
+                                        <div class="post-thumbnail">
+                                            <img src="/newsImage/@item.ImageName" alt="item.ImageName">
+                                            <!-- Video Duration -->
+                                            <span class="video-duration">@item.PublishDateTime.Value.ToString("hh:mm")</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <!-- Post Content -->
+                                        <div class="post-content mt-0">
+                                            <a href="#" class="post-cata cata-sm cata-success">@item.NameOfCategories</a>
+                                            <a href="single-post.html" class="post-title mb-2">
+                                                @item.Title
+                                            </a>
+                                            <div class="post-meta d-flex align-items-center mb-2">
+                                                <a href="#" class="post-author">@item.AuthorName</a>
+                                                <i class="fa fa-circle" aria-hidden="true"></i>
+                                                <a href="/@item.NewsId/@item.Url" class="post-date">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</a>
+                                            </div>
+                                            <p class="mb-2">
+                                                @item.Abstract
+                                            </p>
+                                            <div class="post-meta d-flex float-left">
+                                                <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</a>
+                                                <a href="#"><i class="fa fa-eye" aria-hidden="true"></i>@item.NumberOfVisit</a>
+                                                <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>@item.NumberOfLike</a>
+                                                <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>@item.NumberOfDisLike</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
 
-                    <!-- Single Post Area -->
-                    <div class="single-post-area mb-30">
-                        <div class="row align-items-center">
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Thumbnail -->
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/11.jpeg" alt="">
 
-                                    <!-- Video Duration -->
-                                    <span class="video-duration">05.03</span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Content -->
-                                <div class="post-content mt-0">
-                                    <a href="#" class="post-cata cata-sm cata-success">ورزشی</a>
-                                    <a href="single-post.html" class="post-title mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان
-                                    </a>
-                                    <div class="post-meta d-flex align-items-center mb-2">
-                                        <a href="#" class="post-author">آرزو ابراهیمی</a>
-                                        <i class="fa fa-circle" aria-hidden="true"></i>
-                                        <a href="#" class="post-date">8 تیر 1398</a>
-                                    </div>
-                                    <p class="mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان ، شوک دوم به پرسپولیس/ بیرانوند در آستانه ...
-                                    </p>
-                                    <div class="post-meta d-flex float-left">
-                                        <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 32</a>
-                                        <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 42</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 7</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 0</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single-post-area mb-30">
-                        <div class="row align-items-center">
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Thumbnail -->
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/11.jpeg" alt="">
-
-                                    <!-- Video Duration -->
-                                    <span class="video-duration">05.03</span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Content -->
-                                <div class="post-content mt-0">
-                                    <a href="#" class="post-cata cata-sm cata-success">ورزشی</a>
-                                    <a href="single-post.html" class="post-title mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان
-                                    </a>
-                                    <div class="post-meta d-flex align-items-center mb-2">
-                                        <a href="#" class="post-author">آرزو ابراهیمی</a>
-                                        <i class="fa fa-circle" aria-hidden="true"></i>
-                                        <a href="#" class="post-date">8 تیر 1398</a>
-                                    </div>
-                                    <p class="mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان ، شوک دوم به پرسپولیس/ بیرانوند در آستانه ...
-                                    </p>
-                                    <div class="post-meta d-flex float-left">
-                                        <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 32</a>
-                                        <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 42</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 7</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 0</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single-post-area mb-30">
-                        <div class="row align-items-center">
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Thumbnail -->
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/11.jpeg" alt="">
-
-                                    <!-- Video Duration -->
-                                    <span class="video-duration">05.03</span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Content -->
-                                <div class="post-content mt-0">
-                                    <a href="#" class="post-cata cata-sm cata-success">ورزشی</a>
-                                    <a href="single-post.html" class="post-title mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان
-                                    </a>
-                                    <div class="post-meta d-flex align-items-center mb-2">
-                                        <a href="#" class="post-author">آرزو ابراهیمی</a>
-                                        <i class="fa fa-circle" aria-hidden="true"></i>
-                                        <a href="#" class="post-date">8 تیر 1398</a>
-                                    </div>
-                                    <p class="mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان ، شوک دوم به پرسپولیس/ بیرانوند در آستانه ...
-                                    </p>
-                                    <div class="post-meta d-flex float-left">
-                                        <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 32</a>
-                                        <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 42</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 7</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 0</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single-post-area mb-30">
-                        <div class="row align-items-center">
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Thumbnail -->
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/11.jpeg" alt="">
-
-                                    <!-- Video Duration -->
-                                    <span class="video-duration">05.03</span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Content -->
-                                <div class="post-content mt-0">
-                                    <a href="#" class="post-cata cata-sm cata-success">ورزشی</a>
-                                    <a href="single-post.html" class="post-title mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان
-                                    </a>
-                                    <div class="post-meta d-flex align-items-center mb-2">
-                                        <a href="#" class="post-author">آرزو ابراهیمی</a>
-                                        <i class="fa fa-circle" aria-hidden="true"></i>
-                                        <a href="#" class="post-date">8 تیر 1398</a>
-                                    </div>
-                                    <p class="mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان ، شوک دوم به پرسپولیس/ بیرانوند در آستانه ...
-                                    </p>
-                                    <div class="post-meta d-flex float-left">
-                                        <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 32</a>
-                                        <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 42</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 7</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 0</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single-post-area mb-30">
-                        <div class="row align-items-center">
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Thumbnail -->
-                                <div class="post-thumbnail">
-                                    <img src="/assets/img/bg-img/11.jpeg" alt="">
-
-                                    <!-- Video Duration -->
-                                    <span class="video-duration">05.03</span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <!-- Post Content -->
-                                <div class="post-content mt-0">
-                                    <a href="#" class="post-cata cata-sm cata-success">ورزشی</a>
-                                    <a href="single-post.html" class="post-title mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان
-                                    </a>
-                                    <div class="post-meta d-flex align-items-center mb-2">
-                                        <a href="#" class="post-author">آرزو ابراهیمی</a>
-                                        <i class="fa fa-circle" aria-hidden="true"></i>
-                                        <a href="#" class="post-date">8 تیر 1398</a>
-                                    </div>
-                                    <p class="mb-2">
-                                        شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان ، شوک دوم به پرسپولیس/ بیرانوند در آستانه ...
-                                    </p>
-                                    <div class="post-meta d-flex float-left">
-                                        <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 32</a>
-                                        <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 42</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 7</a>
-                                        <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 0</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
