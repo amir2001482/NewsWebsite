@@ -22,9 +22,29 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Controller\" />
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\posters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\fonts\Farsi-Digits-Without-Latin\Vazir-Black-FD-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits-Without-Latin\Vazir-Bold-FD-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits-Without-Latin\Vazir-FD-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits-Without-Latin\Vazir-Light-FD-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits-Without-Latin\Vazir-Medium-FD-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits-Without-Latin\Vazir-Thin-FD-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits\Vazir-Black-FD.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits\Vazir-Bold-FD.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits\Vazir-FD.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits\Vazir-Light-FD.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits\Vazir-Medium-FD.woff2" />
+    <None Include="wwwroot\assets\fonts\Farsi-Digits\Vazir-Thin-FD.woff2" />
+    <None Include="wwwroot\assets\fonts\Without-Latin\Vazir-Black-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Without-Latin\Vazir-Bold-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Without-Latin\Vazir-Light-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Without-Latin\Vazir-Medium-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Without-Latin\Vazir-Thin-WOL.woff2" />
+    <None Include="wwwroot\assets\fonts\Without-Latin\Vazir-WOL.woff2" />
   </ItemGroup>
 
 </Project>
