@@ -72,7 +72,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         public async Task<IActionResult> RenderCategory(string categoryId)
         {
             var categoryViewModel = new CategoryViewModel();
-            ViewBag.Categories = _uw.CategoryRepository.GetAllCategories();
+            ViewBag.Categories = await _uw.CategoryRepository.GetAllCategoriesAsync();
             if (categoryId.HasValue())
             {
                 var category = await _uw.BaseRepository<Category>().FindByIdAsync(categoryId);

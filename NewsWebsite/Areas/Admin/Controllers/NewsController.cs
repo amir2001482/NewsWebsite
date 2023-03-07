@@ -105,7 +105,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         {
             NewsViewModel newsViewModel = new NewsViewModel();
             ViewBag.Tags = _uw._Context.Tags.Select(t => t.TagName).ToList();
-            newsViewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(_uw.CategoryRepository.GetAllCategories(), null);
+            newsViewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(await _uw.CategoryRepository.GetAllCategoriesAsync(), null);
             if (newsId.HasValue())
             {
                 var news = await (from n in _uw._Context.News.Include(c => c.NewsCategories)
@@ -137,7 +137,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         newsViewModel.PersianPublishDate = news.FirstOrDefault().PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd");
                         newsViewModel.PersianPublishTime = news.FirstOrDefault().PublishDateTime.Value.TimeOfDay.ToString();
                     }
-                    newsViewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(_uw.CategoryRepository.GetAllCategories(),news.FirstOrDefault().NewsCategories.Select(n=>n.CategoryId).ToArray());
+                    newsViewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(await _uw.CategoryRepository.GetAllCategoriesAsync(),news.FirstOrDefault().NewsCategories.Select(n=>n.CategoryId).ToArray());
                     newsViewModel.NameOfTags = news.Select(t => t.NameOfTags).ToArray().CombineWith(',');
                 }
 
@@ -150,7 +150,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         public async Task<IActionResult> CreateOrUpdate(NewsViewModel viewModel,string submitButton)
         {
             ViewBag.Tags = _uw._Context.Tags.Select(t => t.TagName).ToList();
-            viewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(_uw.CategoryRepository.GetAllCategories(), null);
+            viewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(await _uw.CategoryRepository.GetAllCategoriesAsync(), null);
             if (!viewModel.FuturePublish)
             {
                 ModelState.Remove("PersianPublishTime");

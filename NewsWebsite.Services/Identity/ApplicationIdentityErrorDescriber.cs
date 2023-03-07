@@ -25,5 +25,6 @@ namespace NewsWebsite.Services.Identity
         public override IdentityError DuplicateEmail(string email) => new IdentityError { Code = nameof(DuplicateEmail), Description = $"شما با ایمیل '{email}' قبلا ثبت نام کرده اید." };
 
         public override IdentityError DuplicateRoleName(string role) => new IdentityError { Code = nameof(DuplicateRoleName), Description = $"نقش '{role}' تکراری است." };
+        public override IdentityError PasswordMismatch() => new IdentityError { Code = nameof(PasswordMismatch), Description = "کلمه عبور فعلی شما اشتباه است." };
     }
 }
