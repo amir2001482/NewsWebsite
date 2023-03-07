@@ -49,9 +49,14 @@ a:focus {
   font-weight: 500;
   font-size: 14px;
   font-family: "Vazir_Medium", sans-serif; }
-.header-area .vizew-main-menu .classy-navbar .classynav ul li a:hover, .post-title:hover{
+.classynav ul li a:hover{
     color: #fff !important;
 }
+
+.post-meta a, .post-meta span {
+    font-family: Vazir_FD;
+}
+
 ul {
     margin: 0;
 }

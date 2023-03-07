@@ -86,6 +86,12 @@ namespace NewsWebsite.ViewModels.News
 
         [JsonProperty("متن خبر")]
         public string Description { get; set; }
+        [JsonIgnore]
+        [Required(ErrorMessage = "انتخاب {0} الزامی است.") , Display(Name ="چکیده")]
+        public string Abstract { get; set; }
+
+        [JsonProperty("NumberOfComment")]
+        public int NumberOfComment { get; set; }
 
         
         [JsonIgnore]

@@ -146,14 +146,16 @@ namespace NewsWebsite.Data.Repositories
             return fileName;
         }
 
-        public async Task<List<NewsViewModel>> GetPaginateNews(int offset, int limit, bool? titleSortAsc, bool? visitSortAsc, bool? likeSortAsc, bool? dislikeSortAsc, bool? publishDateTimeSortAsc, string searchText)
+        public async Task<List<NewsViewModel>> GetPaginateNews(int offset, int limit, bool? titleSortAsc, bool? visitSortAsc, bool? likeSortAsc, bool? dislikeSortAsc, bool? publishDateTimeSortAsc, string searchText , bool? isPublish)
         {
             var newsList = await _context.News
+                .Include(e=>e.Comments)
                 .Include(e => e.Likes)
                 .Include(e => e.User)
                 .Include(e => e.Visits)
                 .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
                 .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
+                .Where(d=> isPublish== null ? true : d.IsPublish == isPublish && d.PublishDateTime <= DateTime.Now)
                 .Skip(offset).Take(limit)
                 .AsNoTracking().ToListAsync();
             var res = _mapper.Map<List<NewsViewModel>>(newsList);

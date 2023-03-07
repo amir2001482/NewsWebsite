@@ -51,7 +51,8 @@ namespace NewsWebsite.IocConfig.Mapping
                 .ForMember(p => p.NumberOfLike, opt => opt.MapFrom(d => d.Likes.Where(d => d.IsLiked == true).Count()))
                 .ForMember(p => p.PersianPublishDate, opt => opt.MapFrom(d => d.PublishDateTime == null ? "-" : d.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss")))
                 .ForMember(p => p.NewsType, opt => opt.MapFrom(d => d.IsInternal == true ? "داخلی" : "خارجی"))
-                .ForMember(p => p.Status, opt => opt.MapFrom(d => d.IsPublish == false ? "پیش نویس" : (d.PublishDateTime > DateTime.Now ? "انتشار در آینده" : "منتشر شده")));
+                .ForMember(p => p.Status, opt => opt.MapFrom(d => d.IsPublish == false ? "پیش نویس" : (d.PublishDateTime > DateTime.Now ? "انتشار در آینده" : "منتشر شده")))
+                .ForMember(p => p.NumberOfComment, opt => opt.MapFrom(d => d.Comments.Count()));
             CreateMap<NewsViewModel, News>();
 
 

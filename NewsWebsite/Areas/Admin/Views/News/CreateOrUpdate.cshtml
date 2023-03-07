@@ -119,6 +119,10 @@
                                 <input asp-for="Title" class="form-control" placeholder="عنوان خبر" />
                                 <span asp-validation-for="Title" class="text-danger"></span>
                             </div>
+                            <div class="form-group">
+                                <input asp-for="Abstract" class="form-control" placeholder="چکیده خبر" maxlength="100"/>
+                                <span asp-validation-for="Abstract" class="text-danger"></span>
+                            </div>
                             <div class="form-group row">
                                 <div class="col-md-9 p-0">
                                     <input asp-for="Url" class="form-control text-left" placeholder="...Enter Url" />
