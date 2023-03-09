@@ -33,8 +33,8 @@ namespace NewsWebsite.Data.Repositories
 
             else if (publishDateTimeSortAsc != null)
             {
-                videos = videos.OrderBy(c => (publishDateTimeSortAsc == true && publishDateTimeSortAsc != null) ? c.Title : "")
-                                   .OrderByDescending(c => (publishDateTimeSortAsc == false && publishDateTimeSortAsc != null) ? c.Title : "").ToList();
+                videos = videos.OrderBy(c => (publishDateTimeSortAsc == true && publishDateTimeSortAsc != null) ? c.PersianPublishDateTime : "")
+                                   .OrderByDescending(c => (publishDateTimeSortAsc == false && publishDateTimeSortAsc != null) ? c.PersianPublishDateTime : "").ToList();
             }
 
             foreach (var item in videos)

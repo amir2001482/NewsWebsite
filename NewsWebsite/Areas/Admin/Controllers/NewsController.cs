@@ -105,7 +105,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
         {
             NewsViewModel newsViewModel = new NewsViewModel();
             ViewBag.Tags = _uw._Context.Tags.Select(t => t.TagName).ToList();
-            newsViewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(await _uw.CategoryRepository.GetAllCategoriesAsync(), null);
             if (newsId.HasValue())
             {
                 var news = await (from n in _uw._Context.News.Include(c => c.NewsCategories)
@@ -117,6 +116,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                             select new NewsViewModel
                             {
                                 NewsId = n.NewsId,
+                                Abstract = n.Abstract,
                                 Title = n.Title,
                                 Description = n.Description,
                                 PublishDateTime = n.PublishDateTime,
@@ -150,7 +150,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         public async Task<IActionResult> CreateOrUpdate(NewsViewModel viewModel,string submitButton)
         {
             ViewBag.Tags = _uw._Context.Tags.Select(t => t.TagName).ToList();
-            viewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(await _uw.CategoryRepository.GetAllCategoriesAsync(), null);
+            viewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(await _uw.CategoryRepository.GetAllCategoriesAsync(), viewModel.CategoryIds);
             if (!viewModel.FuturePublish)
             {
                 ModelState.Remove("PersianPublishTime");
@@ -169,7 +169,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
                 if (viewModel.NewsId.HasValue())
                 {
-                    string[] newTagsArray;
                     var news = _uw.BaseRepository<News>().FindByConditionAsync(n=>n.NewsId==viewModel.NewsId,null,n => n.NewsCategories,n=>n.NewsTags).Result.FirstOrDefault();
                     if (news == null)
                         ModelState.AddModelError(string.Empty, NewsNotFound);
@@ -198,12 +197,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         else
                             viewModel.ImageName = news.ImageName;
 
-                        var newsTags = _uw._Context.NewsTags.Include(t => t.Tag).Where(t => t.NewsId == viewModel.NewsId).Select(t => t.Tag).ToList();
                         if (viewModel.NameOfTags.HasValue())
-                        {
-                            newTagsArray = viewModel.NameOfTags.Split(',');
                             viewModel.NewsTags = await _uw.TagRepository.InsertNewsTags(viewModel.NameOfTags.Split(','), news.NewsId);
-                        }
                         else
                             viewModel.NewsTags = news.NewsTags;
 
@@ -216,7 +211,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         _uw.BaseRepository<News>().Update(_mapper.Map(viewModel, news));
                         await _uw.Commit();
                         ViewBag.Alert = "ذخیره تغییرات با موفقیت انجام شد.";
-                        viewModel.NewsCategoriesViewModel.CategoryId = viewModel.CategoryIds;
                     }
                 }
 

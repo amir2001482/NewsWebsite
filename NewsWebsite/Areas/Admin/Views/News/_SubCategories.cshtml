@@ -4,9 +4,9 @@
     @foreach (var item in Model.Categories)
     {
     <li>
-        @if (Model.CategoryId != null)
+        @if (Model.CategoryIds != null)
         {
-            if (Model.CategoryId.Contains(item.id))
+            if (Model.CategoryIds.Contains(item.id))
             {
                 <input type="checkbox" name="CategoryIds" value="@item.id" checked /> @item.title
             }

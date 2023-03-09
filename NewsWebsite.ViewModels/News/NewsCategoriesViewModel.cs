@@ -7,13 +7,13 @@ namespace NewsWebsite.ViewModels.News
 {
     public class NewsCategoriesViewModel
     {
-        public NewsCategoriesViewModel(List<TreeViewCategory> categories, string[] categoryId)
+        public NewsCategoriesViewModel(List<TreeViewCategory> categories, string[] categoryIds)
         {
             Categories = categories;
-            CategoryId = categoryId;
+            CategoryIds = categoryIds;
         }
 
         public List<TreeViewCategory> Categories { get; set; }
-        public string[] CategoryId { get; set; }
+        public string[] CategoryIds { get; set; }
     }
 }
