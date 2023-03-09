@@ -72,6 +72,11 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     else
                         ModelState.AddModelError(string.Empty, "حساب کابری شما غیرفعال است.");
                 }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
+                    _logger.LogWarning($"The user attempts to login with the IP address({_accessor.HttpContext?.Connection?.RemoteIpAddress.ToString()}) and username ({ViewModel.UserName}) and password ({ViewModel.Password}).");
+                }
             }
             return View();
         }

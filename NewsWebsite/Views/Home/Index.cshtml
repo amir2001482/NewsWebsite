@@ -355,13 +355,13 @@
                                         <!-- Post Content -->
                                         <div class="post-content mt-0">
                                             <a href="#" class="post-cata cata-sm cata-success">@item.NameOfCategories</a>
-                                            <a href="single-post.html" class="post-title mb-2">
+                                            <a href="/@item.NewsId/@item.Url" class="post-date" class="post-title mb-2">
                                                 @item.Title
                                             </a>
                                             <div class="post-meta d-flex align-items-center mb-2">
                                                 <a href="#" class="post-author">@item.AuthorName</a>
                                                 <i class="fa fa-circle" aria-hidden="true"></i>
-                                                <a href="/@item.NewsId/@item.Url" class="post-date">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</a>
+                                                <a href="#">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</a>
                                             </div>
                                             <p class="mb-2">
                                                 @item.Abstract
