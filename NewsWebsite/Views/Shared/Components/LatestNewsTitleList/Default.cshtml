@@ -1,0 +1,15 @@
+﻿@model List<NewsWebsite.ViewModels.News.NewsViewModel>
+
+    <div class="breaking-news-area d-flex align-items-center">
+        <div class="news-title">
+            <p>تیتر جدیدترین اخبار :</p>
+        </div>
+        <div id="breakingNewsTicker" class="ticker">
+            <ul>
+                @foreach (var item in Model)
+                {
+                    <li><a href="/@item.NewsId/@item.Url">@item.Title</a></li>
+                }
+            </ul>
+        </div>
+    </div>

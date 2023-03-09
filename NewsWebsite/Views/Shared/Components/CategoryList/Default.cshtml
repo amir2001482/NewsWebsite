@@ -2,7 +2,7 @@
 <div class="classynav">
     <ul>
         <li class="active"><a asp-action="Index" asp-controller="Home">خانه</a></li>
-        @foreach (var item in Model)
+        @foreach (var item in Model.OrderBy(c=>c.title))
         {
             <li>
                 <a href="/@item.id/@item.url">@item.title</a>

@@ -37,17 +37,7 @@
                 <div class="row align-items-center">
                     <div class="col-12 col-md-6">
                         <!-- Breaking News Widget -->
-                        <div class="breaking-news-area d-flex align-items-center">
-                            <div class="news-title">
-                                <p>تیتر جدیدترین اخبار :</p>
-                            </div>
-                            <div id="breakingNewsTicker" class="ticker">
-                                <ul>
-                                    <li><a href="single-post.html">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان</a></li>
-                                    <li><a href="single-post.html">دیدار رئیس و مسئولان قوه قضائیه با رهبر انقلاب</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                       @await Component.InvokeAsync("LatestNewsTitleList")
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="top-meta-data d-flex align-items-center justify-content-end">
