@@ -146,7 +146,7 @@ namespace NewsWebsite.Data.Repositories
             return fileName;
         }
 
-        public async Task<List<NewsViewModel>> GetPaginateNews(int offset, int limit, bool? titleSortAsc, bool? visitSortAsc, bool? likeSortAsc, bool? dislikeSortAsc, bool? publishDateTimeSortAsc, string searchText , bool? isPublish)
+        public async Task<List<NewsViewModel>> GetPaginateNews(int offset, int limit , Func<NewsViewModel, object> orderByAsc, Func<NewsViewModel, object> orderByDes , string searchText , bool? isPublish)
         {
             var newsList = await _context.News
                 .Include(e=>e.Comments)
@@ -156,10 +156,14 @@ namespace NewsWebsite.Data.Repositories
                 .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
                 .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
                 .Where(d=> isPublish== null ? true : d.IsPublish == isPublish && d.PublishDateTime <= DateTime.Now)
-                .Skip(offset).Take(limit)
                 .AsNoTracking().ToListAsync();
-            var res = _mapper.Map<List<NewsViewModel>>(newsList);
-            foreach(var item in res)
+
+            var res = _mapper.Map<List<NewsViewModel>>(newsList)
+                .OrderBy(orderByAsc)
+                .OrderByDescending(orderByDes)
+                .Skip(offset).Take(limit)
+                .ToList();
+            foreach (var item in res)
             {
                 foreach(var category in item.NewsCategories.Select(e => e.Category))
                 {
@@ -176,27 +180,6 @@ namespace NewsWebsite.Data.Repositories
                         item.NameOfTags = item.NameOfTags + "-" + tag.TagName;
                 }
             }
-
-            if (titleSortAsc != null)
-                res = res.OrderBy(c => (titleSortAsc == true && titleSortAsc != null) ? c.Title : "")
-                                     .OrderByDescending(c => (titleSortAsc == false && titleSortAsc != null) ? c.Title : "").ToList();
-
-            else if (visitSortAsc != null)
-                res = res.OrderBy(c => (visitSortAsc == true && visitSortAsc != null) ? c.NumberOfVisit : 0)
-                                   .OrderByDescending(c => (visitSortAsc == false && visitSortAsc != null) ? c.NumberOfVisit : 0).ToList();
-
-            else if (likeSortAsc != null)
-                res = res.OrderBy(c => (likeSortAsc == true && likeSortAsc != null) ? c.NumberOfLike : 0)
-                                   .OrderByDescending(c => (likeSortAsc == false && likeSortAsc != null) ? c.NumberOfLike : 0).ToList();
-
-            else if (dislikeSortAsc != null)
-                res = res.OrderBy(c => (dislikeSortAsc == true && dislikeSortAsc != null) ? c.NumberOfDisLike : 0)
-                                   .OrderByDescending(c => (dislikeSortAsc == false && dislikeSortAsc != null) ? c.NumberOfDisLike : 0).ToList();
-
-            else if (publishDateTimeSortAsc != null)
-                res = res.OrderBy(c => (publishDateTimeSortAsc == true && publishDateTimeSortAsc != null) ? c.PersianPublishDate : "")
-                                   .OrderByDescending(c => (publishDateTimeSortAsc == false && publishDateTimeSortAsc != null) ? c.PersianPublishDate : "").ToList();
-
             foreach (var item in res)
                 item.Row = ++offset;
             return res;

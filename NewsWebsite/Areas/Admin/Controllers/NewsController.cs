@@ -54,45 +54,45 @@ namespace NewsWebsite.Areas.Admin.Controllers
             if (sort == "ShortTitle")
             {
                 if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, true, null, null, null, null, search , null);
+                    news = await  _uw.NewsRepository.GetPaginateNews(offset, limit , item=>item.Title , item => "" ,  search , null);
                 else
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, false, null, null, null, null, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, item => "" , item => item.Title , search, null);
             }
 
             else if (sort == "بازدید")
             {
                 if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, null, true,null,null,null, search , null);
+                    news =await _uw.NewsRepository.GetPaginateNews(offset, limit, item => item.NumberOfVisit, item => "", search , null);
                 else
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, null, false, null, null, null, search , null);
+                    news =await _uw.NewsRepository.GetPaginateNews(offset, limit, item => "", item => item.NumberOfVisit, search , null);
             }
 
             else if (sort == "لایک")
             {
                 if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, null,null, true,null,null, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit,item => item.NumberOfLike , item => "", search , null);
                 else
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, null,null, false,null,null, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, item =>"", item => item.NumberOfLike, search , null);
             }
 
             else if (sort == "دیس لایک")
             {
                 if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, null,null,null, true,null, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit,item => item.NumberOfDisLike , item => "", search , null);
                 else
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, null,null,null, false,null, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, item => "", item => item.NumberOfDisLike, search , null);
             }
 
             else if (sort == "تاریخ انتشار")
             {
                 if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, null, null, null,null,true, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit,item => item.PublishDateTime , item => "" , search , null);
                 else
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, null, null, null,null,false, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, item => "", item =>item.PublishDateTime, search , null);
             }
 
             else
-                news = await _uw.NewsRepository.GetPaginateNews(offset, limit, null, null,null,null,false, search , null);
+                news = await _uw.NewsRepository.GetPaginateNews(offset, limit,item => "" , item => "", search , null);
 
             if (search != "")
                 total = news.Count();
@@ -104,6 +104,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         public async Task<IActionResult> CreateOrUpdate(string newsId)
         {
             NewsViewModel newsViewModel = new NewsViewModel();
+            newsViewModel.NewsCategoriesViewModel = new NewsCategoriesViewModel(await _uw.CategoryRepository.GetAllCategoriesAsync(), null);
             ViewBag.Tags = _uw._Context.Tags.Select(t => t.TagName).ToList();
             if (newsId.HasValue())
             {

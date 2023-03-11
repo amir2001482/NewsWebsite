@@ -19,7 +19,7 @@ namespace NewsWebsite.Controllers
        
         public async Task<IActionResult> Index()
         {
-            var news = await _uw.NewsRepository.GetPaginateNews(0, 10, null, null, null, null, true, "", true);
+            var news = await _uw.NewsRepository.GetPaginateNews(0, 10, item => item.Title , item => "", "", true);
             var homePageViewModel = new HomePageViewModel(news);
             return View(homePageViewModel);
         }

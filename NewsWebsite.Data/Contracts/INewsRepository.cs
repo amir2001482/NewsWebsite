@@ -1,4 +1,5 @@
-﻿using NewsWebsite.ViewModels.News;
+﻿using NewsWebsite.Entities;
+using NewsWebsite.ViewModels.News;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,6 @@ namespace NewsWebsite.Data.Contracts
     {
         string CheckNewsFileName(string fileName);
         Task<List<NewsViewModel>> GetPaginateNewsAsync(int offset, int limit, bool? titleSortAsc, bool? visitSortAsc, bool? likeSortAsc, bool? dislikeSortAsc, bool? publishDateTimeSortAsc, string searchText);
-        Task<List<NewsViewModel>> GetPaginateNews(int offset, int limit, bool? titleSortAsc, bool? visitSortAsc, bool? likeSortAsc, bool? dislikeSortAsc, bool? publishDateTimeSortAsc, string searchText , bool? isPublish);
+        Task<List<NewsViewModel>> GetPaginateNews(int offset, int limit, Func<NewsViewModel, object> orderByAsc, Func<NewsViewModel, object> orderByDes, string searchText, bool? isPublish);
     }
 }
