@@ -138,112 +138,71 @@
                     </div>
 
                     <div class="row mt-5">
-                        <div class="col-12 col-lg-6">
-                            <!-- Section Heading -->
-                            <div class="section-heading style-2">
-                                <h5>جدیدترین اخبار داخلی</h5>
-                                <div class="line"></div>
-                            </div>
-
-                            <!-- Sports Video Slides -->
-                            <div class="sport-video-slides owl-carousel mb-50 direction-ltr">
-                                <!-- Single Blog Post -->
-                                <div class="single-post-area">
-                                    <!-- Post Thumbnail -->
-                                    <div class="post-thumbnail">
-                                        <img src="/assets/img/bg-img/11.jpeg" alt="">
-
-                                        <!-- Video Duration -->
-                                        <span class="video-duration">05.03</span>
-                                    </div>
-
-                                    <!-- Post Content -->
-                                    <div class="post-content">
-                                        <a href="#" class="post-cata cata-sm cata-primary">ورزشی</a>
-                                        <a href="single-post.html" class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </a>
-                                        <div class="post-meta d-flex">
-                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 14</a>
-                                            <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 38</a>
-                                            <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 22</a>
-                                        </div>
-                                    </div>
+                        @if (Model.InternalNews.Count() != 0)
+                        {
+                            <div class="col-12 col-lg-6">
+                                <div class="section-heading style-2">
+                                    <h5>جدیدترین اخبار داخلی</h5>
+                                    <div class="line"></div>
                                 </div>
-                                <div class="single-post-area">
-                                    <!-- Post Thumbnail -->
-                                    <div class="post-thumbnail">
-                                        <img src="/assets/img/bg-img/11.jpeg" alt="">
-
-                                        <!-- Video Duration -->
-                                        <span class="video-duration">05.03</span>
-                                    </div>
-
-                                    <!-- Post Content -->
-                                    <div class="post-content">
-                                        <a href="#" class="post-cata cata-sm cata-primary">ورزشی</a>
-                                        <a href="single-post.html" class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </a>
-                                        <div class="post-meta d-flex">
-                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 14</a>
-                                            <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 38</a>
-                                            <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 22</a>
+                                <div class="sport-video-slides owl-carousel mb-50 direction-ltr">
+                                    @foreach (var item in Model.InternalNews)
+                                    {
+                                        <div class="single-post-area">
+                                            <div class="post-thumbnail">
+                                                <img src="/newsImage/@item.ImageName" alt="@item.Title">
+                                                <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
+                                            </div>
+                                            <div class="post-content">
+                                                <a href="#" class="post-cata cata-sm cata-primary">@item.NameOfCategories</a>
+                                                <a href="/@item.NewsId/@item.Url" class="post-title">@item.ShortTitle</a>
+                                                <div class="post-meta d-flex">
+                                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</a>
+                                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i>@item.NumberOfVisit</a>
+                                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>@item.NumberOfLike</a>
+                                                    <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>@item.NumberOfLike</a>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
+
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-12 col-lg-6">
-                            <!-- Section Heading -->
-                            <div class="section-heading style-2">
-                                <h5>جدیدترین اخبار خارجی</h5>
-                                <div class="line"></div>
-                            </div>
-
-                            <!-- Business Video Slides -->
-                            <div class="business-video-slides owl-carousel mb-50 direction-ltr">
-                                <!-- Single Blog Post -->
-                                <div class="single-post-area">
-                                    <!-- Post Thumbnail -->
-                                    <div class="post-thumbnail">
-                                        <img src="/assets/img/bg-img/11.jpeg" alt="">
-
-                                        <!-- Video Duration -->
-                                        <span class="video-duration">05.03</span>
-                                    </div>
-
-                                    <!-- Post Content -->
-                                    <div class="post-content">
-                                        <a href="#" class="post-cata cata-sm cata-primary">ورزشی</a>
-                                        <a href="single-post.html" class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </a>
-                                        <div class="post-meta d-flex">
-                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 14</a>
-                                            <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 38</a>
-                                            <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 22</a>
-                                        </div>
-                                    </div>
+                        }
+                        @if (Model.ForignNews.Count() != 0)
+                        {
+                            <div class="col-12 col-lg-6">
+                                <div class="section-heading style-2">
+                                    <h5>جدیدترین اخبار خارجی</h5>
+                                    <div class="line"></div>
                                 </div>
-                                <div class="single-post-area">
-                                    <!-- Post Thumbnail -->
-                                    <div class="post-thumbnail">
-                                        <img src="/assets/img/bg-img/11.jpeg" alt="">
-
-                                        <!-- Video Duration -->
-                                        <span class="video-duration">05.03</span>
-                                    </div>
-
-                                    <!-- Post Content -->
-                                    <div class="post-content">
-                                        <a href="#" class="post-cata cata-sm cata-primary">ورزشی</a>
-                                        <a href="single-post.html" class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان </a>
-                                        <div class="post-meta d-flex">
-                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 32</a>
-                                            <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 42</a>
-                                            <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 7</a>
-                                            <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 0</a>
+                                <div class="business-video-slides owl-carousel mb-50 direction-ltr">
+                                    @foreach (var item in Model.ForignNews)
+                                    {
+                                       <div class="single-post-area">
+                                            <div class="post-thumbnail">
+                                                <img src="/newsImage/@item.ImageName" alt="@item.Title">
+                                                <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
+                                            </div>
+                                            <div class="post-content">
+                                                <a href="#" class="post-cata cata-sm cata-primary">@item.NameOfCategories</a>
+                                                <a href="/@item.NewsId/@item.Url" class="post-title">@item.ShortTitle</a>
+                                                <div class="post-meta d-flex">
+                                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</a>
+                                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i>@item.NumberOfVisit</a>
+                                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>@item.NumberOfLike</a>
+                                                    <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>@item.NumberOfLike</a>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
+
                                 </div>
                             </div>
-                        </div>
+                        }
+
+
+
                     </div>
 
 
@@ -332,10 +291,7 @@
 
                     <!-- ***** Single Widget ***** -->
                     <div id="MostTalkNewsDiv" class="container">
-                        @if (Model.MostTalkNews.Count() != 0)
-                        {
-                            @await Html.PartialAsync("_MostTalkNews", Model.MostTalkNews)
-                        }
+                        @await Html.PartialAsync("_MostTalkNews", Model.MostTalkNews)
                     </div>
                 </div>
 

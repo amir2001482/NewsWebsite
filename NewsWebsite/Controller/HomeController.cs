@@ -27,11 +27,13 @@ namespace NewsWebsite.Controllers
                 return PartialView("_MostTalkNews", await _uw.NewsRepository.MostTalkNewsAsync(0, 3, duration));
             else
             {
-                var news = await _uw.NewsRepository.GetPaginateNewsAsync(0, 10, item => "", item => item.PersianPublishDate, "", true);
+                var news = await _uw.NewsRepository.GetPaginateNewsAsync(0, 10, item => "", item => item.PersianPublishDate, "", true , null);
                 var mostViewNews = await _uw.NewsRepository.MostViewedNewsAsync(0, 3, "day");
                 var mostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0, 3, "day");
                 var mostPopularNews = await _uw.NewsRepository.MostPopularNewsAsync(0 , 5);
-                var homePageViewModel = new HomePageViewModel(news, mostViewNews , mostTalkNews , mostPopularNews);
+                var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(0, 10, item => "", item => item.PersianPublishDate, "", true, true);
+                var forignNews = await _uw.NewsRepository.GetPaginateNewsAsync(0, 10, item => "", item => item.PersianPublishDate, "", true, false);
+                var homePageViewModel = new HomePageViewModel(news, mostViewNews , mostTalkNews , mostPopularNews , internalNews , forignNews);
                 return View(homePageViewModel);
             }
         }
