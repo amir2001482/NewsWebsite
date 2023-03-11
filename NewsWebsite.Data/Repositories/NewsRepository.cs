@@ -168,24 +168,8 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<List<NewsViewModel>> MostViewedNewsAsync(int offset, int limit, string duration)
         {
-            List<NewsViewModel> newsViewModel = new List<NewsViewModel>();
-            DateTime StartMiladiDate;
+            DateTime StartMiladiDate = GetStartDateOfDuration(duration);
             DateTime EndMiladiDate = DateTime.Now;
-
-            if (duration == "week")
-            {
-                int NumOfWeek = ConvertDateTime.ConvertMiladiToShamsi(DateTime.Now, "dddd").GetNumOfWeek();
-                StartMiladiDate = DateTime.Now.AddDays((-1) * NumOfWeek).Date + new TimeSpan(0, 0, 0);
-            }
-
-            else if (duration == "day")
-                StartMiladiDate = DateTime.Now.Date + new TimeSpan(0, 0, 0);
-
-            else
-            {
-                string DayOfMonth = ConvertDateTime.ConvertMiladiToShamsi(DateTime.Now, "dd").Fa2En();
-                StartMiladiDate = DateTime.Now.AddDays((-1) * (int.Parse(DayOfMonth) - 1)).Date + new TimeSpan(0, 0, 0);
-            }
             var newsList = await _context.News
                .Include(e => e.Comments)
                .Include(e => e.Likes)
@@ -197,6 +181,38 @@ namespace NewsWebsite.Data.Repositories
                .AsNoTracking().ToListAsync();
             var res = SetCategoryAndTagNames(_mapper.Map<List<NewsViewModel>>(newsList), offset);
             return res.OrderByDescending(d => d.NumberOfVisit).Skip(offset).Take(limit).ToList();
+        }
+
+        public async Task<List<NewsViewModel>> MostTalkNewsAsync(int offset, int limit, string duration)
+        {
+            DateTime StartMiladiDate = GetStartDateOfDuration(duration);
+            DateTime EndMiladiDate = DateTime.Now;
+            var newsList = await _context.News
+               .Include(e => e.Comments)
+               .Include(e => e.Likes)
+               .Include(e => e.User)
+               .Include(e => e.Visits)
+               .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
+               .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
+               .Where(e => e.PublishDateTime >= StartMiladiDate && e.PublishDateTime <= EndMiladiDate)
+               .AsNoTracking().ToListAsync();
+            var res = SetCategoryAndTagNames(_mapper.Map<List<NewsViewModel>>(newsList), offset);
+            return res.OrderByDescending(d => d.NumberOfComment).Skip(offset).Take(limit).ToList();
+        }
+
+        public async Task<List<NewsViewModel>> MostPopularNewsAsync(int offset, int limit)
+        {
+            var newsList = await _context.News
+               .Include(e => e.Comments)
+               .Include(e => e.Likes)
+               .Include(e => e.User)
+               .Include(e => e.Visits)
+               .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
+               .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
+               .AsNoTracking().ToListAsync();
+            var res = SetCategoryAndTagNames(_mapper.Map<List<NewsViewModel>>(newsList), offset);
+            return res.OrderByDescending(d => d.NumberOfLike).Skip(offset).Take(limit).ToList();
+
         }
 
         private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news , int offset)
@@ -222,5 +238,28 @@ namespace NewsWebsite.Data.Repositories
                 item.Row = ++offset;
             return news;
         }
+
+        private DateTime GetStartDateOfDuration(string duration)
+        {
+            DateTime StartMiladiDate;
+
+            if (duration == "week")
+            {
+                int NumOfWeek = ConvertDateTime.ConvertMiladiToShamsi(DateTime.Now, "dddd").GetNumOfWeek();
+                StartMiladiDate = DateTime.Now.AddDays((-1) * NumOfWeek).Date + new TimeSpan(0, 0, 0);
+            }
+
+            else if (duration == "day")
+                StartMiladiDate = DateTime.Now.Date + new TimeSpan(0, 0, 0);
+
+            else
+            {
+                string DayOfMonth = ConvertDateTime.ConvertMiladiToShamsi(DateTime.Now, "dd").Fa2En();
+                StartMiladiDate = DateTime.Now.AddDays((-1) * (int.Parse(DayOfMonth) - 1)).Date + new TimeSpan(0, 0, 0);
+            }
+
+            return StartMiladiDate;
+        }
+
     }
 }

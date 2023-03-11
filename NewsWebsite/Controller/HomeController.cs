@@ -22,11 +22,16 @@ namespace NewsWebsite.Controllers
             var isAjax = Request.Headers["X-Requested-With"] == "XMLHttpRequest";
             if (isAjax && TypeOfNews == "MostViewedNews")
                 return PartialView("_MostViewNews", await _uw.NewsRepository.MostViewedNewsAsync(0, 3, duration));
+
+            else if(isAjax && TypeOfNews == "MostTalkNews")
+                return PartialView("_MostTalkNews", await _uw.NewsRepository.MostTalkNewsAsync(0, 3, duration));
             else
             {
                 var news = await _uw.NewsRepository.GetPaginateNewsAsync(0, 10, item => "", item => item.PersianPublishDate, "", true);
                 var mostViewNews = await _uw.NewsRepository.MostViewedNewsAsync(0, 3, "day");
-                var homePageViewModel = new HomePageViewModel(news, mostViewNews);
+                var mostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0, 3, "day");
+                var mostPopularNews = await _uw.NewsRepository.MostPopularNewsAsync(0 , 5);
+                var homePageViewModel = new HomePageViewModel(news, mostViewNews , mostTalkNews , mostPopularNews);
                 return View(homePageViewModel);
             }
         }
