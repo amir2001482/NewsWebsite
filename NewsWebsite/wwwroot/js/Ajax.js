@@ -72,3 +72,25 @@ function ShowSweetSuccessAlert(message) {
     })
 }
 
+$(document).on('click', 'a[data-toggle="tab"]', function () {
+    var url = $(this).data('url');
+    var id = $(this).attr('id');
+    var contentDivId = "#MostViewedNewsDiv";
+    var loadingDivId = "#nav-mostViewedNews";
+    if ($(this).hasClass("most-talk")) {
+        contentDivId = "#MostTalkNewsDiv";
+        loadingDivId = "#nav-mostTalkNews";
+    }
+
+    $.ajax({
+        url: url,
+        beforeSend: function () { $(loadingDivId).html("<p class='text-center mb-5 mt-3'><span style='font-size:18px;font-family: Vazir_Medium;'>در حال بارگزاری اطلاعات خبر </span><img src='/icons/LoaderIcon.gif'/></p>") },
+        error: function () {
+            ShowSweetErrorAlert();
+        }
+    }).done(function (result) {
+        $(contentDivId).html(result);
+        $(contentDivId + " a").removeClass("active");
+        $("#" + id).addClass("active");
+    });
+});

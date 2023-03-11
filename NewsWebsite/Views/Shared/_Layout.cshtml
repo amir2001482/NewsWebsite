@@ -15,6 +15,7 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="~/css/style.css">
+    <script src="~/assets/vendor/jquery/dist/jquery-2.2.4.min.js"></script>
 
 </head>
 
@@ -37,7 +38,7 @@
                 <div class="row align-items-center">
                     <div class="col-12 col-md-6">
                         <!-- Breaking News Widget -->
-                       @await Component.InvokeAsync("LatestNewsTitleList")
+                        @await Component.InvokeAsync("LatestNewsTitleList")
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="top-meta-data d-flex align-items-center justify-content-end">
@@ -228,11 +229,8 @@
     <!-- ##### Footer Area End ##### -->
     <!-- ##### All Javascript Script ##### -->
     <!-- jQuery-2.2.4 js -->
-    <script src="~/assets/vendor/jquery/dist/jquery-2.2.4.min.js"></script>
-    <script src="~/assets/js/jquery/jquery-2.2.4.min.js"></script>
     <script src="~/assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/js/plugins.js"></script>
     <script src="~/js/active.js"></script>
 </body>
-
 </html>

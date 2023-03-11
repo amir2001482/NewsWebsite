@@ -1,0 +1,60 @@
+﻿@model List<NewsWebsite.ViewModels.News.NewsViewModel>
+@using NewsWebsite.Common
+<div class="row">
+    <div class="col-12">
+        <!-- Section Heading -->
+        <div class="section-heading">
+            <h4>پربازدید ترین اخبار</h4>
+            <div class="line"></div>
+        </div>
+    </div>
+</div>
+
+<nav class="w-25 m-auto">
+    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active most-view" id="most-viewed-day-tab" data-toggle="tab" data-url="@Url.Action("Index","Home",values:new {duration="day",TypeOfNews="MostViewedNews"})">امروز</a>
+        <a class="nav-item nav-link most-view" id="most-viewed-week-tab" data-toggle="tab" data-url="@Url.Action("Index","Home",values:new {duration="week",TypeOfNews="MostViewedNews"})">هفته</a>
+        <a class="nav-item nav-link most-view" id="most-viewed-month-tab" data-toggle="tab" data-url="@Url.Action("Index","Home",values:new {duration="month",TypeOfNews="MostViewedNews"})">ماه</a>
+    </div>
+</nav>
+<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-mostViewedNews">
+        <div class="row">
+            @if (Model.Count() != 0)
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="col-12 col-md-4">
+                        <div class="single-post-area mb-80 border">
+                            <!-- Post Thumbnail -->
+                            <div class="post-thumbnail">
+                                <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
+
+                                <!-- Video Duration -->
+                                <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
+                            </div>
+
+                            <!-- Post Content -->
+                            <div class="post-content clearfix">
+                                <a href="#" class="post-cata cata-sm cata-success">@item.NameOfCategories</a>
+                                <a href="single-post.html" class="post-title p-2"> @item.ShortTitle </a>
+                                <div class="post-meta d-flex float-left pb-1">
+                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
+                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
+                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
+                                    <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="col-md-12 alert alert-info text-center">پربازدیدترین خبر یافت نشد ...</p>
+            }
+
+        </div>
+    </div>
+</div>
+

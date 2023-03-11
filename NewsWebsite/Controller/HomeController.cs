@@ -17,11 +17,18 @@ namespace NewsWebsite.Controllers
             _uw = uw;
         }
        
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string TypeOfNews , string duration)
         {
-            var news = await _uw.NewsRepository.GetPaginateNews(0, 10, item => item.Title , item => "", "", true);
-            var homePageViewModel = new HomePageViewModel(news);
-            return View(homePageViewModel);
+            var isAjax = Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+            if (isAjax && TypeOfNews == "MostViewedNews")
+                return PartialView("_MostViewNews", await _uw.NewsRepository.MostViewedNewsAsync(0, 3, duration));
+            else
+            {
+                var news = await _uw.NewsRepository.GetPaginateNewsAsync(0, 10, item => "", item => item.PersianPublishDate, "", true);
+                var mostViewNews = await _uw.NewsRepository.MostViewedNewsAsync(0, 3, "day");
+                var homePageViewModel = new HomePageViewModel(news, mostViewNews);
+                return View(homePageViewModel);
+            }
         }
     }
 }

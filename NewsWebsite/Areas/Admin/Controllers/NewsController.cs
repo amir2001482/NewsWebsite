@@ -54,45 +54,45 @@ namespace NewsWebsite.Areas.Admin.Controllers
             if (sort == "ShortTitle")
             {
                 if (order == "asc")
-                    news = await  _uw.NewsRepository.GetPaginateNews(offset, limit , item=>item.Title , item => "" ,  search , null);
+                    news = await  _uw.NewsRepository.GetPaginateNewsAsync(offset, limit , item=>item.Title , item => "" ,  search , null);
                 else
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, item => "" , item => item.Title , search, null);
+                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => "" , item => item.Title , search, null);
             }
 
             else if (sort == "بازدید")
             {
                 if (order == "asc")
-                    news =await _uw.NewsRepository.GetPaginateNews(offset, limit, item => item.NumberOfVisit, item => "", search , null);
+                    news =await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => item.NumberOfVisit, item => "", search , null);
                 else
-                    news =await _uw.NewsRepository.GetPaginateNews(offset, limit, item => "", item => item.NumberOfVisit, search , null);
+                    news =await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => "", item => item.NumberOfVisit, search , null);
             }
 
             else if (sort == "لایک")
             {
                 if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit,item => item.NumberOfLike , item => "", search , null);
+                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit,item => item.NumberOfLike , item => "", search , null);
                 else
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, item =>"", item => item.NumberOfLike, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item =>"", item => item.NumberOfLike, search , null);
             }
 
             else if (sort == "دیس لایک")
             {
                 if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit,item => item.NumberOfDisLike , item => "", search , null);
+                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit,item => item.NumberOfDisLike , item => "", search , null);
                 else
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, item => "", item => item.NumberOfDisLike, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => "", item => item.NumberOfDisLike, search , null);
             }
 
             else if (sort == "تاریخ انتشار")
             {
                 if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit,item => item.PublishDateTime , item => "" , search , null);
+                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit,item => item.PublishDateTime , item => "" , search , null);
                 else
-                    news = await _uw.NewsRepository.GetPaginateNews(offset, limit, item => "", item =>item.PublishDateTime, search , null);
+                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => "", item =>item.PublishDateTime, search , null);
             }
 
             else
-                news = await _uw.NewsRepository.GetPaginateNews(offset, limit,item => "" , item => "", search , null);
+                news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit,item => "" , item => "", search , null);
 
             if (search != "")
                 total = news.Count();
