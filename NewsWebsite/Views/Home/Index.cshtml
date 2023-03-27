@@ -1,5 +1,6 @@
 ﻿@model NewsWebsite.ViewModels.Home.HomePageViewModel
 @using NewsWebsite.Common
+@using NewsWebsite.ViewModels.Newsletter
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -272,22 +273,8 @@
                         @await Html.PartialAsync("_MostPopularNews", Model.MostPopularNews)
                     }
 
-                    <!-- ***** Single Widget ***** -->
-                    <div class="single-widget newsletter-widget mb-4 border">
-                        <!-- Section Heading -->
-                        <div class="section-heading style-2 mb-30">
-                            <h4>عضویت در خبرنامه</h4>
-                            <div class="line"></div>
-                        </div>
-                        <p>جهت دریافت جدیدترین اخبار ایمیل خود را وارد کنید.</p>
-                        <!-- Newsletter Form -->
-                        <div class="newsletter-form">
-                            <form action="#" method="post">
-                                <input type="email" name="nl-email" class="form-control mb-15" id="emailnl" placeholder="ایمیل خود را وارد کنید">
-                                <button type="submit" class="btn vizew-btn w-100">عضویت</button>
-                            </form>
-                        </div>
-                    </div>
+                    <!-- ***** Newsletter ***** -->
+                    @await Html.PartialAsync("_RegisterInNewsletter" , new NewsletterViewModel())
 
                     <!-- ***** Single Widget ***** -->
                     <div id="MostTalkNewsDiv" class="container">

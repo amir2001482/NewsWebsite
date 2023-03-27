@@ -23,7 +23,9 @@ namespace NewsWebsite.Data
             builder.AddCustomNewsWebsiteMapping();
             builder.Entity<Video>().Property(b => b.PublishDateTime).HasDefaultValueSql("CONVERT(datetime,GetDate())");
             builder.Entity<User>().Property(b => b.RegisterDateTime).HasDefaultValueSql("CONVERT(datetime,GetDate())");
+            builder.Entity<NewsLetter>().Property(b => b.RegisterDateTime).HasDefaultValueSql("CONVERT(datetime,GetDate())");
             builder.Entity<User>().Property(b => b.IsActive).HasDefaultValueSql("1");
+            builder.Entity<NewsLetter>().Property(b => b.IsActive).HasDefaultValueSql("1");
         }
         public virtual DbSet<Category> Categories { set; get; }
         public virtual DbSet<News> News { set; get; }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Home;
+using NewsWebsite.ViewModels.News;
 
 namespace NewsWebsite.Controllers
 {
@@ -27,12 +28,23 @@ namespace NewsWebsite.Controllers
                 return PartialView("_MostTalkNews", await _uw.NewsRepository.MostTalkNewsAsync(0, 3, duration));
             else
             {
-                var news = await _uw.NewsRepository.GetPaginateNewsAsync(0, 10, item => "", item => item.PersianPublishDate, "", true , null);
+                var model = new NewsPaginateModel()
+                {
+                     offset = 0,
+                     limit = 10,
+                     orderByAsc = item=> "",
+                     orderByDes = item=> item.PersianPublishDate,
+                     searchText = "",
+                     isPublish = true
+                };
+                var news = await _uw.NewsRepository.GetPaginateNewsAsync(model);
                 var mostViewNews = await _uw.NewsRepository.MostViewedNewsAsync(0, 3, "day");
                 var mostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0, 3, "day");
                 var mostPopularNews = await _uw.NewsRepository.MostPopularNewsAsync(0 , 5);
-                var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(0, 10, item => "", item => item.PersianPublishDate, "", true, true);
-                var forignNews = await _uw.NewsRepository.GetPaginateNewsAsync(0, 10, item => "", item => item.PersianPublishDate, "", true, false);
+                model.isInternal = true;
+                var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(model);
+                model.isInternal = false;
+                var forignNews = await _uw.NewsRepository.GetPaginateNewsAsync(model);
                 var homePageViewModel = new HomePageViewModel(news, mostViewNews , mostTalkNews , mostPopularNews , internalNews , forignNews);
                 return View(homePageViewModel);
             }

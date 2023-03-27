@@ -146,7 +146,7 @@ namespace NewsWebsite.Data.Repositories
             return fileName;
         }
 
-        public async Task<List<NewsViewModel>> GetPaginateNewsAsync(int offset, int limit , Func<NewsViewModel, object> orderByAsc, Func<NewsViewModel, object> orderByDes , string searchText , bool? isPublish , bool? isInternal)
+        public async Task<List<NewsViewModel>> GetPaginateNewsAsync(NewsPaginateModel model)
         {
             var newsList = await _context.News
                 .Include(e=>e.Comments)
@@ -155,15 +155,15 @@ namespace NewsWebsite.Data.Repositories
                 .Include(e => e.Visits)
                 .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
                 .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
-                .Where(d=> (isPublish== null ? true : d.IsPublish == isPublish && d.PublishDateTime <= DateTime.Now) && isInternal == null ? true : d.IsInternal == isInternal)
+                .Where(d=> (model .isPublish== null ? true : d.IsPublish == model.isPublish && d.PublishDateTime <= DateTime.Now) && model.isInternal == null ? true : d.IsInternal == model.isInternal)
                 .AsNoTracking().ToListAsync();
 
             var res = _mapper.Map<List<NewsViewModel>>(newsList)
-                .OrderBy(orderByAsc)
-                .OrderByDescending(orderByDes)
-                .Skip(offset).Take(limit)
+                .OrderBy(model.orderByAsc)
+                .OrderByDescending(model.orderByDes)
+                .Skip(model.offset).Take(model.limit)
                 .ToList();
-            return SetCategoryAndTagNames( res , offset);
+            return SetCategoryAndTagNames( res , model.offset);
         }
 
         public async Task<List<NewsViewModel>> MostViewedNewsAsync(int offset, int limit, string duration)

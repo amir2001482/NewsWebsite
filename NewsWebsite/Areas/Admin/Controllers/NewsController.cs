@@ -43,60 +43,86 @@ namespace NewsWebsite.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetNews(string search, string order, int offset, int limit, string sort)
         {
+            var model = new NewsPaginateModel();
             List<NewsViewModel> news;
             int total = _uw.BaseRepository<News>().CountEntities();
             if (!search.HasValue())
                 search = "";
-
             if (limit == 0)
                 limit = total;
 
-            if (sort == "ShortTitle")
+            switch (sort)
             {
-                if (order == "asc")
-                    news = await  _uw.NewsRepository.GetPaginateNewsAsync(offset, limit , item=>item.Title , item => "" ,  search , null , null);
-                else
-                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => "" , item => item.Title , search, null , null);
+                case ("ShortTitle"):
+                     if (order == "asc")
+                     {
+                        model.orderByAsc = item => item.ShortTitle;
+                        model.orderByDes = item => "";
+                     }
+                    else
+                    {
+                        model.orderByDes = item => item.ShortTitle;
+                        model.orderByAsc = item => "";
+                    }
+                    break;
+                case ("بازدید"):
+                    if (order == "asc")
+                    {
+                        model.orderByAsc = item => item.NumberOfVisit;
+                        model.orderByDes = item => "";
+                    }
+                    else
+                    {
+                        model.orderByDes = item => item.NumberOfVisit;
+                        model.orderByAsc = item => "";
+                    }
+                    break;
+                case ("لایک"):
+                    if (order == "asc")
+                    {
+                        model.orderByAsc = item => item.NumberOfLike;
+                        model.orderByDes = item => "";
+                    }
+                    else
+                    {
+                        model.orderByDes = item => item.NumberOfLike;
+                        model.orderByAsc = item => "";
+                    }
+                    break;
+                case ("دیس لایک"):
+                    if (order == "asc")
+                    {
+                        model.orderByAsc = item => item.NumberOfDisLike;
+                        model.orderByDes = item => "";
+                    }
+                    else
+                    {
+                        model.orderByDes = item => item.NumberOfDisLike;
+                        model.orderByAsc = item => "";
+
+                    }
+                    break;
+                case ("تاریخ انتشار"):
+                    if (order == "asc")
+                    {
+                        model.orderByAsc = item => item.PublishDateTime;
+                        model.orderByDes = item => "";
+                    }
+
+                    else
+                    {
+                        model.orderByDes = item => item.PublishDateTime;
+                        model.orderByAsc = item => "";
+                    }
+                    break;
+
             }
-
-            else if (sort == "بازدید")
-            {
-                if (order == "asc")
-                    news =await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => item.NumberOfVisit, item => "", search , null , null);
-                else
-                    news =await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => "", item => item.NumberOfVisit, search , null , null);
-            }
-
-            else if (sort == "لایک")
-            {
-                if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit,item => item.NumberOfLike , item => "", search , null , null);
-                else
-                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item =>"", item => item.NumberOfLike, search , null , null);
-            }
-
-            else if (sort == "دیس لایک")
-            {
-                if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit,item => item.NumberOfDisLike , item => "", search , null , null);
-                else
-                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => "", item => item.NumberOfDisLike, search , null  ,null);
-            }
-
-            else if (sort == "تاریخ انتشار")
-            {
-                if (order == "asc")
-                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit,item => item.PublishDateTime , item => "" , search , null , null);
-                else
-                    news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit, item => "", item =>item.PublishDateTime, search , null , null);
-            }
-
-            else
-                news = await _uw.NewsRepository.GetPaginateNewsAsync(offset, limit,item => "" , item => "", search , null , null);
-
+            model.searchText = search;
+            model.offset = offset;
+            model.limit = limit;
+            news = await _uw.NewsRepository.GetPaginateNewsAsync(model);
             if (search != "")
                 total = news.Count();
-
             return Json(new { total = total, rows = news });
         }
 
