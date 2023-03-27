@@ -15,6 +15,12 @@ namespace NewsWebsite.Data.Contracts
         Task<List<NewsViewModel>> MostViewedNewsAsync(int offset, int limit, string duration);
         Task<List<NewsViewModel>> MostTalkNewsAsync(int offset, int limit, string duration);
         Task<List<NewsViewModel>> MostPopularNewsAsync(int offset, int limit);
+        Task<NewsViewModel> GetNewsById(string newsId);
+        Task<List<NewsViewModel>> GetNextAndPreviousNews(DateTime? PublishDateTime);
+        Task<List<Comment>> GetNewsCommentsAsync(string newsId);
+        Task BindSubComments(Comment comment);
+        Task<List<NewsViewModel>> GetRelatedNews(int number, List<string> tagIdList, string newsId);
+
 
     }
 }
