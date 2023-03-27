@@ -3,6 +3,7 @@ using NewsWebsite.Common;
 using NewsWebsite.Entities;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Category;
+using NewsWebsite.ViewModels.Comments;
 using NewsWebsite.ViewModels.Manage;
 using NewsWebsite.ViewModels.News;
 using NewsWebsite.ViewModels.RoleManager;
@@ -54,6 +55,7 @@ namespace NewsWebsite.IocConfig.Mapping
                 .ForMember(p => p.Status, opt => opt.MapFrom(d => d.IsPublish == false ? "پیش نویس" : (d.PublishDateTime > DateTime.Now ? "انتشار در آینده" : "منتشر شده")))
                 .ForMember(p => p.NumberOfComment, opt => opt.MapFrom(d => d.Comments.Count()));
             CreateMap<NewsViewModel, News>();
+            CreateMap<Comment, CommentViewModel>().ReverseMap();
 
 
         }

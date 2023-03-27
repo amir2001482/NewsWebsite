@@ -1,10 +1,15 @@
 ﻿@model NewsWebsite.ViewModels.Home.NewsDetailsViewModel
 @using NewsWebsite.Common
+@using NewsWebsite.ViewModels.Comments
 @{
     ViewData["Title"] = "NewsDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="~/js/Ajax.js"></script>
+<!-- Sweetalert2 -->
+<link href="~/lib/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+<script src="~/lib/sweetalert2/dist/sweetalert2.min.js"></script>
+
 <style>
     .post-meta.d-flex a i {
         font-size: 15px !important;
@@ -196,8 +201,8 @@
                                                     <a href="#" class="comment-date">@item.PostageDateTime.ConvertMiladiToShamsi("dd MMMM yyyy ساعت HH:mm")</a>
                                                     <h6>@item.Name</h6>
                                                     <p>@item.Desription</p>
-                                                    <div id="@("btn-"+item.CommentId)" class="d-flex align-items-center">
-                                                        <a href="#" class="reply" onclick="ShowCommentForm('@item.CommentId', '@item.NewsId')">پاسخ</a>
+                                                    <div class="d-flex align-items-center">
+                                                        <a id="@("btn-"+item.CommentId)" onclick="ShowCommentForm('@item.CommentId','@item.NewsId')" href="#" class="reply">پاسخ</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -216,8 +221,8 @@
                                                                     <a href="#" class="comment-date">@sub.PostageDateTime.ConvertMiladiToShamsi("dd MMMM yyyy ساعت HH:mm")</a>
                                                                     <h6>@sub.Name</h6>
                                                                     <p>@sub.Desription</p>
-                                                                    <div id="@("btn-"+sub.CommentId)" class="d-flex align-items-center">
-                                                                        <a href="#" class="reply" onclick="ShowCommentForm('@sub.CommentId', '@sub.NewsId')">پاسخ</a>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <a id="@("btn-"+sub.CommentId)" href="#" onclick="ShowCommentForm('@sub.CommentId','@item.NewsId')" class="reply">پاسخ</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -254,24 +259,7 @@
                             </div>
 
                             <!-- Reply Form -->
-                            <div class="contact-form-area">
-                                <form action="#" method="post">
-                                    <div class="row">
-                                        <div class="col-12 col-lg-6">
-                                            <input type="text" class="form-control" id="name" placeholder="نام*">
-                                        </div>
-                                        <div class="col-12 col-lg-6">
-                                            <input type="email" class="form-control" id="email" placeholder="ایمیل*">
-                                        </div>
-                                        <div class="col-12">
-                                            <textarea name="message" class="form-control" id="message" placeholder="دیدگاه خود را بنویسید ...*"></textarea>
-                                        </div>
-                                        <div class="col-12">
-                                            <button class="btn vizew-btn mt-10 float-left" type="submit">ارسال دیدگاه</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                            @await Html.PartialAsync("_SendComment", new CommentViewModel(null, Model.News.NewsId))
                         </div>
 
                     </div>

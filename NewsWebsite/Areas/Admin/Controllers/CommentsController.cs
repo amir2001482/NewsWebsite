@@ -190,14 +190,21 @@ namespace NewsWebsite.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SendComment(CommentViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                viewModel.PostageDateTime = DateTime.Now;
-                await _uw.BaseRepository<Comment>().CreateAsync(_mapper.Map<Comment>(viewModel));
-                await _uw.Commit();
-                TempData["notification"] = "دیدگاه شما با موفقیت ارسال شد و بعد از تایید در سایت نمایش داده می شود.";
+                if (ModelState.IsValid)
+                {
+                    viewModel.PostageDateTime = DateTime.Now;
+                    await _uw.BaseRepository<Comment>().CreateAsync(_mapper.Map<Comment>(viewModel));
+                    await _uw.Commit();
+                    TempData["notification"] = "دیدگاه شما با موفقیت ارسال شد و بعد از تایید در سایت نمایش داده می شود.";
+                }
+                return PartialView("_SendComment", viewModel);
             }
-            return PartialView("_SendComment", viewModel);
+            catch (Exception ex)
+            {
+                return View();
+            }
         }
     }
 }
