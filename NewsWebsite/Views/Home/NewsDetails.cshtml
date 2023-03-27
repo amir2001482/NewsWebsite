@@ -4,6 +4,7 @@
     ViewData["Title"] = "NewsDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<script src="~/js/Ajax.js"></script>
 <style>
     .post-meta.d-flex a i {
         font-size: 15px !important;
@@ -44,7 +45,7 @@
             </div>
         </div>
     }
-    @if (Model.NextAndPreviousNews.Last()!=null)
+    @if (Model.NextAndPreviousNews.Last() != null)
     {
         <div class="vizew-pager-prev">
             <p>خبر بعدی</p>
@@ -141,35 +142,35 @@
                             </div>
                             @if (Model.NewsRelated.Count() != 0)
                             {
-                                 <div class="row">
-                                        @foreach (var item in Model.NewsRelated)
-                                        {
-                                            <div class="col-12 col-md-6">
-                                                <div class="single-post-area mb-50">
-                                                    <div class="post-thumbnail">
-                                                        <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
-                                                        <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
-                                                    </div>
-                                                    <div class="post-content">
-                                                        <a href="/News/@item.NewsId/@item.Url" class="post-title">@item.Title</a>
-                                                        <div class="post-meta d-flex">
-                                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
-                                                            <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
-                                                            <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
-                                                            <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
-                                                        </div>
+                                <div class="row">
+                                    @foreach (var item in Model.NewsRelated)
+                                    {
+                                        <div class="col-12 col-md-6">
+                                            <div class="single-post-area mb-50">
+                                                <div class="post-thumbnail">
+                                                    <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
+                                                    <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
+                                                </div>
+                                                <div class="post-content">
+                                                    <a href="/News/@item.NewsId/@item.Url" class="post-title">@item.Title</a>
+                                                    <div class="post-meta d-flex">
+                                                        <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
+                                                        <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
+                                                        <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
+                                                        <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
                                                     </div>
                                                 </div>
                                             </div>
-                                        }
-                                    </div>
+                                        </div>
+                                    }
+                                </div>
                             }
                             else
                             {
                                 <p class="alert alert-info">خبر مرتبط با این خبر یافت نشد .</p>
                             }
                         </div>
-                       
+
                         <!-- Comment Area Start -->
                         <div class="comment_area clearfix mb-50">
 
@@ -185,7 +186,7 @@
                                     {
                                         <li class="single_comment_area">
                                             <!-- Comment Content -->
-                                            <div class="comment-content d-flex">
+                                            <div id="@("comment-"+item.CommentId)" class="comment-content d-flex">
                                                 <!-- Comment Author -->
                                                 <div class="comment-author">
                                                     <img src="~/assets/img/UserPic.png" alt="author">
@@ -195,19 +196,19 @@
                                                     <a href="#" class="comment-date">@item.PostageDateTime.ConvertMiladiToShamsi("dd MMMM yyyy ساعت HH:mm")</a>
                                                     <h6>@item.Name</h6>
                                                     <p>@item.Desription</p>
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="#" class="reply">پاسخ</a>
+                                                    <div id="@("btn-"+item.CommentId)" class="d-flex align-items-center">
+                                                        <a href="#" class="reply" onclick="ShowCommentForm('@item.CommentId', '@item.NewsId')">پاسخ</a>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            @if (item.comments != null)
+                                            @if (item.comments.Count() != 0)
                                             {
                                                 <ol class="children">
                                                     @foreach (var sub in item.comments)
                                                     {
                                                         <li class="single_comment_area">
-                                                            <div class="comment-content d-flex">
+                                                            <div id="@("comment-"+sub.CommentId)" class="comment-content d-flex">
                                                                 <div class="comment-author">
                                                                     <img src="~/assets/img/UserPic.png" alt="author">
                                                                 </div>
@@ -215,8 +216,8 @@
                                                                     <a href="#" class="comment-date">@sub.PostageDateTime.ConvertMiladiToShamsi("dd MMMM yyyy ساعت HH:mm")</a>
                                                                     <h6>@sub.Name</h6>
                                                                     <p>@sub.Desription</p>
-                                                                    <div class="d-flex align-items-center">
-                                                                        <a href="#" class="reply">پاسخ</a>
+                                                                    <div id="@("btn-"+sub.CommentId)" class="d-flex align-items-center">
+                                                                        <a href="#" class="reply" onclick="ShowCommentForm('@sub.CommentId', '@sub.NewsId')">پاسخ</a>
                                                                     </div>
                                                                 </div>
                                                             </div>

@@ -115,3 +115,25 @@ $(document).on('click', 'button[data-save="Ajax"]', function () {
         }
     });
 });
+
+function ShowCommentForm(parentCommentId, newsId) {
+    $.ajax({
+        url: "/Admin/Comments/SendComment?parentCommentId=" + parentCommentId + "&&newsId=" + newsId,
+        beforeSend: function () { $("#comment-" + parentCommentId).after("<p class='text-center mb-5 mt-3'><span style='font-size:18px;font-family: Vazir_Medium;'> لطفا منتظر بماند  </span><img src='/icons/LoaderIcon.gif'/></p>") },
+        error: function () {
+            ShowSweetErrorAlert();
+        }
+    }).done(function (result) {
+        $("#comment-" + parentCommentId).next().replaceWith("");
+        $("#comment-" + parentCommentId).after("<hr/>" + result);
+        $("#btn-" + parentCommentId).html("لغو پاسخ");
+        $("#btn-" + parentCommentId).attr("onclick", "HideCommentForm('" + parentCommentId + "','" + newsId + "')");
+    });
+}
+function HideCommentForm(parentCommentId, newsId) {
+    $("#comment-" + parentCommentId).next().replaceWith("");
+    $("#comment-" + parentCommentId).next().replaceWith("");
+    $("#btn-" + parentCommentId).html("پاسخ");
+    $("#btn-" + parentCommentId).attr("onclick", "ShowCommentForm('" + parentCommentId + "')");
+}
+

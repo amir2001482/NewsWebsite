@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using NewsWebsite.Common.Attributes;
 using NewsWebsite.Entities;
 using NewsWebsite.Entities.identity;
 using Newtonsoft.Json;
@@ -34,7 +35,7 @@ namespace NewsWebsite.ViewModels.News
         [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
         public string PersianPublishDate { get; set; }
 
-        [Display(Name = "زمان انتشار"),JsonIgnore]
+        [Display(Name = "زمان انتشار"), JsonIgnore]
         [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
         public string PersianPublishTime { get; set; }
 
@@ -48,14 +49,14 @@ namespace NewsWebsite.ViewModels.News
         public string ImageName { get; set; }
 
         [Required(ErrorMessage = "انتخاب {0} الزامی است.")]
-        [JsonIgnore,Display(Name ="تصویر شاخص")]
-        public string ImageFile {get;set;}
+        [JsonIgnore, Display(Name = "تصویر شاخص")]
+        public string ImageFile { get; set; }
 
         [JsonIgnore]
         public bool IsPublish { get; set; }
 
         [Required(ErrorMessage = "انتخاب {0} الزامی است.")]
-        [Display(Name = "نوع خبر"),JsonIgnore()]
+        [Display(Name = "نوع خبر"), JsonIgnore()]
         public bool? IsInternal { get; set; }
 
         [JsonProperty("تگ ها")]
@@ -79,6 +80,7 @@ namespace NewsWebsite.ViewModels.News
 
         [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
         [Display(Name = "آدرس خبر"), JsonProperty("آدرس")]
+        [UrlValidate("/", @"\", " ")]
         public string Url { get; set; }
 
         [JsonProperty("Status")]

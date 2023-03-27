@@ -8,6 +8,10 @@ namespace NewsWebsite.Entities
 {
     public class Comment
     {
+        public Comment()
+        {
+            comments = new List<Comment>();
+        }
         [Key]
         public string CommentId { get; set; }
         public string NewsId { get; set; }
