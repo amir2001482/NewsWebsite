@@ -17,7 +17,7 @@ namespace NewsWebsite.Common.Attributes
         public override bool IsValid(object value)
         {
             if(value!=null)
-                return !Characters.Any(value.ToString().Contains);
+                return !Characters.Any(value.ToString().Trim().Contains);
             return false;
         }
         public override string FormatErrorMessage(string name)

@@ -92,6 +92,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                viewModel.Url = viewModel.Url.Trim();
                if (_uw.CategoryRepository.IsExistCategory(viewModel.CategoryName, viewModel.CategoryId))
                         ModelState.AddModelError(string.Empty, Categoryduplicated);
                 else

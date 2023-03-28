@@ -1,4 +1,5 @@
 ﻿using NewsWebsite.ViewModels.News;
+using NewsWebsite.ViewModels.Video;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +13,9 @@ namespace NewsWebsite.ViewModels.Home
             List<NewsViewModel> mostTalkNews ,
             List<NewsViewModel> mostPopularNews,
             List<NewsViewModel> internalNews,
-            List<NewsViewModel> forignNews)
+            List<NewsViewModel> forignNews,
+            List<VideoViewModel> videos ,
+            int countNewsPublished)
         {
             News = news;
             MostViewNews = mostViewNews;
@@ -20,6 +23,8 @@ namespace NewsWebsite.ViewModels.Home
             MostPopularNews = mostPopularNews;
             InternalNews = internalNews;
             ForignNews = forignNews;
+            Videos = videos;
+            CountNewsPublished = countNewsPublished;
         }
         public List<NewsViewModel> News { get; set; }
         public List<NewsViewModel> MostViewNews { get; set; }
@@ -27,5 +32,7 @@ namespace NewsWebsite.ViewModels.Home
         public List<NewsViewModel> MostPopularNews { get; set; }
         public List<NewsViewModel> InternalNews { get; set; }
         public List<NewsViewModel> ForignNews { get; set; }
+        public List<VideoViewModel> Videos { get; set; }
+        public int CountNewsPublished { get; set; }
     }
 }

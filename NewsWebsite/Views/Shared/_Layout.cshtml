@@ -120,72 +120,11 @@
                     </div>
                 </div>
 
-                <!-- Footer Widget Area -->
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="footer-widget mb-70">
-                        <h6 class="widget-title">جدیدترین ویدیوها</h6>
-                        <!-- Twitter Slides -->
-                        <div class="single-blog-post d-flex">
-                            <div class="post-thumbnail">
-                                <img src="/assets/img/bg-img/1.jpg" alt="">
-                            </div>
-                            <div class="post-content">
-                                <a href="single-post.html" class="post-title">خبر جدید 1</a>
+                <!-- Random Videos -->
+                @await Component.InvokeAsync("RandomVideosList", 2)
 
-                            </div>
-                        </div>
-
-                        <!-- Single Blog Post -->
-                        <div class="single-blog-post d-flex">
-                            <div class="post-thumbnail">
-                                <img src="/assets/img/bg-img/2.jpg" alt="">
-                            </div>
-                            <div class="post-content">
-                                <a href="single-post.html" class="post-title">خبر جدید 2</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer Widget Area -->
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="footer-widget mb-70">
-                        <h6 class="widget-title">جدیدترین اخبار </h6>
-
-                        <!-- Single Blog Post -->
-                        <div class="single-blog-post d-flex">
-                            <div class="post-thumbnail">
-                                <img src="/assets/img/bg-img/1.jpg" alt="">
-                            </div>
-                            <div class="post-content">
-                                <a href="single-post.html" class="post-title">خبر جدید 1</a>
-                                <div class="post-meta d-flex justify-content-between">
-                                    <a href="#" class="ml-1"><i class="fa fa-comments-o" aria-hidden="true"></i> 14</a>
-                                    <a href="#" class="ml-1"><i class="fa fa-eye" aria-hidden="true"></i> 34</a>
-                                    <a href="#" class="ml-1"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 84</a>
-                                    <a href="#" class="ml-1"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 84</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Single Blog Post -->
-                        <div class="single-blog-post d-flex">
-                            <div class="post-thumbnail">
-                                <img src="/assets/img/bg-img/2.jpg" alt="">
-                            </div>
-                            <div class="post-content">
-                                <a href="single-post.html" class="post-title">خبر جدید 2</a>
-                                <div class="post-meta d-flex justify-content-between">
-                                    <a href="#" class="ml-1"><i class="fa fa-comments-o" aria-hidden="true"></i> 14</a>
-                                    <a href="#" class="ml-1"><i class="fa fa-eye" aria-hidden="true"></i> 34</a>
-                                    <a href="#" class="ml-1"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 84</a>
-                                    <a href="#" class="ml-1"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> 84</a>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                <!-- Random News -->
+                @await Component.InvokeAsync("RandomNewsList", 2)
 
                 <!-- Footer Widget Area -->
                 <div class="col-12 col-sm-6 col-xl-3">

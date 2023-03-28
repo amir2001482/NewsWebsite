@@ -188,6 +188,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                viewModel.Url = viewModel.Url.Trim();
                 if (submitButton != "ذخیره پیش نویس")
                     viewModel.IsPublish = true;
 

@@ -148,22 +148,29 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<List<NewsViewModel>> GetPaginateNewsAsync(NewsPaginateModel model)
         {
-            var newsList = await _context.News
-                .Include(e=>e.Comments)
+            try
+            {
+                var newsList = await _context.News
+                .Include(e => e.Comments)
                 .Include(e => e.Likes)
                 .Include(e => e.User)
                 .Include(e => e.Visits)
                 .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
                 .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
-                .Where(d=> (model .isPublish== null ? true : d.IsPublish == model.isPublish && d.PublishDateTime <= DateTime.Now) && model.isInternal == null ? true : d.IsInternal == model.isInternal)
+                .Where(d => (model.isPublish == null ? true : d.IsPublish == model.isPublish && d.PublishDateTime <= DateTime.Now) && model.isInternal == null ? true : d.IsInternal == model.isInternal)
                 .AsNoTracking().ToListAsync();
 
-            var res = _mapper.Map<List<NewsViewModel>>(newsList)
-                .OrderBy(model.orderByAsc)
-                .OrderByDescending(model.orderByDes)
-                .Skip(model.offset).Take(model.limit)
-                .ToList();
-            return SetCategoryAndTagNames( res , model.offset);
+                var res = _mapper.Map<List<NewsViewModel>>(newsList)
+                    .OrderBy(model.orderByAsc)
+                    .OrderByDescending(model.orderByDes)
+                    .Skip(model.offset).Take(model.limit)
+                    .ToList();
+                return SetCategoryAndTagNames(res, model.offset);
+            }
+            catch(Exception ex)
+            {
+                return new List<NewsViewModel>();
+            }
         }
 
         public async Task<List<NewsViewModel>> MostViewedNewsAsync(int offset, int limit, string duration)
@@ -375,7 +382,10 @@ namespace NewsWebsite.Data.Repositories
 
             return newsList;
         }
-
+        public int GetPublishedNewsCount()
+        {
+            return _context.News.Where(c => c.IsPublish == true).Count();
+        }
 
         private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news , int offset)
         {

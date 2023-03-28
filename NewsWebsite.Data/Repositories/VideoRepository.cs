@@ -20,25 +20,25 @@ namespace NewsWebsite.Data.Repositories
         }
 
 
-        public async Task<List<VideoViewModel>> GetPaginateVideosAsync(int offset, int limit, bool? titleSortAsc, bool? publishDateTimeSortAsc, string searchText)
+        public async Task<List<VideoViewModel>> GetPaginateVideosAsync(VideoPaginateModel model)
         {
-            List<VideoViewModel> videos= await _context.Videos.Where(c => c.Title.Contains(searchText))
-                                    .Select(c => new VideoViewModel { VideoId = c.VideoId, Title = c.Title, Url = c.Url, Poster=c.Poster,PersianPublishDateTime=c.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss")}).Skip(offset).Take(limit).AsNoTracking().ToListAsync();
+            List<VideoViewModel> videos= await _context.Videos.Where(c => c.Title.Contains(model.searchText))
+                                    .Select(c => new VideoViewModel { VideoId = c.VideoId, Title = c.Title, Url = c.Url, Poster=c.Poster,PersianPublishDateTime=c.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss")}).Skip(model.offset).Take(model.limit).AsNoTracking().ToListAsync();
 
-            if (titleSortAsc != null)
+            if (model.titleSortAsc != null)
             {
-                videos = videos.OrderBy(c => (titleSortAsc == true && titleSortAsc != null) ? c.Title : "")
-                                    .OrderByDescending(c => (titleSortAsc == false && titleSortAsc != null) ? c.Title : "").ToList();
+                videos = videos.OrderBy(c => (model.titleSortAsc == true && model.titleSortAsc != null) ? c.Title : "")
+                                    .OrderByDescending(c => (model.titleSortAsc == false && model.titleSortAsc != null) ? c.Title : "").ToList();
             }
 
-            else if (publishDateTimeSortAsc != null)
+            else if (model.publishDateTimeSortAsc!= null)
             {
-                videos = videos.OrderBy(c => (publishDateTimeSortAsc == true && publishDateTimeSortAsc != null) ? c.PersianPublishDateTime : "")
-                                   .OrderByDescending(c => (publishDateTimeSortAsc == false && publishDateTimeSortAsc != null) ? c.PersianPublishDateTime : "").ToList();
+                videos = videos.OrderBy(c => (model.publishDateTimeSortAsc == true && model.publishDateTimeSortAsc != null) ? c.PersianPublishDateTime : "")
+                                   .OrderByDescending(c => (model.publishDateTimeSortAsc == false && model.publishDateTimeSortAsc != null) ? c.PersianPublishDateTime : "").ToList();
             }
 
             foreach (var item in videos)
-                item.Row = ++offset;
+                item.Row = ++model.offset;
 
             return videos;
         }

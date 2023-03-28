@@ -9,6 +9,6 @@ namespace NewsWebsite.Data.Contracts
     public interface IVideoRepository
     {
         string CheckVideoFileName(string fileName);
-        Task<List<VideoViewModel>> GetPaginateVideosAsync(int offset, int limit, bool? titleSortAsc, bool? publishDateTimeSortAsc, string searchText);
+        Task<List<VideoViewModel>> GetPaginateVideosAsync(VideoPaginateModel model);
     }
 }

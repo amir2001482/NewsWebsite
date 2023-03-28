@@ -1,0 +1,44 @@
+﻿@model NewsWebsite.ViewModels.Home.NewsPaginateViewModel
+@using NewsWebsite.Common
+
+@foreach (var item in Model.News)
+{
+    <!-- Single Post Area -->
+    <div class="single-post-area mb-30">
+        <div class="row align-items-center">
+            <div class="col-12 col-lg-6">
+                <!-- Post Thumbnail -->
+                <div class="post-thumbnail">
+                    <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
+
+                    <!-- Video Duration -->
+                    <span class="video-duration">@item.PublishDateTime.Value.ToString("HH:mm")</span>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <!-- Post Content -->
+                <div class="post-content mt-0">
+                    <a href="#" class="post-cata cata-sm cata-success">@item.NameOfCategories</a>
+                    <a href="/News/@item.NewsId/@item.Url" class="post-title mb-2">
+                        @item.Title
+                    </a>
+                    <div class="post-meta d-flex align-items-center mb-2">
+                        <a href="#" class="post-author">@item.AuthorName</a>
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                        <a href="#" class="post-date">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</a>
+                    </div>
+                    <p class="mb-2">
+                        @item.Abstract
+                    </p>
+                    <div class="post-meta d-flex float-left">
+                        <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
+                        <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
+                        <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
+                        <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

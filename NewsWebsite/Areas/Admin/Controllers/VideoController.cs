@@ -41,10 +41,16 @@ namespace NewsWebsite.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVideos(string search, string order, int offset, int limit, string sort)
         {
+            var model = new VideoPaginateModel
+            {
+                limit = limit,
+                offset = offset,
+                searchText = search,
+            };
             List<VideoViewModel> videos;
             int total = _uw.BaseRepository<Video>().CountEntities();
             if (!search.HasValue())
-                search = "";
+                model.searchText = "";
 
             if (limit == 0)
                 limit = total;
@@ -52,21 +58,37 @@ namespace NewsWebsite.Areas.Admin.Controllers
             if (sort == "عنوان ویدیو")
             {
                 if (order == "asc")
-                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(offset, limit, true, null, search);
+                {
+                    model.titleSortAsc = true;
+                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
+                }
+
                 else
-                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(offset, limit, false, null, search);
+                {
+                    model.titleSortAsc = false;
+                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
+                }
+                  
             }
 
             else if (sort == "تاریخ انتشار")
             {
                 if (order == "asc")
-                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(offset, limit, null, true, search);
+                {
+                    model.publishDateTimeSortAsc = true;
+                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
+                }
+
                 else
-                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(offset, limit, null, false, search);
+                {
+                    model.publishDateTimeSortAsc = false;
+                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
+                }
+                    
             }
 
             else
-                videos = await _uw.VideoRepository.GetPaginateVideosAsync(offset, limit, null, null, search);
+                videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
 
             if (search != "")
                 total = videos.Count();

@@ -1,14 +1,13 @@
 ﻿@model NewsWebsite.ViewModels.Home.HomePageViewModel
 @using NewsWebsite.Common
 @using NewsWebsite.ViewModels.Newsletter
+@using NewsWebsite.ViewModels.Home
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<link href="~/lib/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
-<script src="~/lib/sweetalert2/dist/sweetalert2.min.js"></script>
-<script src="~/js/Ajax.js"></script>
 
+<script src="~/js/Ajax.js"></script>
 <!-- ##### Hero Area Start ##### -->
 <section class="hero--area section-padding-60">
     @if (Model.News.Count() != 0)
@@ -17,49 +16,52 @@
             <div class="row no-gutters">
                 <div class="col-12 col-md-7 col-lg-8">
                     <div class="tab-content">
-                        @{ var i = 1;}
+                        @{int i = 1;}
                         @foreach (var item in Model.News)
                         {
-                            <div class="tab-pane fade show @(i == 1 ? "active" : "")" id="@("post-" + i)" role="tabpanel" aria-labelledby="@("post-" + i + "-tab")">
+                            <div class="tab-pane fade show @(i==1?"active":"")" id="@("post-"+i)" role="tabpanel" aria-labelledby="@("post-"+i+"-tab")">
                                 <!-- Single Feature Post -->
                                 <div class="single-feature-post video-post bg-img" style="background-image: url(/newsImage/@item.ImageName);">
                                     <!-- Post Content -->
                                     <div class="post-content">
                                         <a href="#" class="post-cata">@item.NameOfCategories</a>
-                                        <a href="/News/@item.NewsId/@item.Url" class="post-title">@item.Title</a>
+                                        <a href="/News/@item.NewsId/@item.Url" class="post-title"> @item.Title </a>
                                         <div class="post-meta d-flex float-left">
-                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</a>
+                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
                                             <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
                                             <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
                                             <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
                                         </div>
                                     </div>
-                                    <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
+                                    <span class="news-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
                                 </div>
                             </div>
                             i++;
                         }
+
+
                     </div>
                 </div>
-                @{ i = 1;}
+
+                @{i = 1;}
                 <div class="col-12 col-md-5 col-lg-4">
                     <ul class="nav vizew-nav-tab" role="tablist">
                         @foreach (var item in Model.News)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link @(i == 1 ? "active" : "")" id="@("post-" + i)" data-toggle="pill" href="@("#post-" + i)" role="tab" aria-controls="@("post-" + i)" aria-selected="true">
+                            <li class="nav-item w-100">
+                                <a class="nav-link  @(i==1?"active":"")" id="@("post-"+i+"-tab")" data-toggle="pill" href="@("#post-"+i)" role="tab" aria-controls="post-1" aria-selected="true">
                                     <!-- Single Blog Post -->
                                     <div class="single-blog-post style-2 d-flex align-items-center">
                                         <div class="post-thumbnail">
-                                            <img src="/newsImage/@item.ImageName" alt="@item.ImageName">
+                                            <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
                                         </div>
                                         <div class="post-content">
-                                            <h6 class="post-title">@item.Title</h6>
+                                            <h6 class="post-title"> @item.Title </h6>
                                             <div class="post-meta d-flex justify-content-between">
-                                                <span><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</span>
-                                                <span><i class="fa fa-eye" aria-hidden="true"></i>@item.NumberOfVisit</span>
-                                                <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>@item.NumberOfLike</span>
-                                                <span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>@item.NumberOfDisLike</span>
+                                                <span><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</span>
+                                                <span><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</span>
+                                                <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</span>
+                                                <span><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</span>
                                             </div>
                                         </div>
                                     </div>
@@ -67,11 +69,11 @@
                             </li>
                             i++;
                         }
+
                     </ul>
                 </div>
             </div>
         </div>
-
     }
 
 </section>
@@ -89,79 +91,58 @@
         <div class="row">
             <div class="col-12 col-md-7 col-lg-8">
                 <div class="all-posts-area">
-                    <!-- Section Heading -->
-                    <div class="section-heading style-2">
-                        <h4> جدیدترین ویدیوها </h4>
-                        <div class="line"></div>
-                    </div>
-
-                    <!-- Featured Post Slides -->
-                    <div class="featured-post-slides owl-carousel mb-30 direction-ltr">
-                        <!-- Single Feature Post -->
-                        <div class="single-feature-post video-post bg-img" style="background-image: url(/assets/img/bg-img/11.jpeg);">
-                            <!-- Play Button -->
-                            <a href="video-post.html" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
-
-                            <!-- Post Content -->
-                            <div class="post-content">
-                                <a href="#" class="post-cata">ورزشی</a>
-                                <a href="single-post.html" class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان</a>
-                                <div class="post-meta d-flex">
-                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 25</a>
-                                </div>
-                            </div>
-
-                            <!-- Video Duration -->
-                            <span class="video-duration">05.03</span>
+                    @if (Model.Videos.Count() != 0)
+                    {
+                        <div class="section-heading style-2">
+                            <h4> جدیدترین ویدیوها </h4>
+                            <div class="line"></div>
                         </div>
 
-                        <!-- Single Feature Post -->
-                        <div class="single-feature-post video-post bg-img" style="background-image: url(/assets/img/bg-img/11.jpeg);">
-                            <!-- Play Button -->
-                            <a href="video-post.html" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
+                        <div class="featured-post-slides owl-carousel mb-30 direction-ltr">
 
-                            <!-- Post Content -->
-                            <div class="post-content">
-                                <a href="#" class="post-cata">ورزشی</a>
-                                <a href="single-post.html" class="post-title">شوک دوم به پرسپولیس/ بیرانوند در آستانه جدایی از سرخپوشان</a>
-                                <div class="post-meta d-flex">
-                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> 25</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> 25</a>
+                            @foreach (var item in Model.Videos)
+                            {
+                                <div class="single-feature-post video-post bg-img" style="background-image: url(/posters/@item.Poster);">
+                                    <a href="/Videos/@item.VideoId" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
+
+                                    <div class="post-content">
+                                        <a href="/Videos/@item.VideoId" class="post-title">@item.Title</a>
+                                    </div>
+
+                                    <span class="video-duration direction-rtl">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
                                 </div>
-                            </div>
-
-                            <!-- Video Duration -->
-                            <span class="video-duration">05.03</span>
+                            }
                         </div>
-                    </div>
+
+                    }
 
                     <div class="row mt-5">
                         @if (Model.InternalNews.Count() != 0)
                         {
                             <div class="col-12 col-lg-6">
+                                <!-- Section Heading -->
                                 <div class="section-heading style-2">
                                     <h5>جدیدترین اخبار داخلی</h5>
                                     <div class="line"></div>
                                 </div>
+
+                                <!-- Sports Video Slides -->
                                 <div class="sport-video-slides owl-carousel mb-50 direction-ltr">
                                     @foreach (var item in Model.InternalNews)
                                     {
                                         <div class="single-post-area">
                                             <div class="post-thumbnail">
-                                                <img src="/newsImage/@item.ImageName" alt="@item.Title">
-                                                <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
+                                                <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
+                                                <span class="video-duration direction-rtl">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
                                             </div>
                                             <div class="post-content">
                                                 <a href="#" class="post-cata cata-sm cata-primary">@item.NameOfCategories</a>
-                                                <a href="/@item.NewsId/@item.Url" class="post-title">@item.ShortTitle</a>
+                                                <a href="/News/@item.NewsId/@item.Url" class="post-title"> @item.Title </a>
                                                 <div class="post-meta d-flex">
-                                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</a>
-                                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i>@item.NumberOfVisit</a>
-                                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>@item.NumberOfLike</a>
-                                                    <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>@item.NumberOfLike</a>
+                                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
+                                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
+                                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
+                                                    <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -170,39 +151,41 @@
                                 </div>
                             </div>
                         }
+
+
                         @if (Model.ForignNews.Count() != 0)
                         {
                             <div class="col-12 col-lg-6">
+                                <!-- Section Heading -->
                                 <div class="section-heading style-2">
                                     <h5>جدیدترین اخبار خارجی</h5>
                                     <div class="line"></div>
                                 </div>
+
+                                <!-- Business Video Slides -->
                                 <div class="business-video-slides owl-carousel mb-50 direction-ltr">
                                     @foreach (var item in Model.ForignNews)
                                     {
-                                       <div class="single-post-area">
+                                        <div class="single-post-area">
                                             <div class="post-thumbnail">
-                                                <img src="/newsImage/@item.ImageName" alt="@item.Title">
-                                                <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
+                                                <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
+                                                <span class="video-duration direction-rtl">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>
                                             </div>
                                             <div class="post-content">
                                                 <a href="#" class="post-cata cata-sm cata-primary">@item.NameOfCategories</a>
-                                                <a href="/@item.NewsId/@item.Url" class="post-title">@item.ShortTitle</a>
+                                                <a href="/News/@item.NewsId/@item.Url" class="post-title"> @item.Title </a>
                                                 <div class="post-meta d-flex">
-                                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</a>
-                                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i>@item.NumberOfVisit</a>
-                                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>@item.NumberOfLike</a>
-                                                    <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>@item.NumberOfLike</a>
+                                                    <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
+                                                    <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
+                                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
+                                                    <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
                                                 </div>
                                             </div>
                                         </div>
                                     }
-
                                 </div>
                             </div>
                         }
-
-
 
                     </div>
 
@@ -219,47 +202,15 @@
                     }
                     else
                     {
-                        @foreach (var item in Model.News)
-                        {
-                            <!-- Single Post Area -->
-                            <div class="single-post-area mb-30">
-                                <div class="row align-items-center">
-                                    <div class="col-12 col-lg-6">
-                                        <!-- Post Thumbnail -->
-                                        <div class="post-thumbnail">
-                                            <img src="/newsImage/@item.ImageName" alt="item.ImageName">
-                                            <!-- Video Duration -->
-                                            <span class="video-duration">@item.PublishDateTime.Value.ToString("HH:mm")</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-lg-6">
-                                        <!-- Post Content -->
-                                        <div class="post-content mt-0">
-                                            <a href="#" class="post-cata cata-sm cata-success">@item.NameOfCategories</a>
-                                            <a href="/@item.NewsId/@item.Url" class="post-date" class="post-title mb-2">
-                                                @item.Title
-                                            </a>
-                                            <div class="post-meta d-flex align-items-center mb-2">
-                                                <a href="#" class="post-author">@item.AuthorName</a>
-                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                <a href="#">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</a>
-                                            </div>
-                                            <p class="mb-2">
-                                                @item.Abstract
-                                            </p>
-                                            <div class="post-meta d-flex float-left">
-                                                <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i>@item.NumberOfComment</a>
-                                                <a href="#"><i class="fa fa-eye" aria-hidden="true"></i>@item.NumberOfVisit</a>
-                                                <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>@item.NumberOfLike</a>
-                                                <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>@item.NumberOfDisLike</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
+                    <div id="NewsPaginate">
+                        @await Html.PartialAsync("_NewsPaginate", new NewsPaginateViewModel(Model.CountNewsPublished, Model.News.Take(5).ToList()))
+                    </div>
+                       
 
+                        <div id="page" class="mt-5">
+                            <ul class="pagination"></ul>
+                        </div>
+                    }
 
                 </div>
             </div>
@@ -267,19 +218,21 @@
             <div class="col-12 col-md-5 col-lg-4">
                 <div class="sidebar-area">
 
-                    <!-- ***** MostPopularNews ***** -->
+                    <!-- ***** MostPopularNews***** -->
                     @if (Model.MostPopularNews.Count() != 0)
                     {
                         @await Html.PartialAsync("_MostPopularNews", Model.MostPopularNews)
                     }
 
                     <!-- ***** Newsletter ***** -->
-                    @await Html.PartialAsync("_RegisterInNewsletter" , new NewsletterViewModel())
+                    @await Html.PartialAsync("_RegisterInNewsletter", new NewsletterViewModel())
+
 
                     <!-- ***** Single Widget ***** -->
-                    <div id="MostTalkNewsDiv" class="container">
+                    <div id="MostTalkNewsDiv">
                         @await Html.PartialAsync("_MostTalkNews", Model.MostTalkNews)
                     </div>
+
                 </div>
 
             </div>
@@ -287,4 +240,27 @@
         </div>
     </div>
 </section>
+<script src="~/js/pagination.min.js"></script>
+<script>
+    $(function() {
+	$('#page').Pagination({
+            size: 20,
+            limit: 5,
+    	}, function(obj){
+              var offset=(obj.page-1)*5;
+              $.ajax({
+                url: '/Home/GetNewsPaginate?offset='+offset+'&&limit=5',
+                beforeSend: function () { $('#modal-placeholder').after('<div class="preloader d-flex align-items-center justify-content-center"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>');},
+                complete: function () { $('.preloader').remove();},
+                error: function () {
+                     ShowSweetErrorAlert();
+                }
+             }).done(function (result) {
+                $("#NewsPaginate").html(result);
+             });
+    	});
+});
+
+</script>
+
 <!-- ##### Vizew Psot Area End ##### -->

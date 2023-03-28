@@ -1,0 +1,20 @@
+﻿@model List<NewsWebsite.ViewModels.News.NewsViewModel>
+
+<div class="col-12 col-sm-6 col-xl-3">
+    <div class="footer-widget mb-70">
+        <h6 class="widget-title"> اخبار تصادفی </h6>
+        @foreach (var item in Model)
+        {
+            <div class="single-blog-post d-flex">
+                <div class="post-thumbnail">
+                    <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
+                </div>
+                <div class="post-content">
+                    <a href="/@item.NewsId/@item.Title" class="post-title">@item.Title</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

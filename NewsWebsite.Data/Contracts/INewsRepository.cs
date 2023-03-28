@@ -20,6 +20,7 @@ namespace NewsWebsite.Data.Contracts
         Task<List<Comment>> GetNewsCommentsAsync(string newsId);
         Task BindSubComments(Comment comment);
         Task<List<NewsViewModel>> GetRelatedNews(int number, List<string> tagIdList, string newsId);
+        int GetPublishedNewsCount();
 
 
     }
