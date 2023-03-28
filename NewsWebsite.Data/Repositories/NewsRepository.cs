@@ -148,8 +148,6 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<List<NewsViewModel>> GetPaginateNewsAsync(NewsPaginateModel model)
         {
-            try
-            {
                 var newsList = await _context.News
                 .Include(e => e.Comments)
                 .Include(e => e.Likes)
@@ -166,11 +164,6 @@ namespace NewsWebsite.Data.Repositories
                     .Skip(model.offset).Take(model.limit)
                     .ToList();
                 return SetCategoryAndTagNames(res, model.offset);
-            }
-            catch(Exception ex)
-            {
-                return new List<NewsViewModel>();
-            }
         }
 
         public async Task<List<NewsViewModel>> MostViewedNewsAsync(int offset, int limit, string duration)
@@ -385,6 +378,31 @@ namespace NewsWebsite.Data.Repositories
         public int GetPublishedNewsCount()
         {
             return _context.News.Where(c => c.IsPublish == true).Count();
+        }
+
+        public async Task<List<NewsViewModel>> NewsInCategoryOrTag(string categoryId , string TagId)
+        {
+            var obj = await _context.News.AsNoTracking()
+                    .Include(d => d.Comments)
+                    .Include(d => d.Likes)
+                    .Include(d => d.NewsCategories).ThenInclude(e => e.Category)
+                    .Include(d => d.NewsTags).ThenInclude(e => e.Tag)
+                    .Include(d => d.User)
+                    .Include(d => d.Visits)
+                    .Where(d=>d.IsPublish == true)
+                    .ToListAsync();
+            var news = _mapper.Map<List<NewsViewModel>>(obj);
+            var res = SetCategoryAndTagNames(news, 0);
+            if (categoryId.HasValue())
+            {
+                res = res.Where(d => d.NewsCategories.Any(e => e.CategoryId == categoryId)).ToList();
+            }
+            else
+            {
+                res = res.Where(d => d.NewsTags.Any(e => e.TagId == TagId)).ToList();
+            }
+
+            return res;
         }
 
         private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news , int offset)

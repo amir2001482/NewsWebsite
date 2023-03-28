@@ -56,6 +56,8 @@ namespace NewsWebsite.IocConfig.Mapping
                 .ForMember(p => p.NumberOfComment, opt => opt.MapFrom(d => d.Comments.Count()));
             CreateMap<NewsViewModel, News>();
             CreateMap<Comment, CommentViewModel>().ReverseMap();
+            CreateMap<Video, VideoViewModel>()
+                .ForMember(p => p.PersianPublishDateTime, opt => opt.MapFrom(d => d.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss")));
 
 
         }

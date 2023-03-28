@@ -69,5 +69,9 @@ namespace NewsWebsite.Data.Repositories
             await _context.SaveChangesAsync();
             return newsTags;
         }
+        public async Task<Tag> FindByIdAsync(string tagId)
+        {
+            return await _context.Tags.FirstOrDefaultAsync(d => d.TagId == tagId);
+        }
     }
 }

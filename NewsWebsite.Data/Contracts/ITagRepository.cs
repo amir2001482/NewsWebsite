@@ -12,5 +12,6 @@ namespace NewsWebsite.Data.Contracts
         Task<List<TagViewModel>> GetPaginateTagsAsync(int offset, int limit, bool? tagNameSortAsc, string searchText);
         bool IsExistTag(string tagName, string recentTagId = null);
         Task<List<NewsTag>> InsertNewsTags(string[] tags, string newsId = null);
+        Task<Tag> FindByIdAsync(string tagId);
     }
 }

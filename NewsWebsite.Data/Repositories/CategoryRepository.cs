@@ -62,7 +62,7 @@ namespace NewsWebsite.Data.Repositories
         {
             var SubCategories = (from c in _context.Categories
                                  where (c.ParentCategoryId == category.id)
-                                 select new TreeViewCategory { id = c.CategoryId, title = c.CategoryName }).ToList();
+                                 select new TreeViewCategory { id = c.CategoryId, title = c.CategoryName , url = c.Url }).ToList();
             foreach (var item in SubCategories)
             {
                 BindSubCategories(item);
@@ -92,6 +92,5 @@ namespace NewsWebsite.Data.Repositories
                 }
             }
         }
-
     }
 }

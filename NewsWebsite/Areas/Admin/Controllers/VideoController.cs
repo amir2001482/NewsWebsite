@@ -41,58 +41,50 @@ namespace NewsWebsite.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVideos(string search, string order, int offset, int limit, string sort)
         {
-            var model = new VideoPaginateModel
-            {
-                limit = limit,
-                offset = offset,
-                searchText = search,
-            };
+            var model = new VideoPaginateModel();                                 
             List<VideoViewModel> videos;
             int total = _uw.BaseRepository<Video>().CountEntities();
             if (!search.HasValue())
-                model.searchText = "";
-
+                search = "";
             if (limit == 0)
                 limit = total;
-
-            if (sort == "عنوان ویدیو")
+            switch (sort)
             {
-                if (order == "asc")
-                {
-                    model.titleSortAsc = true;
-                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
-                }
-
-                else
-                {
-                    model.titleSortAsc = false;
-                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
-                }
-                  
+                case ("عنوان ویدیو"):
+                    if (order == "asc")
+                    {
+                        model.orderByAsc = item => item.Title;
+                        model.orderByDes = item => "";
+                    }
+                    else
+                    {
+                        model.orderByDes = item => item.Title;
+                        model.orderByAsc = item => "";
+                    }
+                    break;
+                case ("تاریخ انتشار"):
+                    if (order == "asc")
+                    {
+                        model.orderByAsc = item => item.PublishDateTime;
+                        model.orderByDes = item => "";
+                    }
+                    else
+                    {
+                        model.orderByDes = item => item.PublishDateTime;
+                        model.orderByAsc = item => "";
+                    }
+                    break;
+                default:
+                    model.orderByDes = item => "";
+                    model.orderByAsc = item => "";
+                    break;
             }
-
-            else if (sort == "تاریخ انتشار")
-            {
-                if (order == "asc")
-                {
-                    model.publishDateTimeSortAsc = true;
-                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
-                }
-
-                else
-                {
-                    model.publishDateTimeSortAsc = false;
-                    videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
-                }
-                    
-            }
-
-            else
-                videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
-
+            model.searchText = search;
+            model.limit = limit;
+            model.offset = offset;
+            videos = await _uw.VideoRepository.GetPaginateVideosAsync(model);
             if (search != "")
                 total = videos.Count();
-
             return Json(new { total = total, rows = videos });
         }
 

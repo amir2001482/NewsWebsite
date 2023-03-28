@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Video;
@@ -14,33 +15,36 @@ namespace NewsWebsite.Data.Repositories
     public class VideoRepository : IVideoRepository
     {
         private readonly NewsDBContext _context;
-        public VideoRepository(NewsDBContext context)
+        private readonly IMapper _mapper;
+        public VideoRepository(NewsDBContext context , IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
         public async Task<List<VideoViewModel>> GetPaginateVideosAsync(VideoPaginateModel model)
         {
-            List<VideoViewModel> videos= await _context.Videos.Where(c => c.Title.Contains(model.searchText))
-                                    .Select(c => new VideoViewModel { VideoId = c.VideoId, Title = c.Title, Url = c.Url, Poster=c.Poster,PersianPublishDateTime=c.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss")}).Skip(model.offset).Take(model.limit).AsNoTracking().ToListAsync();
-
-            if (model.titleSortAsc != null)
+            try
             {
-                videos = videos.OrderBy(c => (model.titleSortAsc == true && model.titleSortAsc != null) ? c.Title : "")
-                                    .OrderByDescending(c => (model.titleSortAsc == false && model.titleSortAsc != null) ? c.Title : "").ToList();
-            }
+                var obj = await _context.Videos.AsNoTracking()
+               .Where(c => c.Title.Contains(model.searchText))
+               .ToListAsync();
 
-            else if (model.publishDateTimeSortAsc!= null)
+                var videos = _mapper.Map<List<VideoViewModel>>(obj)
+                     .OrderBy(model.orderByAsc)
+                     .OrderByDescending(model.orderByDes)
+                     .Skip(model.offset).Take(model.limit).ToList();
+
+                foreach (var item in videos)
+                    item.Row = ++model.offset;
+
+                return videos;
+            }
+            catch (Exception ex)
             {
-                videos = videos.OrderBy(c => (model.publishDateTimeSortAsc == true && model.publishDateTimeSortAsc != null) ? c.PersianPublishDateTime : "")
-                                   .OrderByDescending(c => (model.publishDateTimeSortAsc == false && model.publishDateTimeSortAsc != null) ? c.PersianPublishDateTime : "").ToList();
+                return new List<VideoViewModel>();
             }
-
-            foreach (var item in videos)
-                item.Row = ++model.offset;
-
-            return videos;
         }
 
         public string CheckVideoFileName(string fileName)

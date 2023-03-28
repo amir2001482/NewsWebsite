@@ -46,7 +46,7 @@ namespace NewsWebsite.Data.UnitOfWork
             get
             {
                 if (_videoRepository == null)
-                    _videoRepository = new VideoRepository(_Context);
+                    _videoRepository = new VideoRepository(_Context , _mapper);
 
                 return _videoRepository;
             }

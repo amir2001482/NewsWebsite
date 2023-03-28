@@ -8,8 +8,8 @@ namespace NewsWebsite.ViewModels.Video
     {
         public int offset { get; set; }
         public int limit { get; set; }
-        public bool? titleSortAsc { get; set; }
-        public bool? publishDateTimeSortAsc { get; set; }
+        public Func<VideoViewModel, object> orderByAsc { get; set; }
+        public Func<VideoViewModel, object> orderByDes { get; set; }
         public string searchText { get; set; }
     }
 }
