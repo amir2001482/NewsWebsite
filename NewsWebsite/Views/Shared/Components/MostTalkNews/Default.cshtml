@@ -1,0 +1,73 @@
+﻿@model List<NewsWebsite.ViewModels.News.NewsViewModel>
+<div class="single-widget mb-50 border ligh">
+    <div class="section-heading style-2 mb-30">
+        <h4>پر بحث ترین اخبار</h4>
+        <div class="line"></div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 ">
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active most-talk" id="most-talk-day-tab" data-toggle="tab" data-url="@Url.Action("Index","Home",values:new {duration="day" , TypeOfNews = "MostTalkNews"})">امروز</a>
+                        <a class="nav-item nav-link most-talk" id="-most-talk-week-tab" data-toggle="tab" data-url="@Url.Action("Index","Home",values:new {duration="week" , TypeOfNews = "MostTalkNews"})">هفته</a>
+                        <a class="nav-item nav-link most-talk" id="-most-talk-month-tab" data-toggle="tab" data-url="@Url.Action("Index","Home",values:new {duration="month" , TypeOfNews = "MostTalkNews"})">ماه</a>
+                    </div>
+                </nav>
+                <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-mostTalkNews">
+                        @if (Model.Count() > 0)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <div class="single-blog-post d-flex">
+                                    <div class="post-thumbnail">
+                                        <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
+                                    </div>
+                                    <div class="post-content">
+                                        <a href="/@item.NewsId/@item.Url" class="post-title">
+                                            @item.ShortTitle
+                                        </a>
+                                        <div class="post-meta d-flex justify-content-between">
+                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
+                                            <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
+                                            <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
+                                            <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+                        else
+                        {
+                            <p class="alert alert-primary">پر بحث ترین اخبار یافت نشد...</p>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).on('click', 'a[data-toggle="tab"]', function () {
+        var url = $(this).data('url');
+        var id = $(this).attr('id');
+        contentDivId = "#MostTalkNewsDiv";
+        loadingDivId = "#nav-mostTalkNews";
+
+        $.ajax({
+            url: url,
+            beforeSend: function () { $(loadingDivId).html("<p class='text-center mb-5 mt-3'><span style='font-size:18px;font-family: Vazir_Medium;'>در حال بارگزاری اطلاعات خبر </span><img src='/icons/LoaderIcon.gif'/></p>") },
+            error: function () {
+                ShowSweetErrorAlert();
+            }
+        }).done(function (result) {
+            console.log("1111111111", result);
+            $(contentDivId).html(result);
+            $(contentDivId + " a").removeClass("active");
+            $("#" + id).addClass("active");
+        });
+    });
+</script>

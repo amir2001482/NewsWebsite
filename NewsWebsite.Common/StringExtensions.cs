@@ -121,7 +121,7 @@ namespace NewsWebsite.Common
         }
         public static int GetNumOfWeek(this string week)
         {
-            string[] weekArray = { "شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهار شنبه", "پنج شنبه", "جمعه" };
+            string[] weekArray = { "شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه" };
             return Array.IndexOf(weekArray, week);
         }
     }

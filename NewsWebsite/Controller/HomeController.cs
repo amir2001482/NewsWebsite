@@ -35,7 +35,7 @@ namespace NewsWebsite.Controllers
                 return PartialView("_MostViewNews", await _uw.NewsRepository.MostViewedNewsAsync(0, 3, duration));
 
             else if (isAjax && TypeOfNews == "MostTalkNews")
-                return PartialView("_MostTalkNews", await _uw.NewsRepository.MostTalkNewsAsync(0, 3, duration));
+                return ViewComponent("MostTalkNews", duration);
             else
             {
                 var newsPaginateModel = new NewsPaginateModel()
@@ -51,7 +51,7 @@ namespace NewsWebsite.Controllers
                 var news = await _uw.NewsRepository.GetPaginateNewsAsync(newsPaginateModel);
                 var mostViewNews = await _uw.NewsRepository.MostViewedNewsAsync(0, 3, "day");
                 var mostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0, 3, "day");
-                var mostPopularNews = await _uw.NewsRepository.MostPopularNewsAsync(0, 5);
+                //var mostPopularNews = await _uw.NewsRepository.MostPopularNewsAsync(0, 5);
                 newsPaginateModel.isInternal = true;
                 var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(newsPaginateModel);
                 newsPaginateModel.isInternal = false;
@@ -66,7 +66,7 @@ namespace NewsWebsite.Controllers
                     searchText = ""
                 };
                 var videos = await _uw.VideoRepository.GetPaginateVideosAsync(videosPaginateModel);
-                var homePageViewModel = new HomePageViewModel(news, mostViewNews, mostTalkNews, mostPopularNews, internalNews, forignNews, videos, _uw.NewsRepository.GetPublishedNewsCount());
+                var homePageViewModel = new HomePageViewModel(news, mostViewNews, mostTalkNews, internalNews, forignNews, videos, _uw.NewsRepository.GetPublishedNewsCount());
                 return View(homePageViewModel);
             }
         }
@@ -111,11 +111,9 @@ namespace NewsWebsite.Controllers
 
         }
 
-        [Route("category/{categoryId}/{url}")]
+        [Route("Category/{categoryId}/{url}")]
         public async Task<IActionResult> NewsInCategory(string categoryId , string url)
         {
-
-            
             if (!categoryId.HasValue())
                 return NotFound();
 
@@ -123,7 +121,40 @@ namespace NewsWebsite.Controllers
             if (category == null)
                 return NotFound();
             ViewBag.Category = category.CategoryName;
-            return View("NewsInCategoryAndTag", await _uw.NewsRepository.NewsInCategoryOrTag(categoryId , ""));
+            return View("NewsInCategoryAndTag", await _uw.NewsRepository.GetNewsInCategoryOrTag(categoryId , ""));
         }
+        [Route("Tag/{tagId}")]
+        public async Task<IActionResult> NewsInCategory(string tagId)
+        {
+            if (!tagId.HasValue())
+                return NotFound();
+            var tag = await _uw.BaseRepository<Tag>().FindByIdAsync(tagId);
+            if (tag == null)
+                return NotFound();
+            ViewBag.Tag = tag.TagName;
+            return View("NewsInCategoryAndTag", await _uw.NewsRepository.GetNewsInCategoryOrTag("", tagId));
+        }
+
+        [Route("Videos")]
+        public async Task<IActionResult> Videos()
+        {
+            var videos = await _uw.BaseRepository<Video>().FindAllAsync();
+            return View(videos);
+        }
+        [Route("Video/{videoId}")]
+        public async Task<IActionResult> VideoDetails(string videoId)
+        {
+            if (!videoId.HasValue())
+                return NotFound();
+            else
+            {
+                var video = await _uw.BaseRepository<Video>().FindByIdAsync(videoId);
+                if (video == null)
+                    return NotFound();
+                else
+                    return View(video);
+            }
+        }
+
     }
 }

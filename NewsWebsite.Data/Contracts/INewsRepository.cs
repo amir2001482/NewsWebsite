@@ -21,7 +21,7 @@ namespace NewsWebsite.Data.Contracts
         Task BindSubComments(Comment comment);
         Task<List<NewsViewModel>> GetRelatedNews(int number, List<string> tagIdList, string newsId);
         int GetPublishedNewsCount();
-        Task<List<NewsViewModel>> NewsInCategoryOrTag(string categoryId, string TagId);
+        Task<List<NewsViewModel>> GetNewsInCategoryOrTag(string categoryId, string TagId);
 
 
     }

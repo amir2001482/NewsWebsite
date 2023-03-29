@@ -1,0 +1,77 @@
+﻿@model List<NewsWebsite.Entities.Video>
+@using NewsWebsite.Common
+@using NewsWebsite.ViewModels.Newsletter
+@{
+    ViewData["Title"] = "Videos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="vizew-breadcrumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/"><i class="fa fa-home" aria-hidden="true"></i> خانه</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">ویدیوها</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="vizew-grid-posts-area mb-80">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <div class="archive-catagory-view mb-30 d-flex align-items-center justify-content-between">
+                    <!-- Catagory -->
+                    <div class="archive-catagory">
+                        <h4><i class="fa fa-video" aria-hidden="true"></i>ویدیوها</h4>
+                    </div>
+                    <!-- View Options -->
+                    <div class="view-options">
+                        <a href="archive-grid.html" class="active"><i class="fa fa-th-large" aria-hidden="true"></i></a>
+                        <a href="archive-list.html"><i class="fa fa-list-ul" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @if (Model.Count() != 0)
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <div class="col-12 col-md-6">
+                                <div class="single-post-area mb-50 border">
+                                    <div class="post-thumbnail">
+                                        <video style="max-height : 197px;" width="100%"  poster="@("/posters/"+item.Poster)" controls><source src="@item.Url">Your browser does not support the video tag.</video>
+                                       
+                                    </div>
+
+                                    <div class="mt-0 p-1">
+                                        <span style="font-size: 12px;" class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy ساعت HH:mm")</span>
+                                        <br />
+                                        <a href="/Video/@item.VideoId" class="post-title">@item.Title</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="alert alert-info">ویدیویی یافت نشد...</p>
+                    }
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="sidebar-area">
+                    @await Html.PartialAsync("_RegisterInNewsletter", new NewsletterViewModel())
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

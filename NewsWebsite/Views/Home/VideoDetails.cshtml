@@ -1,0 +1,42 @@
+﻿@model NewsWebsite.Entities.Video
+@using NewsWebsite.Common
+@{
+    ViewData["Title"] = "VideoDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- ##### Breadcrumb Area Start ##### -->
+<div class="vizew-breadcrumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/"><i class="fa fa-home" aria-hidden="true"></i>خانه</a></li>
+                        <li class="breadcrumb-item"><a href="/Videos">ویدیوها</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="post-details-area mb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="single-video-area">
+                    <div class="post-thumbnail">
+                        <video width="100%" poster="@("/posters/"+Model.Poster)" controls><source src="@Model.Url">Your browser does not support the video tag.</video>
+                        <span class="video-duration">@Model.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy ساعت HH:mm")</span>
+                    </div>
+                    <div class="post-content">
+                        <p style="font-size:19px;">@Model.Title</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -148,6 +148,8 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<List<NewsViewModel>> GetPaginateNewsAsync(NewsPaginateModel model)
         {
+            try
+            {
                 var newsList = await _context.News
                 .Include(e => e.Comments)
                 .Include(e => e.Likes)
@@ -164,6 +166,12 @@ namespace NewsWebsite.Data.Repositories
                     .Skip(model.offset).Take(model.limit)
                     .ToList();
                 return SetCategoryAndTagNames(res, model.offset);
+            }
+            catch(Exception ex)
+            {
+                return new List<NewsViewModel>();
+            }
+                
         }
 
         public async Task<List<NewsViewModel>> MostViewedNewsAsync(int offset, int limit, string duration)
@@ -380,7 +388,7 @@ namespace NewsWebsite.Data.Repositories
             return _context.News.Where(c => c.IsPublish == true).Count();
         }
 
-        public async Task<List<NewsViewModel>> NewsInCategoryOrTag(string categoryId , string TagId)
+        public async Task<List<NewsViewModel>> GetNewsInCategoryOrTag(string categoryId , string TagId)
         {
             var obj = await _context.News.AsNoTracking()
                     .Include(d => d.Comments)

@@ -115,6 +115,10 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         model.orderByAsc = item => "";
                     }
                     break;
+                default:
+                    model.orderByAsc = item => "";
+                    model.orderByDes = item => "";
+                    break;
 
             }
             model.searchText = search;

@@ -117,12 +117,12 @@
                                 <h6> برچسب ها (کلمات کلیدی)</h6>
                                 @if (Model.News.TagNamesList.Count() != 0)
                                 {
-                                    <ul>
-                                        @foreach (var item in Model.News.TagNamesList)
-                                        {
-                                            <li><a href="#">@item</a></li>
-                                        }
-                                    </ul>
+                            <ul>
+                                @for (var i = 0; i < Model.News.TagNamesList.Count(); i++)
+                                {
+                                    <li><a href="/Tag/@Model.News.TagIdsList[i]">@Model.News.TagNamesList[i]</a></li>
+                                }
+                            </ul>
                                 }
                             </div>
                         }

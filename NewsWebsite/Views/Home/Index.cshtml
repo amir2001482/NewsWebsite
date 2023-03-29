@@ -219,10 +219,7 @@
                 <div class="sidebar-area">
 
                     <!-- ***** MostPopularNews***** -->
-                    @if (Model.MostPopularNews.Count() != 0)
-                    {
-                        @await Html.PartialAsync("_MostPopularNews", Model.MostPopularNews)
-                    }
+                    @await Component.InvokeAsync("MostPopularNews")
 
                     <!-- ***** Newsletter ***** -->
                     @await Html.PartialAsync("_RegisterInNewsletter", new NewsletterViewModel())
@@ -241,6 +238,8 @@
     </div>
 </section>
 <script src="~/js/pagination.min.js"></script>
+
+@*// for pagination*@
 <script>
     $(function() {
 	$('#page').Pagination({
@@ -262,5 +261,3 @@
 });
 
 </script>
-
-<!-- ##### Vizew Psot Area End ##### -->
