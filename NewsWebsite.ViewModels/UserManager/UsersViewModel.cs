@@ -78,6 +78,8 @@ namespace NewsWebsite.ViewModels.UserManager
 
         [JsonProperty("جنسیت")]
         public string GenderName { get; set; }
+        [Display(Name = "معرفی"), JsonProperty("معرفی")]
+        public string Bio { get; set; }
 
         [JsonIgnore]
         public ICollection<UserRole> Roles { get; set; }

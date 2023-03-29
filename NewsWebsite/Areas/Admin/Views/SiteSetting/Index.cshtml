@@ -1,0 +1,207 @@
+﻿@model  NewsWebsite.ViewModels.SiteSetting.SettingsViewModel
+@using NewsWebsite.ViewModels.Settings
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <ul class="nav nav-sitemap justify-content-center justify-content-xl-end">
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html"> داشبورد </a>
+            </li>
+            <li class="pr-2 pl-2">
+                <i class="fa fa-angle-left text-white align-middle"></i>
+            </li>
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html">نمایه من</a>
+            </li>
+
+        </ul>
+
+        <!-- User -->
+        @await Html.PartialAsync("_AdminLogin")
+    </div>
+</nav>
+<!-- Header -->
+<div class="header bg-gradient-primary pb-4 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+    <div class="row mt-5">
+        <div class="card shadow w-100">
+            <div class="card-header font_Vazir_Medium">
+                تنظیمات سایت
+            </div>
+            <form asp-controller="SiteSetting" asp-action="Index" enctype="multipart/form-data">
+                <div class="card-body">
+                    @if (ViewData.ModelState.IsValid.ToString() == "False")
+                    {
+                        <div asp-validation-summary="All" class="alert alert-danger mb-4"></div>
+                    }
+                    @if (ViewBag.Alert != null)
+                    {
+                        <div class="alert alert-success alert-dismissable mb-4">
+                            @ViewBag.Alert
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    }
+                    <div class="row mt-2 mb-2">
+                        <div class="col-md-3 border-left">
+                            <div class="col-md-12 text-center">
+                                <p>
+                                    تصویر لوگو
+                                </p>
+                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <div class="fileinput-new thumbnail" style="height: 150px;">
+                                        @if (Model.LogoName!="")
+                                        {
+                                            <img src="~/assets/img/@Model.LogoName" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/icons/pic-icon.png" />
+                                        }
+                                    </div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail" style="height:200px"> </div>
+                                    <div>
+                                        <span class="btn default btn-file">
+                                            <span class="fileinput-new btn btn-success"> انتخاب کنید </span>
+                                            <span class="fileinput-exists btn btn-default"> تغییر عکس </span>
+                                            <input type="file" asp-for="Logo" accept=".jpg, .png, .jpeg, .gif, .tif, .tiff, .JPG" />
+                                        </span>
+                                        <a href="javascript:;" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"> حذف </a>
+                                    </div>
+                                    <span asp-validation-for="Logo" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr />
+
+                            <div class="col-md-12 text-center">
+                                <p>
+                                    تصویر فاویکن
+                                </p>
+                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <div class="fileinput-new thumbnail">
+                                        @if (Model.FaviconName != "")
+                                        {
+                                            <img src="~/assets/img/@Model.FaviconName" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/icons/pic-icon.png" height="150"/>
+                                        }
+                                    </div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail"> </div>
+                                    <div>
+                                        <span class="btn default btn-file">
+                                            <span class="fileinput-new btn btn-success"> انتخاب کنید </span>
+                                            <span class="fileinput-exists btn btn-default"> تغییر عکس </span>
+                                            <input type="file" asp-for="Favicon" accept=".jpg, .png, .jpeg, .gif, .tif, .tiff, .JPG" />
+                                        </span>
+                                        <a href="javascript:;" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"> حذف </a>
+                                    </div>
+                                    <span asp-validation-for="Favicon" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <p>تنظیمات سایت</p>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="Title" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="Title" class="form-control" />
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="Description" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea asp-for="Description" class="form-control"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="MetaDescriptionTag" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea asp-for="MetaDescriptionTag" class="form-control"></textarea>
+                                    <span asp-validation-for="MetaDescriptionTag" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <hr />
+                            <p>تنظیمات ارسال ایمیل</p>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="SenderEmail" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="SenderEmail" class="form-control" />
+                                    <span asp-validation-for="SenderEmail" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="EmailUsername" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="EmailUsername" class="form-control" />
+                                    <span asp-validation-for="EmailUsername" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="EmailPassword" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="EmailPassword" class="form-control" />
+                                    <span asp-validation-for="EmailPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="EmailPort" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="EmailPort" class="form-control" />
+                                    <span asp-validation-for="EmailPort" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="EmailHost" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input asp-for="EmailHost" class="form-control" />
+                                    <span asp-validation-for="EmailHost" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <input type="submit" value="ویرایش اطلاعات" class="btn btn-success float-left" />
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+

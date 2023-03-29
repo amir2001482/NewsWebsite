@@ -40,6 +40,7 @@ namespace NewsWebsite
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()));
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddCustomIdentityServices();
+            services.ConfigureWritable<SiteSettings>(Configuration.GetSection("SiteSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +63,6 @@ namespace NewsWebsite
                  template: "{controller=Home}/{action=Index}/{id?}"
                );
             });
-
         }
     }
 }

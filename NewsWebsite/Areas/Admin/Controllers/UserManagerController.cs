@@ -155,6 +155,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         user.UserName = viewModel.UserName;
                         user.Gender = viewModel.Gender.Value;
                         user.PhoneNumber = viewModel.PhoneNumber;
+                        user.Bio = viewModel.Bio;
                         var userRoles = await _userManager.GetRolesAsync(user);
                         if (viewModel.ImageFile != null)
                         {

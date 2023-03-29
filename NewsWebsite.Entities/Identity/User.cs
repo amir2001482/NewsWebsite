@@ -16,6 +16,7 @@ namespace NewsWebsite.Entities.identity
         public DateTime? RegisterDateTime { get; set; }
         public bool IsActive { get; set; }
         public GenderType Gender { get; set; }
+        public string Bio { get; set; }
 
         public virtual ICollection<UserRole> Roles { get; set; }
         public virtual ICollection<UserClaim> Claims { get; set; }
