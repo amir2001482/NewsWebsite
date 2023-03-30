@@ -4,7 +4,7 @@
     @foreach (var sub in Model)
     {
         <li class="single_comment_area">
-            <div class="comment-content d-flex">
+            <div id="@("comment-"+sub.CommentId)" class="comment-content d-flex">
                 <div class="comment-author">
                     <img src="~/assets/img/UserPic.png" alt="author">
                 </div>
@@ -13,7 +13,7 @@
                     <h6>@sub.Name</h6>
                     <p>@sub.Desription</p>
                     <div class="d-flex align-items-center">
-                        <a href="#" class="reply">پاسخ</a>
+                        <a id="@("btn-"+sub.CommentId)" href="#" onclick="ShowCommentForm('@sub.CommentId','@sub.NewsId')" class="reply">پاسخ</a>
                     </div>
                 </div>
             </div>
