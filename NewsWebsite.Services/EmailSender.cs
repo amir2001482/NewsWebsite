@@ -18,31 +18,38 @@ namespace NewsWebsite.Services
         }
         public async Task SendEmailAsync(string email, string subject, string message)
         {
-            using (var Client = new SmtpClient())
+            try
             {
-                var Credential = new NetworkCredential
+                using (var Client = new SmtpClient())
                 {
-                    UserName = _writableLocations.Value.EmailSetting.Username,
-                    Password = _writableLocations.Value.EmailSetting.Password,
-                };
+                    var Credential = new NetworkCredential
+                    {
+                        UserName = _writableLocations.Value.EmailSetting.Username,
+                        Password = _writableLocations.Value.EmailSetting.Password,
+                    };
 
-                Client.Credentials = Credential;
-                Client.Host = _writableLocations.Value.EmailSetting.Host;
-                Client.Port = _writableLocations.Value.EmailSetting.Port;
-                Client.EnableSsl = true;
+                    Client.Credentials = Credential;
+                    Client.Host = _writableLocations.Value.EmailSetting.Host;
+                    Client.Port = _writableLocations.Value.EmailSetting.Port;
+                    Client.EnableSsl = true;
 
-                using (var emailMessage = new MailMessage())
-                {
-                    emailMessage.To.Add(new MailAddress(email));
-                    emailMessage.From = new MailAddress(_writableLocations.Value.EmailSetting.Email);
-                    emailMessage.Subject = subject;
-                    emailMessage.IsBodyHtml = true;
-                    emailMessage.Body = message;
+                    using (var emailMessage = new MailMessage())
+                    {
+                        emailMessage.To.Add(new MailAddress(email));
+                        emailMessage.From = new MailAddress(_writableLocations.Value.EmailSetting.Email);
+                        emailMessage.Subject = subject;
+                        emailMessage.IsBodyHtml = true;
+                        emailMessage.Body = message;
 
-                    Client.Send(emailMessage);
-                };
+                        Client.Send(emailMessage);
+                    };
 
-                await Task.CompletedTask;
+                    await Task.CompletedTask;
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
     }

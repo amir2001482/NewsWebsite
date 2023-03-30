@@ -2822,7 +2822,7 @@ line-height: 1.5;
     z-index: 2;
     height: 48px;
     width: 100%;
-    background-color: #e7e7e7;
+    background-color: #e7e7e7 !important; 
     font-size: 12px;
     margin-bottom: 15px;
     padding: 10px 30px;
