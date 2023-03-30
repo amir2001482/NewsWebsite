@@ -1,0 +1,72 @@
+﻿@model NewsWebsite.ViewModels.Manage.SignInViewModel
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="mb-0" id="modal-title">ورود به سایت</h5>
+                <button style="font-size : initial; margin-right : 19rem;" type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body clearfix">
+                <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item"> <a class="nav-link bg-danger text-white m-1" id="pills-signin-tab" data-toggle="pill" href="#pills-signin" role="tab" aria-controls="pills-signin" aria-selected="true">ورود </a> </li>
+                    <li class="nav-item"> <a class="nav-link bg-gray m-1" id="pills-signup-tab" data-toggle="ajax-load-register" data-url="@Url.Action("Register","Account")">عضویت</a> </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade active show" id="pills-signin" role="tabpanel" aria-labelledby="pills-signin-tab">
+                        <form method="post" asp-action="SignIn" asp-controller="Account">
+                            <script src='https://www.google.com/recaptcha/api.js?hl=fa'></script>
+
+                            @if (ViewData.ModelState.IsValid.ToString() == "False")
+                            {
+                                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                            }
+                            <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                            <div class="form-group">
+                                <label> ایمیل <span class="badge badge-secondary">یا</span> نام کاربری <span class="text-danger">*</span></label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    </div>
+                                    <input asp-for="UserName" class="form-control form-control-lg" placeholder="ایمیل یا نام کاربری">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>کلمه عبور <span class="text-danger">*</span></label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-key"></i></span>
+                                    </div>
+                                    <input asp-for="Password" class="form-control form-control-lg" autocomplete="off" placeholder="***********" data-required="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="g-recaptcha" data-sitekey="@(Configuration.GetValue<string>("GoogleReCaptcha:ClientKey"))">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-control-alternative custom-checkbox">
+                                    <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
+                                    <label class="custom-control-label" for=" customCheckLogin" asp-for="RememberMe">
+
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-signout" role="tabpanel" aria-labelledby="pills-signin-tab">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btn-signin" value="Sign In" class="btn btn-block btn-danger" data-save="modal-ajax"><i class="fa fa-sign-in"></i> ورود</button>
+            </div>
+        </div>
+    </div>
+</div>
