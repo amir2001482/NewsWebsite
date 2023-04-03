@@ -73,6 +73,7 @@ namespace NewsWebsite.Controllers
         [Route("News/{newsId}/{url}")]
         public async Task<IActionResult> NewsDetails(string newsId, string url)
         {
+            var currentuserId = User.Identity.GetUserId<int>();
             string ipAddress = _accessor.HttpContext?.Connection?.RemoteIpAddress.ToString();
             Visit visit = _uw.BaseRepository<Visit>().FindByConditionAsync(n => n.NewsId == newsId && n.IpAddress == ipAddress).Result.FirstOrDefault();
             if (visit != null && visit.LastVisitDateTime.Date != DateTime.Now.Date)
@@ -88,7 +89,7 @@ namespace NewsWebsite.Controllers
                 await _uw.Commit();
             }
 
-            var news = await _uw.NewsRepository.GetNewsById(newsId);
+            var news = await _uw.NewsRepository.GetNewsById(newsId , currentuserId);
             var newsComments = await _uw.NewsRepository.GetNewsCommentsAsync(newsId);
             var nextAndPreviousNews = await _uw.NewsRepository.GetNextAndPreviousNews(news.PublishDateTime);
             var newsRelated = await _uw.NewsRepository.GetRelatedNews(2, news.TagIdsList, newsId);
@@ -156,5 +157,31 @@ namespace NewsWebsite.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<JsonResult> LikeOrDisLike(string newsId, bool isLike)
+        {
+            string ipAddress = _accessor.HttpContext?.Connection?.RemoteIpAddress.ToString();
+            Like likeOrDislike = _uw.BaseRepository<Like>().FindByConditionAsync(l => l.NewsId == newsId && l.IpAddress == ipAddress).Result.FirstOrDefault();
+            if (likeOrDislike == null)
+            {
+                likeOrDislike = new Like { NewsId = newsId, IpAddress = ipAddress, IsLiked = isLike };
+                await _uw.BaseRepository<Like>().CreateAsync(likeOrDislike);
+            }
+            else
+                likeOrDislike.IsLiked = isLike;
+
+            await _uw.Commit();
+            var likeAndDislike = _uw.NewsRepository.NumberOfLikeAndDislike(newsId);
+            return Json(new { like = likeAndDislike.NumberOfLike, dislike = likeAndDislike.NumberOfDisLike });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BookMark(string newsId)
+        {
+            var currentUserId = User.Identity.GetUserId<int>();
+            if (!User.Identity.IsAuthenticated)
+                return PartialView("_SignIn");
+            return Json(await _uw.NewsRepository.BookMarkAsync(newsId, currentUserId));
+        }
     }
 }

@@ -222,7 +222,7 @@ namespace NewsWebsite.Data.Repositories
             return res.OrderByDescending(d => d.NumberOfLike).Skip(offset).Take(limit).ToList();
 
         }
-        public async Task<NewsViewModel> GetNewsById(string newsId)
+        public async Task<NewsViewModel> GetNewsById(string newsId , int userId)
         {
             string NameOfCategories = "";
             var newsGroup = await (from n in _context.News.Include(v => v.Visits).Include(l => l.Likes).Include(u => u.User).Include(c => c.Comments)
@@ -253,6 +253,7 @@ namespace NewsWebsite.Data.Repositories
                                        IdOfTags = tog != null ? tog.TagId : "",
                                        AuthorInfo = n.User,
                                        IsPublish = n.IsPublish,
+                                       Bookmarked = n.Bookmarks.Any(d=>d.NewsId == newsId && d.UserId == userId),
                                        NewsType = n.IsInternal == true ? "داخلی" : "خارجی",
                                        PublishDateTime = n.PublishDateTime == null ? new DateTime(01, 01, 01) : n.PublishDateTime,
                                        PersianPublishDate = n.PublishDateTime == null ? "-" : n.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت HH:mm:ss"),
@@ -288,6 +289,7 @@ namespace NewsWebsite.Data.Repositories
                 AuthorInfo = newsGroup.First().NewsGroup.First().AuthorInfo,
                 NumberOfComment = newsGroup.First().NewsGroup.First().NumberOfComment,
                 PublishDateTime = newsGroup.First().NewsGroup.First().PublishDateTime,
+                Bookmarked = newsGroup.First().NewsGroup.First().Bookmarked,
             };
 
             return news;
@@ -422,6 +424,43 @@ namespace NewsWebsite.Data.Repositories
                           select new NewsViewModel { NewsId = n.NewsId, Title = n.Title, PersianPublishDate = n.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy ساعت HH:mm"), Url = n.Url }).ToListAsync();
         }
 
+        //public async Task<NewsViewModel> LikeOrdisLikeAsync(bool isLike , string newsId , string ip )
+        //{
+        //    var like = await _context.Likes.FirstOrDefaultAsync(d => d.NewsId == newsId && d.IpAddress == ip);
+        //    if(like == null)
+        //        await _context.Likes.AddAsync(new Like { IpAddress = ip, IsLiked = isLike, NewsId = newsId });
+        //    else
+        //        like.IsLiked = isLike;
+        //    await _context.SaveChangesAsync();
+        //    return new NewsViewModel 
+        //    { 
+        //        NumberOfDisLike = _context.Likes.AsNoTracking().Where(d => d.NewsId == newsId && d.IsLiked == false).Count(), 
+        //        NumberOfLike = _context.Likes.AsNoTracking().Where(d => d.NewsId == newsId && d.IsLiked == true).Count() 
+        //    };
+        //}
+
+        public NewsViewModel NumberOfLikeAndDislike(string newsId)
+        {
+            return (from u in _context.News.Include(l => l.Likes)
+                    where (u.NewsId == newsId)
+                    select new NewsViewModel { NumberOfLike = u.Likes.Where(l => l.IsLiked == true).Count(), NumberOfDisLike = u.Likes.Where(l => l.IsLiked == false).Count() })
+                    .FirstOrDefault();
+
+        }
+        public async Task<bool> BookMarkAsync(string newsId , int UserId)
+        {
+            var bookMark = await _context.Bookmarks.FirstOrDefaultAsync(d => d.NewsId == newsId && d.UserId == UserId);
+            if (bookMark == null)
+            {
+                await _context.Bookmarks.AddAsync(new Bookmark { NewsId = newsId, UserId = UserId });
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            _context.Bookmarks.Remove(bookMark);
+            await _context.SaveChangesAsync();
+            return false;
+        }
+
         private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news , int offset)
         {
             foreach (var item in news)
@@ -467,7 +506,5 @@ namespace NewsWebsite.Data.Repositories
 
             return StartMiladiDate;
         }
-
-
     }
 }

@@ -97,9 +97,10 @@
                                 <div class="post-meta d-flex">
                                     <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @Model.News.NumberOfComment</a>
                                     <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @Model.News.NumberOfVisit</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @Model.News.NumberOfLike</a>
-                                    <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @Model.News.NumberOfDisLike</a>
-                                    <a href="#"><i class="fa fa-bookmark-o" aria-hidden="true"></i></a>
+                                    <a onclick="LikeOrDisLike('@Model.News.NewsId' , true)"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span id="like">@Model.News.NumberOfLike</span></a>
+                                    <a onclick="LikeOrDisLike('@Model.News.NewsId' , false)"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span id="dislike">@Model.News.NumberOfDisLike</span></a>
+                                    <a onclick="Bookmark('@Model.News.NewsId')" id="bookmark"><i class="fa @(Model.News.Bookmarked?"fa-bookmark":"fa-bookmark-o")" aria-hidden='true'></i></a>
+                                  
                                 </div>
                             </div>
                         </div>
