@@ -1,11 +1,11 @@
 ﻿$(function () {
     var placeholder = $("#modal-placeholder");
-    $(document).on('click','button[data-toggle="ajax-modal"]',function () {
+    $(document).on('click', 'button[data-toggle="ajax-modal"]', function () {
         var url = $(this).data('url');
         $.ajax({
             url: url,
             beforeSend: function () { ShowLoading(); },
-            complete: function () { $("body").preloader("remove"); },
+            complete: function () { $("body").preloader('remove'); },
             error: function () {
                 ShowSweetErrorAlert();
             }
@@ -19,21 +19,23 @@
         ShowLoading();
         var form = $(this).parents(".modal").find('form');
         var actionUrl = form.attr('action');
-        if (form.length == 0)
-        {
-            form = $(".card-body").find("form");
-            actionUrl = form.attr('action') + "/" + $(".modal").attr("id");
+
+        if (form.length == 0) {
+            form = $(".card-body").find('form');
+            actionUrl = form.attr('action') + '/' + $(".modal").attr('id');
         }
+
         var dataToSend = new FormData(form.get(0));
 
         $.ajax({
             url: actionUrl, type: "post", data: dataToSend, processData: false, contentType: false, error: function () {
                 ShowSweetErrorAlert();
-            }}).done(function (data) {
-                var newBody = $(".modal-body", data);
-                var newFooter = $(".modal-footer", data);
-                placeholder.find(".modal-body").replaceWith(newBody);
-                placeholder.find(".modal-footer").replaceWith(newFooter);
+            }
+        }).done(function (data) {
+            var newBody = $(".modal-body", data);
+            var newFooter = $(".modal-footer", data);
+            placeholder.find(".modal-body").replaceWith(newBody);
+            placeholder.find(".modal-footer").replaceWith(newFooter);
 
             var IsValid = newBody.find("input[name='IsValid']").val() === "True";
             if (IsValid) {
@@ -46,10 +48,11 @@
             }
         });
 
-        $("body").preloader("remove");
+        $("body").preloader('remove');
     });
+
+
     $(document).on('click', 'a[data-toggle="ajax-modal"]', function () {
-        console.log("111111111111111");
         var url = $(this).data('url');
         $.ajax({
             url: url,
@@ -136,6 +139,20 @@
                     $('#pills-signin').html($("#pills-signin", data));
                 }
             }
+
+            else {
+                if (($(data).find(".modal-body").length) == 0) {
+                    $("#bookmarks").html(data);
+                    placeholder.find(".modal").modal('hide');
+                }
+                else {
+                    var newBody = $(".modal-body", data);
+                    var newFooter = $(".modal-footer", data);
+                    placeholder.find(".modal-body").replaceWith(newBody);
+                    placeholder.find(".modal-footer").replaceWith(newFooter);
+
+                }
+            }
             $('.preloader').remove();
         });
     });
@@ -151,7 +168,7 @@ function ShowSweetErrorAlert() {
 }
 
 function ShowLoading() {
-    $("body").preloader({ text: "لطفا صبر کنید..." });
+    $("body").preloader({ text: 'لطفا صبر کنید ...' });
 }
 
 function ShowSweetSuccessAlert(message) {
@@ -162,6 +179,7 @@ function ShowSweetSuccessAlert(message) {
         confirmButtonText: 'بستن',
     })
 }
+
 
 $(document).on('click', 'a[data-toggle="tab"]', function () {
     var url = $(this).data('url');
@@ -186,6 +204,7 @@ $(document).on('click', 'a[data-toggle="tab"]', function () {
     });
 });
 
+
 $(document).on('click', 'button[data-save="Ajax"]', function () {
     var form = $(".newsletter-widget").find('form');
     var actionUrl = form.attr('action');
@@ -207,6 +226,27 @@ $(document).on('click', 'button[data-save="Ajax"]', function () {
     });
 });
 
+$(document).on('click', 'button[data-save="ajax-changePass"]', function () {
+    var form = $("#changePass").find('form');
+    var actionUrl = $(this).data('url');
+    var dataToSend = new FormData(form.get(0));
+    $.ajax({
+        url: actionUrl, type: "post", data: dataToSend, processData: false, contentType: false, error: function () {
+            ShowSweetErrorAlert();
+        }
+    }).done(function (data) {
+        var newForm = $("form", data);
+        $(".changePass").find("form").replaceWith(newForm);
+        var IsValid = newForm.find("input[name='IsValid']").val() === "True";
+        if (IsValid) {
+            $.ajax({ url: '/Admin/Base/Notification', error: function () { ShowSweetErrorAlert(); } }).done(function (notification) {
+                ShowSweetSuccessAlert(notification)
+            });
+        }
+    });
+});
+
+
 function ShowCommentForm(parentCommentId, newsId) {
     $.ajax({
         url: "/Admin/Comments/SendComment?parentCommentId=" + parentCommentId + "&&newsId=" + newsId,
@@ -221,12 +261,14 @@ function ShowCommentForm(parentCommentId, newsId) {
         $("#btn-" + parentCommentId).attr("onclick", "HideCommentForm('" + parentCommentId + "','" + newsId + "')");
     });
 }
+
 function HideCommentForm(parentCommentId, newsId) {
     $("#comment-" + parentCommentId).next().replaceWith("");
     $("#comment-" + parentCommentId).next().replaceWith("");
     $("#btn-" + parentCommentId).html("پاسخ");
     $("#btn-" + parentCommentId).attr("onclick", "ShowCommentForm('" + parentCommentId + "')");
 }
+
 
 function SendComment(parentCommentId) {
     var form = $("#reply-" + parentCommentId).find('form');
@@ -264,4 +306,5 @@ function SendComment(parentCommentId) {
         }
     });
 }
+
 

@@ -42,8 +42,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
         {
             return View();
         }
-
-
         public async Task<JsonResult> GetUsers(string search, string order, int offset, int limit, string sort)
         {
             List<UsersViewModel> allUsers;
@@ -104,9 +102,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return Json(new { total = total, rows = allUsers });
         }
 
-
-
-
         [HttpGet]
         public async Task<IActionResult> RenderUser(int? userId)
         {
@@ -121,7 +116,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             return PartialView("_RenderUser", user);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdate(UsersViewModel viewModel)
@@ -189,7 +183,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
             }
         }
 
-
         [HttpGet]
         public async Task<IActionResult> Delete(string userId)
         {
@@ -205,7 +198,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
             }
             return PartialView("_DeleteConfirmation");
         }
-
 
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(User model)
@@ -228,8 +220,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             return PartialView("_DeleteConfirmation");
         }
-
-
 
         [HttpPost, ActionName("DeleteGroup")]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)

@@ -1,0 +1,23 @@
+﻿<style>
+    .btn-link {
+        font-size: 13px !important;
+        color: #6c6b6b;
+        padding: 0px !important;
+        text-decoration: none !important;
+    }
+</style>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form asp-action="SignOut" asp-controller="Account">
+        <button type="submit" class="btn btn-link mr-2">
+            <i class="ni ni-user-run"></i> خروج
+        </button>
+    </form>
+    <span class="m-2">|</span>
+    <a asp-action="Profile" asp-controller="Account" class="btn-link">پنل کاربری</a>
+}
+else
+{
+    <a href="#" class="login-btn" data-toggle="ajax-modal" data-url="@Url.Action("SignIn","Account")"><i class="fa fa-user" aria-hidden="true"></i></a>
+}

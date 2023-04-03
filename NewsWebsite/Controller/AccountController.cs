@@ -13,6 +13,10 @@ using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.Account;
 using NewsWebsite.ViewModels.Manage;
 using NewsWebsite.Common;
+using NewsWebsite.Common.Attributes;
+using NewsWebsite.Entities;
+using Microsoft.AspNetCore.Authorization;
+using NewsWebsite.Areas.Admin.Controllers;
 
 namespace NewsWebsite.Controllers
 {
@@ -25,6 +29,7 @@ namespace NewsWebsite.Controllers
         private readonly IEmailSender _emailSender;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
+        private const string BookmarkNotFound = "خبر بوکمارک شده یافت نشد.";
         public AccountController(IUnitOfWork uw, IHttpContextAccessor accessor, IApplicationUserManager userManager, IApplicationRoleManager roleManager, IEmailSender emailSender, SignInManager<User> signInManager, ILogger<AccountController> logger)
         {
             _uw = uw;
@@ -149,9 +154,92 @@ namespace NewsWebsite.Controllers
 
 
         [HttpGet]
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            return View();
+            int userId = User.Identity.GetUserId<int>();
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            return View(new UserPanelViewModel(user, await _uw.NewsRepository.GetUserBookmarksAsync(userId)));
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet, AjaxOnly]
+        public IActionResult DeleteBookmark(int userId, string newsId)
+        {
+            if (userId == 0 || !newsId.HasValue())
+                ModelState.AddModelError(string.Empty, BookmarkNotFound);
+            else
+            {
+                var bookmark = _uw.BaseRepository<Bookmark>().FindByConditionAsync(b => b.NewsId == newsId && b.UserId == userId).Result.FirstOrDefault();
+                if (bookmark == null)
+                    ModelState.AddModelError(string.Empty, BookmarkNotFound);
+                else
+                    return PartialView("_DeleteConfirmation", bookmark);
+            }
+            return PartialView("_DeleteConfirmation");
+        }
+
+        [HttpPost, ActionName("DeleteBookmark"), AjaxOnly]
+        public async Task<IActionResult> DeleteBookmarkConfirmed(Bookmark model)
+        {
+            if (model.NewsId == null)
+                ModelState.AddModelError(string.Empty, BookmarkNotFound);
+            else
+            {
+                var bookmark = _uw.BaseRepository<Bookmark>().FindByConditionAsync(b => b.UserId == model.UserId && b.NewsId == model.NewsId).Result.FirstOrDefault();
+                if (bookmark == null)
+                    ModelState.AddModelError(string.Empty, BookmarkNotFound);
+                else
+                {
+                    _uw.BaseRepository<Bookmark>().Delete(bookmark);
+                    await _uw.Commit();
+                    return PartialView("_Bookmarks", await _uw.NewsRepository.GetUserBookmarksAsync(model.UserId));
+                }
+            }
+            return PartialView("_DeleteConfirmation");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+            return PartialView("_ChangePassword" , new ChangePasswordViewModel());
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel ViewModel)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                var ChangePassResult = await _userManager.ChangePasswordAsync(user, ViewModel.OldPassword, ViewModel.NewPassword);
+                if (ChangePassResult.Succeeded)
+                    TempData["notification"] = "ویرایش اطلاعات با موفقیت انجام شد.";
+
+                else
+                {
+                    foreach (var item in ChangePassResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, item.Description);
+                    }
+                }
+            }
+            return PartialView("_ChangePassword" , ViewModel);
         }
     }
 }

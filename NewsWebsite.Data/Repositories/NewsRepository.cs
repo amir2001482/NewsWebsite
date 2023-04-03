@@ -413,6 +413,15 @@ namespace NewsWebsite.Data.Repositories
             return res;
         }
 
+        public async Task<List<NewsViewModel>> GetUserBookmarksAsync(int userId)
+        {
+            return await (from u in _context.Users
+                          join b in _context.Bookmarks on u.Id equals b.UserId
+                          join n in _context.News on b.NewsId equals n.NewsId
+                          where (u.Id == userId)
+                          select new NewsViewModel { NewsId = n.NewsId, Title = n.Title, PersianPublishDate = n.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy ساعت HH:mm"), Url = n.Url }).ToListAsync();
+        }
+
         private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news , int offset)
         {
             foreach (var item in news)

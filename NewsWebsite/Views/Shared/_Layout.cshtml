@@ -65,7 +65,7 @@
                                 </form>
                             </div>
                             <!-- Login -->
-                            <a href="#" class="login-btn" data-toggle="ajax-modal" data-url="@Url.Action("SignIn","Account")"><i class="fa fa-user" aria-hidden="true"></i></a>
+                            @await Html.PartialAsync("_UserLogin")
                         </div>
                     </div>
                 </div>

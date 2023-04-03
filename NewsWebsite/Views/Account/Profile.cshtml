@@ -1,4 +1,6 @@
-﻿
+﻿@model NewsWebsite.ViewModels.Account.UserPanelViewModel
+@using NewsWebsite.Common
+@using NewsWebsite.ViewModels.Manage
 @{
     ViewData["Title"] = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,22 +8,22 @@
 
 <style>
     .nav-tabs {
-    background-color: #fff !important;
-    padding: 8px 0px !important;
-}
-    li .active.show {
-    color: #576373;
-    border-color: #C5D0DC #C5D0DC transparent;
-    border-top-color: rgb(197, 208, 220);
-    border-top-color: rgb(197, 208, 220);
-    border-top: 2px solid #db4437 !important;
-    background-color: #FFF !important;
-    z-index: 1;
-    line-height: 18px;
-    margin-top: -1px;
-    box-shadow: 0 -2px 3px 0 rgba(0, 0, 0, .15);
-}
+        background-color: #fff !important;
+        padding: 8px 0px !important;
+    }
 
+    h4, h3 {
+        font-family: "Vazir_Medium",tahoma, sans-serif !important;
+        font-weight: 100 !important;
+    }
+
+    h4 {
+        font-size: 16px !important;
+    }
+
+    h3 {
+        font-size: 18px !important;
+    }
 </style>
 
 <div class="container mt-5 mb-5 border">
@@ -38,7 +40,7 @@
                 <li>
                     <a data-toggle="tab" href="#bookmarks">
                         <i class="ace-icon fa fa-bookmark"></i>
-                        اخبار بوکمارک 
+                        اخبار بوکمارک
                     </a>
                 </li>
 
@@ -54,10 +56,14 @@
                 <div id="profile" class="tab-pane in active">
                     <div class="row">
                         <div class="col-xs-12 col-sm-2 text-center">
-                            <span>
+                            @if (Model.User.Image != null)
+                            {
+                                <img class="editable img-responsive" src="~/avatars/@Model.User.Image" height="150">
+                            }
+                            else
+                            {
                                 <img class="editable img-responsive" src="~/assets/img/UserPic.png" height="150">
-                            </span>
-
+                            }
                             <a href="#" class="btn btn-sm btn-block btn-success mt-2">
                                 <i class="ace-icon fa fa-edit bigger-120"></i>
                                 <span class="bigger-110">ویرایش پروفایل</span>
@@ -66,7 +72,7 @@
 
                         <div class="col-xs-12 col-sm-9">
                             <h5 class="text-primary mb-4">
-                                <span class="middle">آرزو ابراهیمی</span>
+                                <span class="middle">@Model.User.FirstName @Model.User.LastName</span>
                             </h5>
 
                             <div class="profile-user-info">
@@ -74,7 +80,7 @@
                                     <div class="profile-info-name"> نام کاربری </div>
 
                                     <div class="profile-info-value">
-                                        <span>arz_ebrahimi</span>
+                                        <span>@Model.User.UserName</span>
                                     </div>
                                 </div>
 
@@ -82,15 +88,23 @@
                                     <div class="profile-info-name"> ایمیل </div>
 
                                     <div class="profile-info-value">
-                                        <span>aeo.ebrahimi@gmail.com</span>
+                                        <span>@Model.User.Email</span>
                                     </div>
                                 </div>
 
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name"> سن </div>
+                                    <div class="profile-info-name"> شماره موبایل </div>
 
                                     <div class="profile-info-value">
-                                        <span>38</span>
+                                        <span>@Model.User.PhoneNumber</span>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-row">
+                                    <div class="profile-info-name"> تاریخ تولد </div>
+
+                                    <div class="profile-info-value">
+                                        <span>@Model.User.BirthDate.ConvertMiladiToShamsi("yyyy/MM/dd")</span>
                                     </div>
                                 </div>
 
@@ -98,94 +112,24 @@
                                     <div class="profile-info-name"> تاریخ عضویت </div>
 
                                     <div class="profile-info-value">
-                                        <span>2010/06/20</span>
+                                        <span>@Model.User.RegisterDateTime.ConvertMiladiToShamsi("dd MMMM yyyy ساعت HH:mm") </span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="hr hr-8 dotted"></div>
 
-                            
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
+
+                        </div>
+                    </div>
                 </div>
 
                 <div id="bookmarks" class="tab-pane">
-                    <div class="profile-feed row">
-                       
-                        <div class="col-sm-12">
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <a href="#">  افزایش ۹ درصدی سرقت در تهران</a>
-
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        13 اردیبهشت 1398
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#">
-                                        <i class="ace-icon fa fa-times text-danger"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <a href="#">  افزایش ۹ درصدی سرقت در تهران</a>
-
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        13 اردیبهشت 1398
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#">
-                                        <i class="ace-icon fa fa-times text-danger"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <a href="#">  افزایش ۹ درصدی سرقت در تهران</a>
-
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        13 اردیبهشت 1398
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#">
-                                        <i class="ace-icon fa fa-times text-danger"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <a href="#">  افزایش ۹ درصدی سرقت در تهران</a>
-
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        13 اردیبهشت 1398
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#">
-                                        <i class="ace-icon fa fa-times text-danger"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    @await Html.PartialAsync("_Bookmarks", Model.Bookmarks)
                 </div>
 
                 <div id="changePassword" class="tab-pane">
-           
+                    @await Html.PartialAsync("_ChangePassword" , new ChangePasswordViewModel())
                 </div>
             </div>
         </div>
