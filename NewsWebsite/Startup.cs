@@ -62,7 +62,9 @@ namespace NewsWebsite
             var provider = app.ApplicationServices;
             provider.UseScheduler(schedule =>
             {
-                schedule.Schedule<SendWeeklyNewsLatter>().Cron("30 20 * * 5");
+                schedule.Schedule<SendWeeklyNewsLatter>().Cron("30 20 * * 5"); // UTC time
+                //schedule.Schedule<SendWeeklyNewsLatter>().Cron("44 11 * * 2");
+                //schedule.Schedule<SendWeeklyNewsLatter>().EveryMinute();
             }).LogScheduledTaskProgress(Services.GetService<ILogger<IScheduler>>());
             app.UseMvc(routes =>
             {
