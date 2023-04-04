@@ -26,6 +26,7 @@ namespace NewsWebsite.Data.Contracts
         //Task<NewsViewModel> LikeOrdisLikeAsync(bool isLike, string newsId, string ip);
         NewsViewModel NumberOfLikeAndDislike(string newsId);
         Task<bool> BookMarkAsync(string newsId, int UserId);
+        Task<string> GetWeeklyNewsAsync();
 
 
     }

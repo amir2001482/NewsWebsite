@@ -16,7 +16,7 @@ namespace NewsWebsite.Data.Repositories
     {
         private readonly NewsDBContext _context;
         private readonly IMapper _mapper;
-        public VideoRepository(NewsDBContext context , IMapper mapper)
+        public VideoRepository(NewsDBContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -25,26 +25,19 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<List<VideoViewModel>> GetPaginateVideosAsync(VideoPaginateModel model)
         {
-            try
-            {
-                var obj = await _context.Videos.AsNoTracking()
-               .Where(c => c.Title.Contains(model.searchText))
-               .ToListAsync();
+            var obj = await _context.Videos.AsNoTracking()
+           .Where(c => c.Title.Contains(model.searchText))
+           .ToListAsync();
 
-                var videos = _mapper.Map<List<VideoViewModel>>(obj)
-                     .OrderBy(model.orderByAsc)
-                     .OrderByDescending(model.orderByDes)
-                     .Skip(model.offset).Take(model.limit).ToList();
+            var videos = _mapper.Map<List<VideoViewModel>>(obj)
+                 .OrderBy(model.orderByAsc)
+                 .OrderByDescending(model.orderByDes)
+                 .Skip(model.offset).Take(model.limit).ToList();
 
-                foreach (var item in videos)
-                    item.Row = ++model.offset;
+            foreach (var item in videos)
+                item.Row = ++model.offset;
 
-                return videos;
-            }
-            catch (Exception ex)
-            {
-                return new List<VideoViewModel>();
-            }
+            return videos;
         }
 
         public string CheckVideoFileName(string fileName)

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Repositories;
 using System;
@@ -18,11 +19,13 @@ namespace NewsWebsite.Data.UnitOfWork
         private INewsletterRepository _newsletterRepository;
         private ICommentRepository _commentRepository;
         private IMapper _mapper;
+        private IConfiguration _configuration;
         
-        public UnitOfWork(NewsDBContext context , IMapper mapper )
+        public UnitOfWork(NewsDBContext context , IMapper mapper , IConfiguration configuration )
         {
             _Context = context;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         public IBaseRepository<TEntity> BaseRepository<TEntity>() where TEntity : class
@@ -66,7 +69,7 @@ namespace NewsWebsite.Data.UnitOfWork
             get
             {
                 if (_newsRepository == null)
-                    _newsRepository = new NewsRepository(_Context, _mapper);
+                    _newsRepository = new NewsRepository(_Context, _mapper , _configuration);
 
                 return _newsRepository;
             }
