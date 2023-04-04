@@ -1,0 +1,311 @@
+﻿@model NewsWebsite.ViewModels.UserManager.UsersViewModel
+@using NewsWebsite.Common
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .badge-primary {
+      font-size: 12px !important;
+}
+</style>
+
+<div id="modal-placeholder"></div>
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <ul class="nav nav-sitemap justify-content-center justify-content-xl-end">
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html"> داشبورد </a>
+            </li>
+            <li class="pr-2 pl-2">
+                <i class="fa fa-angle-left text-white align-middle"></i>
+            </li>
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html">مدیریت کاربران</a>
+            </li>
+
+        </ul>
+
+        <!-- User -->
+        @await Html.PartialAsync("_AdminLogin")
+    </div>
+</nav>
+<!-- Header -->
+<div class="header bg-gradient-primary pb-4 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+    <div class="row mt-5">
+        <div class="card shadow w-100">
+            <div class="card-header font_Vazir_Medium">
+                مدیریت کاربر
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-5 col-md-3">
+                        <div class="nav flex-column nav-pills nav-secondary nav-pills-no-bd nav-pills-icons" id="v-pills-tab-with-icon" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link active show mb-2" id="v-pills-home-tab-icons" data-toggle="pill" href="#v-pills-home-icons" role="tab" aria-controls="v-pills-home-icons" aria-selected="false">
+                                <i class="flaticon-user-1"></i>
+                                اطلاعات کاربر
+                            </a>
+                            <a class="nav-link " id="v-pills-profile-tab-icons" data-toggle="pill" href="#v-pills-profile-icons" role="tab" aria-controls="v-pills-profile-icons" aria-selected="true">
+                                <i class="flaticon-settings"></i>
+                                مدیریت
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-9">
+                        <div class="tab-content" id="v-pills-with-icon-tabContent">
+                            <div class="tab-pane fade active show" id="v-pills-home-icons" role="tabpanel" aria-labelledby="v-pills-home-tab-icons">
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-4 col-xs-12 user-profil-part pull-left">
+                                        <div class="row ">
+                                            <div class="col-md-12 col-md-12-sm-12 col-xs-12 user-image text-center">
+                                                @if (Model.Image != null)
+                                                {
+                                                    <img src="~/avatars/@Model.Image" height="140" />
+                                                }
+
+                                                else
+                                                {
+                                                    <img src="~/assets/img/UserPic.png" height="140" />
+                                                }
+                                            </div>
+                                            <div class="col-md-12 col-sm-12 col-xs-12 user-detail-section1 text-center">
+                                                <a data-toggle="ajax-modal" data-url=@Url.Action("RenderUser", "UserManager" , new { userId=Model.Id})  class="btn btn-success btn-sm btn-block mt-2"> ویرایش اطلاعات </a>
+                                                <a asp-action="ResetPassword" asp-controller="UserManager" asp-route-userId="@Model.Id" class="btn btn-warning btn-sm btn-block mb-2">بازنشانی کلمه عبور</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9 col-sm-8 col-xs-12 pull-right profile-right-section">
+                                        <div class="row profile-right-section-row">
+                                            <div class="col-md-12 profile-header">
+                                                <div class="row">
+                                                    <div class="col-md-8 col-sm-6 col-xs-6 profile-header-section1 pull-left">
+                                                        <h4>@Model.FirstName  @Model.LastName</h4>
+                                                        <h6>
+                                                            <span class="badge badge-primary">@Model.RoleName</span>
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="tab-content">
+                                                            <div asp-validation-summary="ModelOnly"></div>
+                                                            <table class="table table-bordered">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>نام</td>
+                                                                        <td>@Model.FirstName</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>نام خانوادگی</td>
+                                                                        <td>@Model.LastName</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>ایمیل</td>
+                                                                        <td>@Model.Email</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>شماره موبایل</td>
+                                                                        <td>@Model.PhoneNumber</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>تاریخ تولد</td>
+                                                                        <td>@Model.BirthDate.ConvertMiladiToShamsi("yyyy/MM/dd")</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>تاریخ عضویت</td>
+                                                                        <td>@Model.RegisterDateTime.ConvertMiladiToShamsi("MMMM dd yyyy ساعت HH:mm:ss")</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-profile-icons" role="tabpanel" aria-labelledby="v-pills-profile-tab-icons">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <td class="font_Vazir_Medium">
+                                                    ویژگی ها
+                                                </td>
+                                                <td class="font_Vazir_Medium">
+                                                    وضعیت
+                                                </td>
+                                                <td class="font_Vazir_Medium">
+                                                    عملیات
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    ایمیل
+                                                </td>
+                                                <td>
+                                                    @Model.Email
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="btn btn-info btn-block btn-sm">ویرایش اطلاعات</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    وضعیت حساب کاربری
+                                                </td>
+                                                <td>
+                                                    <span id="InActiveOrActiveUser" class="badge @(Model.IsActive==true?"badge-success":"badge-danger")">
+                                                        @(Model.IsActive == true ? "فعال" : "غیرفعال")
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a id="btnInActiveOrActiveUser" onclick="ConfigureSettings('@Model.Id','InActiveOrActiveUser')" class="btn btn-sm btn-block @(Model.IsActive==true?"btn-danger":"btn-success")">
+                                                        @(Model.IsActive == true ? "غیرفعال شود" : "فعال شود")
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    وضعیت ایمیل
+                                                </td>
+                                                <td>
+                                                    <span id="ChangeEmailConfirmed" class="badge @(Model.EmailConfirmed==true?"badge-success":"badge-danger")">
+                                                        @(Model.EmailConfirmed == true ? "تایید شده" : "تایید نشده")
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a id="btnChangeEmailConfirmed" onclick="ConfigureSettings('@Model.Id','ChangeEmailConfirmed')" class="btn btn-sm btn-block @(Model.EmailConfirmed==true?"btn-danger":"btn-success")">
+                                                        @(Model.EmailConfirmed == true ? "تایید نشود " : "تایید شود")
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    وضعیت شماره موبایل
+                                                </td>
+                                                <td>
+                                                    <span id="ChangePhoneNumberConfirmed" class="badge @(Model.PhoneNumberConfirmed==true?"badge-success":"badge-danger")">
+                                                        @(Model.PhoneNumberConfirmed == true ? "تایید شده" : "تایید نشده")
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a id="btnChangePhoneNumberConfirmed" onclick="ConfigureSettings('@Model.Id','ChangePhoneNumberConfirmed')" class="btn btn-sm btn-block @(Model.PhoneNumberConfirmed==true?"btn-danger":"btn-success")">
+                                                        @(Model.PhoneNumberConfirmed == true ? "تایید نشود" : "تایید شود")
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    قفل حساب کاربر
+                                                </td>
+                                                <td>
+                                                    <span id="ChangeLockOutEnable" class="badge @(Model.LockoutEnabled==true?"badge-success":"badge-danger")">
+                                                        @(Model.LockoutEnabled == true ? "فعال" : "غیرفعال")
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a id="btnChangeLockOutEnable" onclick="ConfigureSettings('@Model.Id','ChangeLockOutEnable')" class="btn btn-sm btn-block @(Model.LockoutEnabled==true?"btn-danger":"btn-success")">
+                                                        @(Model.LockoutEnabled == true ? "غیر فعال شود" : "فعال شود")
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    اهرازهویت دو مرحله ای
+                                                </td>
+                                                <td>
+                                                    <span id="ChangeTwoFactorEnabled" class="badge @(Model.TwoFactorEnabled==true?"badge-success":"badge-danger")">
+                                                        @(Model.TwoFactorEnabled == true ? "فعال" : "غیرفعال")
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a id="btnChangeTwoFactorEnabled" onclick="ConfigureSettings('@Model.Id','ChangeTwoFactorEnabled')" class="btn btn-sm btn-block @(Model.TwoFactorEnabled==true?"btn-danger":"btn-success")">
+                                                        @(Model.TwoFactorEnabled == true ? "غیرفعال شود" : "فعال شود")
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                @{
+                                                    DateTime? LockoutEnd = null;
+                                                    @if (Model.LockoutEnd.HasValue)
+                                                    {
+                                                        LockoutEnd = Model.LockoutEnd.Value.DateTime.ToLocalTime();
+                                                    }
+                                                }
+                                                <td>وضعیت قفل حساب کاربر</td>
+                                                <td>
+                                                    @if (Model.LockoutEnd.HasValue)
+                                                    {
+                                                        <span id="LockOrUnLockUserAccount" class="badge @(LockoutEnd>DateTime.Now? "badge-danger" : "badge-success")">
+                                                            <i class="fa @(LockoutEnd>DateTime.Now? "fa-lock" : "fa-lock-open")"></i>
+                                                            @(LockoutEnd > DateTime.Now ? "قفل شده" : "قفل نشده")
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span id="LockOrUnLockUserAccount" class="badge badge-success"><i class="fa fa-lock-open"></i>  قفل نشده </span>
+                                                    }
+
+                                                </td>
+                                                <td>
+                                                    @if (Model.LockoutEnd.HasValue)
+                                                    {
+                                                        <a id="btnLockOrUnLockUserAccount" onclick="ConfigureSettings('@Model.Id','LockOrUnLockUserAccount')" class="btn btn-sm btn-block @(LockoutEnd>DateTime.Now?"btn-success":"btn-danger")">
+                                                            @(LockoutEnd > DateTime.Now ? "خروج از قفل" : "قفل شود")
+                                                        </a>
+                                                    }
+
+                                                    else
+                                                    {
+                                                        <a id="btnLockOrUnLockUserAccount" onclick="ConfigureSettings('@Model.Id','LockOrUnLockUserAccount')" class="btn btn-sm btn-block btn-danger">
+                                                            قفل شود
+                                                        </a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    تعداد تلاش های ناموفق
+                                                </td>
+                                                <td>
+                                                    @Model.AccessFailedCount
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>زمان خاتمه قفل حساب </td>
+                                                <td>
+                                                    @if (Model.LockoutEnd.HasValue)
+                                                    {
+                                                        var lockoutEnd = Model.LockoutEnd.Value.DateTime.ToLocalTime();
+                                                        @ConvertDateTime.ConvertMiladiToShamsi(lockoutEnd,"dd MMMM yyyy ساعت HH:mm:ss")              
+                                                    }
+
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer"></div>
+        </div>
+    </div>
+</div>

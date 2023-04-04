@@ -81,7 +81,7 @@ namespace NewsWebsite.Services.Identity
 
         public async Task<UsersViewModel> FindUserWithRolesByIdAsync(int UserId)
         {
-            return await Users.Where(u => u.Id == UserId).Select(user => new UsersViewModel
+            return await Users.Include(d=>d.Roles).Where(u => u.Id == UserId).Select(user => new UsersViewModel
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -93,7 +93,8 @@ namespace NewsWebsite.Services.Identity
                 IsActive = user.IsActive,
                 Image = user.Image,
                 RegisterDateTime = user.RegisterDateTime,
-                Roles = user.Roles,
+                RoleName = user.Roles.First().Role.Name,
+                RoleId = user.Roles.First().RoleId,
                 AccessFailedCount = user.AccessFailedCount,
                 EmailConfirmed = user.EmailConfirmed,
                 LockoutEnabled = user.LockoutEnabled,

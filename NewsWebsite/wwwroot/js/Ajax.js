@@ -335,4 +335,37 @@ function Bookmark(newsId) {
     });
 }
 
+function ConfigureSettings(id, action) {
+    $.ajax({
+        url: "/Admin/UserManager/" + action + "?userId=" + id,
+        beforeSend: function () { ShowLoading(); },
+        complete: function () { $("body").preloader('remove'); },
+        type: "get",
+        data: {},
+    }).done(function (result) {
+        if (result == "فعال" || result == "تایید شده" || result == "قفل نشده") {
+            $("#" + action).removeClass("badge-danger").addClass("badge-success");
+            $("#btn" + action).removeClass("btn-suceess").addClass("btn-danger");
+            if (result == "فعال")
+                $("#btn" + action).html("غیرفعال شود");
+            else if (result == "قفل نشده")
+                $("#btn" + action).html("قفل شود");
+            else
+                $("#btn" + action).html("تایید نشود");
+        }
+
+        else {
+            $("#" + action).removeClass("badge-success").addClass("badge-danger");
+            $("#btn" + action).removeClass("btn-danger").addClass("btn-success");
+            if (result == "غیرفعال")
+                $("#btn" + action).html("فعال شود");
+            else if (result == "قفل شده")
+                $("#btn" + action).html("قفل نشود");
+            else
+                $("#btn" + action).html("تایید شود");
+        }
+        $("#" + action).html(result);
+    });
+}
+
 

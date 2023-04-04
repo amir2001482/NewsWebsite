@@ -97,7 +97,7 @@
 
          function operateFormatter(value, row, index) {
         return [
-            '<a class="btn btn btn-primary btn-sm" href=@Url.Action("Details","UsersManager")/' + row.Id + ' title="Management">',
+            '<a class="btn btn btn-primary btn-sm" href=@Url.Action("Details","UserManager")?userId=' + row.Id + ' title="Management">',
             '<i class="fa fa-user"></i> | مدیریت ', '</a>',
 
             '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderUser", "UserManager")?userId=' + row.Id + ' title="ویرایش">',

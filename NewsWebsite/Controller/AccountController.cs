@@ -101,7 +101,7 @@ namespace NewsWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = viewModel.UserName, Email = viewModel.Email, RegisterDateTime = DateTime.Now, IsActive = true };
+                var user = new User { UserName = viewModel.UserName, Email = viewModel.Email, RegisterDateTime = DateTime.Now, IsActive = true  , FirstName ="" , LastName = "" };
                 IdentityResult result = await _userManager.CreateAsync(user, viewModel.Password);
 
                 if (result.Succeeded)

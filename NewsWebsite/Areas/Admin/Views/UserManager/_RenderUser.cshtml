@@ -42,6 +42,7 @@
                                     <div class="fileinput-new thumbnail" style="height: 150px;">
                                         @if (Model.Image != null)
                                         {
+                                            <input type="hidden" asp-for="Image" value="@Model.Image" />
                                             <img src="~/avatars/@Model.Image" />
                                         }
                                         else
