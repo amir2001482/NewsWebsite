@@ -65,7 +65,7 @@
                  if (key != "state" && key != "Id" && key != 'آدرس' && key != "ردیف" && key != "متن خبر" && key != "NumberOfLike" && key != "NumberOfDisLike" && key != "ShortTitle" && key != "Status" && key !="NumberOfComment")
                     html.push('<p><b>' + key + ':</b> ' + value + '</p>')
                 if (key == 'آدرس') {
-                    var url = '@string.Format("{0}://{1}", Context.Request.Scheme, Context.Request.Host)' + '/' + row.Id + '/' + value;
+                    var url = '@string.Format("{0}://{1}", Context.Request.Scheme, Context.Request.Host)' + '/' + 'News' + '/' + row.Id + '/' + value;
                     html.push('<p><b style="float:right">' + key + ':</b> ' + '<a href="' + url +'" style="float:right;direction:ltr;margin-right:2px;">'  + url + '</a>' + '</p>')
                 }
                 if(key == 'متن خبر'){
@@ -112,7 +112,7 @@
     }
     function commentsFormatter(value, row, index) {
         return [
-            '<a class="btn btn-primary btn-sm text-white">',
+            '<a href="/Admin/Comments/Index?newsId=' + row.Id + '" class="btn btn-primary btn-sm text-white">',
             row.NumberOfComment, '<i class="fa fa-comments mr-1"></i>',
             '</a >'
         ].join('')

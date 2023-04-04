@@ -115,6 +115,19 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         model.orderByAsc = item => "";
                     }
                     break;
+                case ("نظرات"):
+                    if (order == "asc")
+                    {
+                        model.orderByAsc = item => item.NumberOfComment;
+                        model.orderByDes = item => "";
+                    }
+
+                    else
+                    {
+                        model.orderByDes = item => item.NumberOfComment;
+                        model.orderByAsc = item => "";
+                    }
+                    break;
                 default:
                     model.orderByAsc = item => "";
                     model.orderByDes = item => "";

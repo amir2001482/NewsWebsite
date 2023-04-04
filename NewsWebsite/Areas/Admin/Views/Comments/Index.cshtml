@@ -1,4 +1,4 @@
-﻿
+﻿@model NewsWebsite.ViewModels.Comments.CommentViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -37,7 +37,7 @@
             </div>
             <div class="card-body">
                 <form asp-area="Admin" asp-controller="Comments">
-                    @await Html.PartialAsync("_CommentsTable")
+                    @await Html.PartialAsync("_CommentsTable" , Model)
                 </form>
             </div>
         </div>

@@ -15,11 +15,9 @@ namespace NewsWebsite.Data.Repositories
         {
             _context = context;
         }
-
-
-        public List<CommentViewModel> GetPaginateComments(int offset, int limit, Func<CommentViewModel, Object> orderByAscFunc, Func<CommentViewModel, Object> orderByDescFunc, string searchText)
+        public List<CommentViewModel> GetPaginateComments(int offset, int limit, Func<CommentViewModel, Object> orderByAscFunc, Func<CommentViewModel, Object> orderByDescFunc, string searchText , string newsId , bool? isConfirm)
         {
-            List<CommentViewModel> comments = _context.Comments.Where(c => c.Name.Contains(searchText) || c.Email.Contains(searchText) || c.PostageDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss").Contains(searchText))
+            List<CommentViewModel> comments = _context.Comments.Where(c => (c.Name.Contains(searchText) || c.Email.Contains(searchText) || c.PostageDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss").Contains(searchText)) && (string.IsNullOrEmpty(newsId)==false ? c.NewsId.Contains(newsId) : true) && isConfirm == null ? (c.IsConfirm == true || c.IsConfirm == false) : (isConfirm == true ? c.IsConfirm == true : c.IsConfirm == false))
                                    .Select(l => new CommentViewModel {CommentId=l.CommentId,Name=l.Name , Email = l.Email, IsConfirm = l.IsConfirm, PersianPostageDateTime = l.PostageDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss") , Desription=l.Desription })
                                    .OrderBy(orderByAscFunc).OrderByDescending(orderByDescFunc)
                                    .Skip(offset).Take(limit).ToList();
@@ -29,5 +27,6 @@ namespace NewsWebsite.Data.Repositories
 
             return comments;
         }
+        public int UnConfiremCommentCount() => _context.Comments.Where(d => d.IsConfirm == false).Count();
     }
 }

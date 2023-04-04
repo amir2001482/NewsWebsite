@@ -1,4 +1,4 @@
-﻿
+﻿@model NewsWebsite.ViewModels.Comments.CommentViewModel
     <div id="toolbar">
         <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Tag")">
             <i class="fa fa-trash"></i> | حذف گروهی
@@ -22,10 +22,8 @@
        data-page-list="[10, 25, 50, 100, all]"
        data-show-footer="true"
        data-side-pagination="server"
-       data-url="/Admin/Comments/GetComments"
+       data-url="/Admin/Comments/GetComments?newsId=@Model.NewsId&&isConfirm=@Model.IsConfirm"
        data-response-handler="responseHandler"></table>
-
-
 <script>
         var $table = $('#table')
         var selections = []

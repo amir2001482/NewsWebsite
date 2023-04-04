@@ -7,6 +7,7 @@ namespace NewsWebsite.Data.Contracts
 {
     public interface ICommentRepository
     {
-        List<CommentViewModel> GetPaginateComments(int offset, int limit, Func<CommentViewModel, Object> orderByAscFunc, Func<CommentViewModel, Object> orderByDescFunc, string searchText);
+        List<CommentViewModel> GetPaginateComments(int offset, int limit, Func<CommentViewModel, Object> orderByAscFunc, Func<CommentViewModel, Object> orderByDescFunc, string searchText, string newsId, bool? isConfirm);
+        int UnConfiremCommentCount();
     }
 }

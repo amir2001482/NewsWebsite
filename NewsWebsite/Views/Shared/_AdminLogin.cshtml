@@ -1,12 +1,79 @@
 ﻿
 @using NewsWebsite.Services.Contracts
 @using NewsWebsite.Common
+@using NewsWebsite.Data.Contracts
 @inject IApplicationUserManager userManager
+@inject ICommentRepository commentRepository
 
 @{ 
     var user = await userManager.GetUserAsync(User);
 }
+<style>
+    .notification {
+        display: inline-block;
+        position: relative;
+        padding: 0.2em 0.4em;
+        background: #f5365c;
+        border-radius: 0.2em;
+        font-size: 1em;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+        .notification.notify::before {
+            animation: ring 1.5s ease;
+        }
+
+        .notification::before {
+            display: block;
+            content: "\f086";
+            font-family: "FontAwesome";
+            transform-origin: top center;
+        }
+
+        .notification::before, .notification::after {
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification.show-count::after {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .notification::after {
+            font-family: Arial;
+            font-size: 0.6em;
+            font-weight: 700;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 2px 4px;
+            line-height: 100%;
+            border: 2px #fff solid;
+            border-radius: 60px;
+            background: #3498db;
+            opacity: 0;
+            content: attr(data-count);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: transform, opacity;
+            transition-duration: 0s, 0s;
+            transition-timing-function: ease, ease;
+            transition-duration: 0s, 0s;
+            transition-timing-function: ease, ease;
+            transition-duration: 0.3s;
+            transition-timing-function: ease-out;
+        }
+
+        .notification::before, .notification::after {
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+</style>
 <ul class="navbar-nav align-items-center d-none d-md-flex">
+    <li>
+        <a href="/Admin/Comments/Index?isConfirm=false" class="notification notify show-count ml-4" data-count="@commentRepository.UnConfiremCommentCount()"></a>
+    </li>
     <li class="nav-item dropdown">
         <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media align-items-center">
