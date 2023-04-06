@@ -1,17 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@using NewsWebsite.ViewModels.Settings
+@using NewsWebsite.Services.Contracts
+@inject IWritableOptions<SiteSettings> options
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="">
+    <meta name="description" content="@options.Value.SiteInfo.MetaDescriptionTag">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <!-- Title -->
-    <title>پایگاه خبری میزفا</title>
-
+    <title>@options.Value.SiteInfo.Title</title>
     <!-- Favicon -->
-    <link rel="icon" href="/assets/img/core-img/favicon.ico">
+    <link rel="icon" href="/assets/img/@options.Value.SiteInfo.Favicon">
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="~/css/style.css">
@@ -59,8 +61,8 @@
                             </div>
                             <!-- Top Search Area -->
                             <div class="top-search-area">
-                                <form action="index.html" method="post">
-                                    <input type="search" name="top-search" id="topSearch" placeholder="جستجو ...">
+                                <form asp-action="Search" asp-controller="Home" method="post">
+                                    <input type="search" name="searchText" id="topSearch" placeholder="جستجو ...">
                                     <button type="submit" class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                 </form>
                             </div>
@@ -76,26 +78,20 @@
         <div class="vizew-main-menu" id="sticker">
             <div class="classy-nav-container breakpoint-off">
                 <div class="container">
-
                     <!-- Menu -->
                     <nav class="classy-navbar justify-content-between" id="vizewNav">
-
                         <!-- Nav brand -->
-                        <a href="index.html" class="nav-brand"><img src="/assets/img/core-img/logo.png" alt="" height="90"> پایگاه خبری میزفا </a>
-
-
+                        <a href="/home/index" class="nav-brand"><img src="/assets/img/@options.Value.SiteInfo.Logo" alt="" height="90">@options.Value.SiteInfo.Title</a>
                         <!-- Navbar Toggler -->
                         <div class="classy-navbar-toggler">
                             <span class="navbarToggler"><span></span><span></span><span></span></span>
                         </div>
 
                         <div class="classy-menu">
-
                             <!-- Close Button -->
                             <div class="classycloseIcon">
                                 <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
                             </div>
-
                             <!-- Nav Start -->
                             @await Component.InvokeAsync("CategoryList")
                             <!-- Nav End -->
@@ -115,8 +111,8 @@
                 <div class="col-12 col-sm-6 col-xl-3">
                     <div class="footer-widget mb-70">
                         <!-- Logo -->
-                        <a href="index.html" class="foo-logo d-block mb-4"><img src="/assets/img/core-img/logo.png" alt="" height="80"></a>
-                        <p>متن درباره خبرگذاری میزفا را اینجا بنویسید ...</p>
+                        <a href="/Home/Index" class="foo-logo d-block mb-4"><img src="/assets/img/@options.Value.SiteInfo.Logo" alt="" height="80"></a>
+                        <p>@options.Value.SiteInfo.Description<p>
                         <!-- Footer Newsletter Area -->
                         <div class="footer-nl-area">
                             <form action="#" method="post">
@@ -162,11 +158,11 @@
                 <div class="row align-items-center">
                     <!-- Copywrite Text -->
                     <div class="col-12 col-sm-6">
-                        <p class="copywrite-text">
+                        <!--<p class="copywrite-text">-->
                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy  <a href="https://mizfa.academy" target="_blank">Mizfa.academy</a>
+                            <!--Copyright &copy  <a href="https://mizfa.academy" target="_blank">Mizfa.academy</a>-->
                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </p>
+                        <!--</p>-->
                     </div>
                 </div>
             </div>

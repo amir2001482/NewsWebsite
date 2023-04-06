@@ -480,6 +480,21 @@ namespace NewsWebsite.Data.Repositories
             return content;
         }
 
+        public async Task<List<NewsViewModel>> Search(string searchText)
+        {
+            var obj = await _context.News.AsNoTracking()
+                .Where(e => e.Title.Contains(searchText.Trim()) || e.Abstract.Contains(searchText.Trim()) || e.Description.Contains(searchText.Trim()))
+                .Include(e => e.Bookmarks)
+                .Include(e => e.Comments)
+                .Include(e => e.Likes)
+                .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
+                .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
+                .Include(e => e.User)
+                .Include(e => e.Visits)
+                .ToListAsync();
+            return _mapper.Map<List<NewsViewModel>>(obj);
+        }
+
         private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news, int offset)
         {
             foreach (var item in news)

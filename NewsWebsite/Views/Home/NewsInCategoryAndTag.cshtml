@@ -1,8 +1,7 @@
-﻿@model  List<NewsWebsite.ViewModels.News.NewsViewModel>
+﻿@model NewsWebsite.ViewModels.Home.CategoryOrTagInfoViewModel
 @using NewsWebsite.Common
 @using NewsWebsite.ViewModels.Newsletter
 @{
-    ViewData["Title"] = "NewsInCategory";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,7 +13,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/"><i class="fa fa-home" aria-hidden="true"></i> خانه</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">@(ViewBag.Category!=null?ViewBag.Category : ViewBag.Tag)</li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
                     </ol>
                 </nav>
             </div>
@@ -31,7 +30,7 @@
                 <div class="archive-catagory-view mb-30 d-flex align-items-center justify-content-between">
                     <!-- Catagory -->
                     <div class="archive-catagory">
-                        <h4> @(ViewBag.Category!=null?ViewBag.Category : ViewBag.Tag) </h4>
+                        <h4> @Model.Title</h4>
                     </div>
                     <!-- View Options -->
                     <div class="view-options">
@@ -39,51 +38,11 @@
                         <a href="archive-list.html" class="active"><i class="fa fa-list-ul" aria-hidden="true"></i></a>
                     </div>
                 </div>
-                @if (Model.Count() != 0)
-                {
-                    @foreach (var item in Model)
-                    {
-                        <!-- Single Post Area -->
-                        <div class="single-post-area style-2">
-                            <div class="row align-items-center">
-                                <div class="col-12 col-md-6">
-                                    <!-- Post Thumbnail -->
-                                    <div class="post-thumbnail">
-                                        <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
-
-                                        <!-- Video Duration -->
-                                        <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("HH:mm")</span>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <!-- Post Content -->
-                                    <div class="post-content mt-0">
-                                        <a href="#" class="post-cata cata-sm cata-success">@item.NameOfCategories</a>
-                                        <a href="~/News/@item.NewsId/@item.Url" class="post-title mb-2">@item.Title</a>
-                                        <div class="post-meta d-flex align-items-center mb-2">
-                                            <a href="#" class="post-author">@item.AuthorName</a>
-                                            <i class="fa fa-circle" aria-hidden="true"></i>
-                                            <a href="#" class="post-date">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</a>
-                                        </div>
-                                        <p class="mb-2">@item.Abstract</p>
-                                        <div class="post-meta d-flex">
-                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
-                                            <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
-                                            <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
-                                            <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    }
-
-                }
-                else
-                {
-                  <p class="alert alert-info"> خبری در این  @(ViewBag.Category != null ? "دسته" : "برچسب") یافت نشد...</p>
-                }
+                <div id="container"></div>
+                <div id="progress" class="text-center">
+                    <p>در حال بارگزاری اطلاعات ...</p>
+                    <div class="loadingCricle m-auto"></div>
+                </div>
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">

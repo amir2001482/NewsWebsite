@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
@@ -20,12 +21,14 @@ namespace NewsWebsite.Controllers
         private readonly IUnitOfWork _uw;
         private readonly IHttpContextAccessor _accessor;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(IUnitOfWork uw, IHttpContextAccessor accessor, IMapper mapper)
+        public HomeController(IUnitOfWork uw, IHttpContextAccessor accessor, IMapper mapper , IConfiguration configuration)
         {
             _uw = uw;
             _accessor = accessor;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index(string TypeOfNews, string duration)
@@ -121,8 +124,7 @@ namespace NewsWebsite.Controllers
             var category = await _uw.BaseRepository<Category>().FindByIdAsync(categoryId);
             if (category == null)
                 return NotFound();
-            ViewBag.Category = category.CategoryName;
-            return View("NewsInCategoryAndTag", await _uw.NewsRepository.GetNewsInCategoryOrTag(categoryId , ""));
+            return View("NewsInCategoryAndTag" , new CategoryOrTagInfoViewModel { Id = category.CategoryId , Title = category.CategoryName , IsCategory = true });
         }
         [Route("Tag/{tagId}")]
         public async Task<IActionResult> NewsInCategory(string tagId)
@@ -183,5 +185,8 @@ namespace NewsWebsite.Controllers
                 return PartialView("_SignIn");
             return Json(await _uw.NewsRepository.BookMarkAsync(newsId, currentUserId));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Search(string searchText) => View(await _uw.NewsRepository.Search(searchText));
     }
 }

@@ -20,16 +20,18 @@ namespace NewsWebsite.Data.Contracts
         Task<List<Comment>> GetNewsCommentsAsync(string newsId);
         Task BindSubComments(Comment comment);
         Task<List<NewsViewModel>> GetRelatedNews(int number, List<string> tagIdList, string newsId);
-        int GetPublishedNewsCount();
+        Task<List<NewsViewModel>> Search(string searchText);
         Task<List<NewsViewModel>> GetNewsInCategoryOrTag(string categoryId, string TagId);
         Task<List<NewsViewModel>> GetUserBookmarksAsync(int userId);
         //Task<NewsViewModel> LikeOrdisLikeAsync(bool isLike, string newsId, string ip);
-        NewsViewModel NumberOfLikeAndDislike(string newsId);
         Task<bool> BookMarkAsync(string newsId, int UserId);
         Task<string> GetWeeklyNewsAsync();
+        NewsViewModel NumberOfLikeAndDislike(string newsId);
         int CountNews();
         int CountFuturePublishedNews();
         int CountNewsPublishedOrDraft(bool? isPublish);
         int CountNewsPublished();
+        int GetPublishedNewsCount();
+
     }
 }
