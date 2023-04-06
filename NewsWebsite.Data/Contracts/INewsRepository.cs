@@ -27,7 +27,9 @@ namespace NewsWebsite.Data.Contracts
         NewsViewModel NumberOfLikeAndDislike(string newsId);
         Task<bool> BookMarkAsync(string newsId, int UserId);
         Task<string> GetWeeklyNewsAsync();
-
-
+        int CountNews();
+        int CountFuturePublishedNews();
+        int CountNewsPublishedOrDraft(bool? isPublish);
+        int CountNewsPublished();
     }
 }

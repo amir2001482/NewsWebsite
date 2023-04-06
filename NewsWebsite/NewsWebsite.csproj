@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Areas\Admin\Views\Dashboard\Index.cshtml" />
     <None Include="wwwroot\assets\fonts\Farsi-Digits-Without-Latin\Vazir-Black-FD-WOL.woff2" />
     <None Include="wwwroot\assets\fonts\Farsi-Digits-Without-Latin\Vazir-Bold-FD-WOL.woff2" />
     <None Include="wwwroot\assets\fonts\Farsi-Digits-Without-Latin\Vazir-FD-WOL.woff2" />

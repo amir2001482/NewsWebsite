@@ -137,6 +137,11 @@ namespace NewsWebsite.Data.Repositories
 
         //}
 
+        public int CountNews() => _context.News.Count();
+        public int CountFuturePublishedNews() => _context.News.Where(n => n.PublishDateTime > DateTime.Now).Count();
+        public int CountNewsPublishedOrDraft(bool? isPublish) => _context.News.Where(n => isPublish == true ? n.IsPublish == true && n.PublishDateTime <= DateTime.Now : n.IsPublish == false).Count();
+        public int CountNewsPublished() => _context.News.Where(n => n.IsPublish == true && n.PublishDateTime <= DateTime.Now).Count();
+
         public string CheckNewsFileName(string fileName)
         {
             string fileExtension = Path.GetExtension(fileName);
