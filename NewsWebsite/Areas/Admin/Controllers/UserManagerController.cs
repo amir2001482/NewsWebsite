@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +12,12 @@ using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Contracts;
+using NewsWebsite.ViewModels.DynamicAccess;
 using NewsWebsite.ViewModels.UserManager;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
+    [DisplayName("مدیریت کاربران")]
     public class UserManagerController : BaseController
     {
         private readonly IApplicationUserManager _userManager;
@@ -38,6 +42,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [DisplayName("مشاهده")]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -103,6 +109,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [DisplayName("افزودن یا ویرایش")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderUser(int? userId)
         {
             var user = new UsersViewModel();
@@ -184,6 +192,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [DisplayName("حذف")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string userId)
         {
             if (!userId.HasValue())
@@ -222,6 +232,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("DeleteGroup")]
+        [DisplayName("حذف گروهی")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)
@@ -239,6 +251,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             return PartialView("_DeleteGroup");
         }
+        [DisplayName("مشاهده جزئیات")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Details(int userId)
         {
             if (userId == 0)
@@ -258,6 +272,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [DisplayName("فعال و غیر فعال کردن فقل حساب کاربر")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ChangeLockOutEnable(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -292,6 +308,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [DisplayName("فعال و غیر فعال کردن کاربر")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> InActiveOrActiveUser(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -323,6 +341,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <param name="UserId"></param>
         /// <returns></returns>
         [HttpGet]
+        [DisplayName("فعال و غیر فعال کردن احرازهویت دو مرحله ای")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ChangeTwoFactorEnabled(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -354,6 +374,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [DisplayName("تایید و عدم تایید وضعیت ایمیل کاربر")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ChangeEmailConfirmed(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -385,6 +407,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [DisplayName("تایید و عدم تایید وضعیت شماره موبایل کاربر")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ChangePhoneNumberConfirmed(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -416,6 +440,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [DisplayName("قفل و خروج از حالت قفل حساب کاربر")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> LockOrUnLockUserAccount(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -455,6 +481,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <param name="UserId"></param>
         /// <returns></returns>
         [HttpGet]
+        [DisplayName("نمایش صفحه بازنشانی کلمه عبور")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ResetPassword(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());

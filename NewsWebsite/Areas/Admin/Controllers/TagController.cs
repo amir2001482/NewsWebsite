@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
+using NewsWebsite.ViewModels.DynamicAccess;
 using NewsWebsite.ViewModels.Tag;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
+    [DisplayName("مدیریت تگ ها")]
     public class TagController : BaseController
     {
         private readonly IUnitOfWork _uw;
@@ -26,13 +30,12 @@ namespace NewsWebsite.Areas.Admin.Controllers
             _mapper = mapper;
             _mapper.CheckArgumentIsNull(nameof(_mapper));
         }
-
+        [DisplayName("مشاهده")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
         }
-
-
         [HttpGet]
         public async Task<IActionResult> GetTags(string search, string order, int offset, int limit, string sort)
         {
@@ -61,9 +64,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return Json(new { total = total, rows = tags });
         }
 
-
-
         [HttpGet]
+        [DisplayName("افزودن یا ویرایش")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderTag(string tagId)
         {
             var tagViewModel = new TagViewModel();
@@ -115,6 +118,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpGet]
+        [DisplayName("حذف")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string tagId)
         {
             if (!tagId.HasValue())
@@ -154,6 +159,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpPost, ActionName("DeleteGroup")]
+        [DisplayName("حذف گروهی")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)

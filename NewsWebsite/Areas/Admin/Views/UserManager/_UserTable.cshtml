@@ -89,7 +89,7 @@
                     html.push('<p><b>' + key + ':</b> <img src="' + url + '" height="50" />')
                 }
 
-                   
+
             })
             return html.join('')
         }
@@ -99,6 +99,8 @@
         return [
             '<a class="btn btn btn-primary btn-sm" href=@Url.Action("Details","UserManager")?userId=' + row.Id + ' title="Management">',
             '<i class="fa fa-user"></i> | مدیریت ', '</a>',
+            '<a class="btn btn btn-success mr-2 btn-sm" href=@Url.Action("Index", "DynamicAccess")?userId=' + row.Id + ' title="Management">',
+            '<i class="fa fa-user"></i> | سطح دسترسی ', '</a>',
 
             '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderUser", "UserManager")?userId=' + row.Id + ' title="ویرایش">',
             '<i class="fa fa-edit"></i>',

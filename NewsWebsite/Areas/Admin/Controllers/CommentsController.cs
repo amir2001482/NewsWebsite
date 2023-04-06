@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Comments;
+using NewsWebsite.ViewModels.DynamicAccess;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
+    [DisplayName("مدیریت نظرات")]
     public class CommentsController : BaseController
     {
         private readonly IUnitOfWork _uw;
@@ -25,7 +29,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
             _mapper = mapper;
             _mapper.CheckArgumentIsNull(nameof(_mapper));
         }
-
+        [DisplayName("مشاهده")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index(string newsId , bool? isConfirm)
         {
             return View(nameof(Index) , new CommentViewModel { NewsId = newsId , IsConfirm = isConfirm });
@@ -80,6 +85,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [DisplayName("حذف")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string commentId)
         {
             if (!commentId.HasValue())
@@ -120,6 +127,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpGet]
+        [DisplayName("تایید یا رد")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ConfirmOrInconfirm(string commentId)
         {
             if (!commentId.HasValue())
@@ -184,6 +193,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [DisplayName("ارسال نظر")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult SendComment(string parentCommentId, string newsId)
         {
             return PartialView("_SendComment",new CommentViewModel(parentCommentId, newsId));

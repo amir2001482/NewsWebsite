@@ -178,5 +178,48 @@ namespace NewsWebsite.Services.Identity
 
             return fileName;
         }
+
+        public Task<User> FindClaimsInUser(int userId)
+        {
+            return Users.Include(c => c.Claims).FirstOrDefaultAsync(c => c.Id == userId);
+        }
+
+        public async Task<IdentityResult> AddOrUpdateClaimsAsync(int userId, string userClaimType, IList<string> selectedUserClaimValues)
+        {
+            var user = await FindClaimsInUser(userId);
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Code = "NotFound",
+                    Description = "کاربر مورد نظر یافت نشد.",
+                });
+            }
+
+            var CurrentUserClaimValues = user.Claims.Where(r => r.ClaimType == userClaimType).Select(r => r.ClaimValue).ToList();
+            if (selectedUserClaimValues == null)
+                selectedUserClaimValues = new List<string>();
+
+            var newClaimValuesToAdd = selectedUserClaimValues.Except(CurrentUserClaimValues).ToList();
+            foreach (var claim in newClaimValuesToAdd)
+            {
+                user.Claims.Add(new UserClaim
+                {
+                    UserId = userId,
+                    ClaimType = userClaimType,
+                    ClaimValue = claim,
+                });
+            }
+
+            var removedClaimValues = CurrentUserClaimValues.Except(selectedUserClaimValues).ToList();
+            foreach (var claim in removedClaimValues)
+            {
+                var roleClaim = user.Claims.SingleOrDefault(r => r.ClaimValue == claim && r.ClaimType == userClaimType);
+                if (roleClaim != null)
+                    user.Claims.Remove(roleClaim);
+            }
+
+            return await UpdateAsync(user);
+        }
     }
 }

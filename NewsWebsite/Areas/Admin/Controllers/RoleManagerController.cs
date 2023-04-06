@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Attributes;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Contracts;
+using NewsWebsite.ViewModels.DynamicAccess;
 using NewsWebsite.ViewModels.RoleManager;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
+    [DisplayName("مدیریت نقش ها")]
     public class RoleManagerController : BaseController
     {
         private readonly IApplicationRoleManager _roleManager;
@@ -28,6 +32,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [DisplayName("مشاهده")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -65,6 +71,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpGet,AjaxOnly]
+        [DisplayName("افزودن یا ویرایش")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderRole(int? roleId)
         {
             var roleViewModel = new RolesViewModel();
@@ -107,6 +115,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpGet, AjaxOnly]
+        [DisplayName("حذف")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string roleId)
         {
             if (!roleId.HasValue())
@@ -145,6 +155,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpPost, ActionName("DeleteGroup"), AjaxOnly]
+        [DisplayName("حذف گروهی")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)

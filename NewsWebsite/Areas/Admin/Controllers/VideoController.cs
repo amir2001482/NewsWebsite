@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
+using NewsWebsite.ViewModels.DynamicAccess;
 using NewsWebsite.ViewModels.Video;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
+    [DisplayName("مدیرت ویدیو ها")]
     public class VideoController : BaseController
     {
         private readonly IUnitOfWork _uw;
@@ -32,6 +36,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
             _env.CheckArgumentIsNull(nameof(_env));
         }
 
+        [DisplayName("مشاهده")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -90,6 +96,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpGet,AjaxOnly()]
+        [DisplayName("افزودن یا ویرایش")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderVideo(string videoId)
         {
             var videoViewModel = new VideoViewModel();
@@ -150,6 +158,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpGet, AjaxOnly()]
+        [DisplayName("حذف")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string videoId)
         {
             if (!videoId.HasValue())
@@ -190,6 +200,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpPost, ActionName("DeleteGroup"), AjaxOnly()]
+        [DisplayName("حذف گروهی")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)

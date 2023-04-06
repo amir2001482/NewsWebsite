@@ -10,6 +10,7 @@ namespace NewsWebsite.IocConfig
         public static void AddCustomIdentityServices(this IServiceCollection services)
         {
             services.AddIdentityOptions();
+            services.AddDynamicPersmission();
             services.AddScoped<IApplicationRoleManager, ApplicationRoleManager>();
             services.AddScoped<IApplicationUserManager, ApplicationUserManager>();
             services.AddScoped<IIdentityDbInitializer, IdentityDbInitializer>();
@@ -21,8 +22,6 @@ namespace NewsWebsite.IocConfig
             app.UseAuthentication();
             app.CallDbInitializer();
         }
-
-
         private static void CallDbInitializer(this IApplicationBuilder app)
         {
             var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();

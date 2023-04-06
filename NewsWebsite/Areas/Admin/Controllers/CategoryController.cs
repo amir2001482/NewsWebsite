@@ -1,17 +1,21 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Category;
+using NewsWebsite.ViewModels.DynamicAccess;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
+    [DisplayName("مدیریت دسته بندی ها")]
     public class CategoryController : BaseController
     {
         private readonly IUnitOfWork _uw;
@@ -27,6 +31,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [DisplayName("مشاهده")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -69,6 +75,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet , AjaxOnly()]
+        [DisplayName("افزودن و ویرایش")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderCategory(string categoryId)
         {
             var categoryViewModel = new CategoryViewModel();
@@ -140,6 +148,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return PartialView("_RenderCategory", viewModel);
         }
         [HttpGet]
+        [DisplayName("حذف")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string categoryId)
         {
             if (!categoryId.HasValue())
@@ -191,6 +201,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("DeleteGroup") , AjaxOnly()]
+        [DisplayName("حذف گروهی")]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)
