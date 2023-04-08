@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using NewsWebsite.Services.Contracts;
 using System;
@@ -25,13 +27,13 @@ namespace NewsWebsite.IocConfig
              AuthorizationHandlerContext context,
              DynamicPermissionRequirement requirement)
         {
-            var mvcContext = context.Resource as AuthorizationFilterContext;
+            var mvcContext = context.Resource as Endpoint;
             if (mvcContext == null)
             {
                 return Task.CompletedTask;
             }
 
-            var actionDescriptor = mvcContext.ActionDescriptor;
+            var actionDescriptor = mvcContext.Metadata.OfType<ControllerActionDescriptor>().SingleOrDefault();
 
             actionDescriptor.RouteValues.TryGetValue("area", out var areaName);
             var area = string.IsNullOrWhiteSpace(areaName) ? string.Empty : areaName;

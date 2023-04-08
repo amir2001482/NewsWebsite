@@ -39,7 +39,8 @@ namespace NewsWebsite.Services.Contracts
         Task<User> FindByIdAsync(string userId);
         Task<User> FindByNameAsync(string userName);
         Task<IdentityResult> CreateAsync(User user, string password);
-        //string NormalizeKey(string key);
+        string NormalizeName(string name);
+        string NormalizeEmail(string email);
         Task UpdateNormalizedUserNameAsync(User user);
         Task<string> GetUserNameAsync(User user);
         Task<IdentityResult> SetUserNameAsync(User user, string userName);

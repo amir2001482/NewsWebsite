@@ -473,7 +473,7 @@ namespace NewsWebsite.Data.Repositories
                     NewsId = d.NewsId,
                     Url = d.Url,
                 }).OrderByDescending(d=>d.PublishDateTime).AsNoTracking().ToListAsync();
-            var url = _configuration.GetSection("SiteSettings.SiteInfo").GetValue<string>("Url");
+            var url = _configuration.GetSection("SiteSettings.SiteInfo.Url").Value;
             foreach (var item in news)
             {
                 content = content + $"<div style='direction:rtl;font-family:tahoma;text-align:center'> <div class='row align-items-center'> <div class='col-12 col-lg-6'><div class='post-thumbnail'> <img src='{url + "/newsImage/" + item.ImageName}' alt='{item.ImageName}'> </div> </div> <div class='col-12 col-lg-6'> <div class='post-content mt-0'> <h4 style='color:#878484;'>{item.Title}</h4> <p> {item.ShortTitle} <a href='{url}/News/{item.NewsId}/{item.Url}'>[ادامه مطلب]</a> </p> </div> </div> </div> </div><hr/>";

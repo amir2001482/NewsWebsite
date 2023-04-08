@@ -23,10 +23,10 @@ namespace NewsWebsite.Areas.Admin.Controllers
         private readonly IApplicationUserManager _userManager;
         private readonly IApplicationRoleManager _roleManager;
         private readonly IMapper _mapper;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         //private readonly IUnitOfWork _uw;
         private const string UserNotFound = "کاربر یافت نشد.";
-        public UserManagerController(IApplicationUserManager userManager, IMapper mapper, IApplicationRoleManager roleManager, IHostingEnvironment env)
+        public UserManagerController(IApplicationUserManager userManager, IMapper mapper, IApplicationRoleManager roleManager, IWebHostEnvironment env)
         {
             _userManager = userManager;
             _userManager.CheckArgumentIsNull(nameof(_userManager));

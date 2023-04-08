@@ -23,9 +23,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
         private readonly ILogger<ManageController> _logger;
         private readonly IHttpContextAccessor _accessor;
         private readonly IMapper _mapper;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
 
-        public ManageController(IApplicationRoleManager roleManager, IApplicationUserManager userManager, SignInManager<User> signInManager, ILogger<ManageController> logger, IHttpContextAccessor accessor, IMapper mapper, IHostingEnvironment env)
+        public ManageController(IApplicationRoleManager roleManager, IApplicationUserManager userManager, SignInManager<User> signInManager, ILogger<ManageController> logger, IHttpContextAccessor accessor, IMapper mapper, IWebHostEnvironment env)
         {
             _roleManager = roleManager;
             _userManager = userManager;

@@ -21,10 +21,10 @@ namespace NewsWebsite.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _uw;
         private readonly IMapper _mapper;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private const string VideoNotFound = "ویدیو درخواستی یافت نشد.";
 
-        public VideoController(IUnitOfWork uw, IMapper mapper,IHostingEnvironment env)
+        public VideoController(IUnitOfWork uw, IMapper mapper, IWebHostEnvironment env)
         {
             _uw = uw;
             _uw.CheckArgumentIsNull(nameof(_uw));

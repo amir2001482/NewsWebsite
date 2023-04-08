@@ -1,9 +1,10 @@
-﻿
-    <div id="toolbar">
-        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Newsletter")">
-            <i class="fa fa-trash"></i> | حذف گروهی
-        </button>
-    </div>
+﻿@using NewsWebsite.Services.Contracts
+@inject ISecurityTrimmingService securityTrimmingService
+<div id="toolbar">
+    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Newsletter")">
+        <i class="fa fa-trash"></i> | حذف گروهی
+    </button>
+</div>
 <table id="table"
        data-toolbar="#toolbar"
        data-search="true"
@@ -65,11 +66,13 @@
 
 
      function operateFormatter(value, row, index) {
-        return [
+         if ('@securityTrimmingService.CanUserAccess(User,"Admin","Newsletter","Delete")'=='True') {
+             return [
             '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "Newsletter")?email=' + row.Id + ' title="حذف">',
             '<i class="fa fa-trash"></i>',
             '</button >'
-        ].join('')
+           ].join('')
+        }
     }
 
     function isActiveFormatter(value, row, index) {

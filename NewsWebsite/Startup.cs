@@ -13,11 +13,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsWebsite.Data;
 using NewsWebsite.IocConfig;
 using NewsWebsite.IocConfig.Mapping;
 using NewsWebsite.Services;
+using NewsWebsite.ViewModels.DynamicAccess;
 using NewsWebsite.ViewModels.Settings;
 
 namespace NewsWebsite
@@ -26,10 +28,9 @@ namespace NewsWebsite
     {
         private  IConfiguration Configuration { get; }
         private IServiceProvider Services { get; }
-        public Startup(IConfiguration configuration , IServiceProvider services)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Services = services;
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -42,16 +43,19 @@ namespace NewsWebsite
                 opptions.EnableEndpointRouting = false;
             });
             services.AddCustomServices();
-            services.AddControllers().AddNewtonsoftJson();
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()));
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddCustomIdentityServices();
             services.ConfigureWritable<SiteSettings>(Configuration.GetSection("SiteSettings"));
             services.AddScheduler();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(ConstantPolicies.DynamicPermission, policy => policy.Requirements.Add(new DynamicPermissionRequirement()));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCustomIdentityServices();
             if (env.IsDevelopment())
@@ -63,18 +67,18 @@ namespace NewsWebsite
             provider.UseScheduler(schedule =>
             {
                 schedule.Schedule<SendWeeklyNewsLatter>().Cron("30 20 * * 5"); // UTC time
-                //schedule.Schedule<SendWeeklyNewsLatter>().Cron("44 11 * * 2");
-                //schedule.Schedule<SendWeeklyNewsLatter>().EveryMinute();
-            }).LogScheduledTaskProgress(Services.GetService<ILogger<IScheduler>>());
-            app.UseMvc(routes =>
+            });
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(routes =>
             {
-                routes.MapRoute(
+                routes.MapControllerRoute(
                   name: "areas",
-                  template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
-                routes.MapRoute(
+                routes.MapControllerRoute(
                  name: "default",
-                 template: "{controller=Home}/{action=Index}/{id?}"
+                 pattern: "{controller=Home}/{action=Index}/{id?}"
                );
             });
         }

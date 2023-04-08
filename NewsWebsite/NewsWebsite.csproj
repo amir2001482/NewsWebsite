@@ -3,16 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
-    <!--<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" />-->
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\NewsWebsite.Common\NewsWebsite.Common.csproj" />
     <ProjectReference Include="..\NewsWebsite.Data\NewsWebsite.Data.csproj" />

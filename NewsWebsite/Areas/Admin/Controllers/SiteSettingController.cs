@@ -20,8 +20,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _uw;
         private readonly IWritableOptions<SiteSettings> _writableLocations;
-        private readonly IHostingEnvironment _env;
-        public SiteSettingController(IUnitOfWork uw, IWritableOptions<SiteSettings> writableLocations, IHostingEnvironment env)
+        private readonly IWebHostEnvironment _env;
+        public SiteSettingController(IUnitOfWork uw, IWritableOptions<SiteSettings> writableLocations, IWebHostEnvironment env)
         {
             _writableLocations = writableLocations;
             _uw = uw;

@@ -30,7 +30,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             _mapper.CheckArgumentIsNull(nameof(_mapper));
         }
         [DisplayName("مشاهده")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -51,21 +51,20 @@ namespace NewsWebsite.Areas.Admin.Controllers
             if (sort == "Id")
             {
                 if (order == "asc")
-                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit,item=>item.Email,item=>"", search);
+                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit, "Email", search);
                 else
-                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit,item=>"", item => item.Email, search);
+                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit, "Email Desc", search);
             }
 
             else if (sort == "تاریخ عضویت")
             {
                 if (order == "asc")
-                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit,item=>item.PersianRegisterDateTime,item=>"", search);
+                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit, "RegisterDateTime", search);
                 else
-                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit,item=>"",item=>item.PersianRegisterDateTime, search);
+                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit , "RegisterDateTime Desc", search);
             }
-
             else
-                newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit,item=>"",item=>item.PersianRegisterDateTime, search);
+                newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit, "RegisterDateTime", search);
 
             if (search != "")
                 total = newsletter.Count();

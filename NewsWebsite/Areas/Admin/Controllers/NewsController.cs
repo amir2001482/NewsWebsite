@@ -21,11 +21,11 @@ namespace NewsWebsite.Areas.Admin.Controllers
     public class NewsController : BaseController
     {
         private readonly IUnitOfWork _uw;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly IMapper _mapper;
         private const string NewsNotFound = "خبر یافت نشد.";
 
-        public NewsController(IUnitOfWork uw, IMapper mapper, IHostingEnvironment env)
+        public NewsController(IUnitOfWork uw, IMapper mapper, IWebHostEnvironment env)
         {
             _uw = uw;
             _uw.CheckArgumentIsNull(nameof(_uw));

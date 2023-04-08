@@ -1,27 +1,26 @@
-﻿using Newtonsoft.Json;
+﻿
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.Text.Json.Serialization;
 
 namespace NewsWebsite.ViewModels.Newsletter
 {
     public class NewsletterViewModel
     {
-        [JsonProperty("Id"),Display(Name ="ایمیل")]
+        [JsonPropertyName("Id"),Display(Name ="ایمیل")]
         [Required(ErrorMessage ="وارد نمودن {0} الزامی است."),EmailAddress(ErrorMessage ="ایمیل وارد شده معتبر نمی باشد.")]
         public string Email { get; set; }
 
-        [JsonProperty("ردیف")]
+        [JsonPropertyName("ردیف")]
         public int Row { get; set; }
 
-        [JsonProperty("تاریخ عضویت")]
+        [JsonPropertyName("تاریخ عضویت")]
         public string PersianRegisterDateTime { get; set; }
 
         [JsonIgnore]
         public DateTime? RegisterDateTime { get; set; }
 
-        [JsonProperty("IsActive")]
+        [JsonPropertyName("IsActive")]
         public bool IsActive { get; set; }
     }
 }
