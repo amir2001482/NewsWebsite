@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NewsWebsite.Entities;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,5 +22,9 @@ namespace NewsWebsite.ViewModels.Home
         public int NumberOfComments { get; set; }
         public string NameOfCategories { get; set; }
         public string Url { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<NewsCategory> NewsCategories { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<NewsTag> NewsTags { get; set; }
     }
 }

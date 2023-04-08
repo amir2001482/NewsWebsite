@@ -4,6 +4,7 @@ using NewsWebsite.Entities;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Category;
 using NewsWebsite.ViewModels.Comments;
+using NewsWebsite.ViewModels.Home;
 using NewsWebsite.ViewModels.Manage;
 using NewsWebsite.ViewModels.News;
 using NewsWebsite.ViewModels.RoleManager;
@@ -58,6 +59,16 @@ namespace NewsWebsite.IocConfig.Mapping
             CreateMap<Comment, CommentViewModel>().ReverseMap();
             CreateMap<Video, VideoViewModel>()
                 .ForMember(p => p.PersianPublishDateTime, opt => opt.MapFrom(d => d.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss")));
+            CreateMap<News, NewsInCategoriesAndTagsViewModel>()
+              .ForMember(p => p.AuthorName, opt => opt.MapFrom(d => d.User.FirstName + " " + d.User.LastName))
+              .ForMember(p => p.ShortTitle, opt => opt.MapFrom(d => d.Title.Length > 60 ? d.Title.Substring(0, 60) : d.Title))
+              .ForMember(p => p.NumberOfVisit, opt => opt.MapFrom(d => d.Visits.Select(c => c.NumberOfVisit).Sum()))
+              .ForMember(p => p.NumberOfDisLike, opt => opt.MapFrom(d => d.Likes.Where(d => d.IsLiked == false).Count()))
+              .ForMember(p => p.NumberOfLike, opt => opt.MapFrom(d => d.Likes.Where(d => d.IsLiked == true).Count()))
+              .ForMember(p => p.PersianPublishDate, opt => opt.MapFrom(d => d.PublishDateTime == null ? "-" : d.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ")))
+              .ForMember(p=>p.PersianPublishTime , opt => opt.MapFrom(d=>d.PublishDateTime == null ? "-" : d.PublishDateTime.ConvertMiladiToShamsi("hh:mm:ss")))
+              .ForMember(p => p.NumberOfComments, opt => opt.MapFrom(d => d.Comments.Count()));
+
 
 
         }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
+using NewsWebsite.ViewModels.Home;
 using NewsWebsite.ViewModels.News;
 using NewsWebsite.ViewModels.Settings;
 using System;
@@ -401,7 +402,7 @@ namespace NewsWebsite.Data.Repositories
             return _context.News.Where(c => c.IsPublish == true).Count();
         }
 
-        public async Task<List<NewsViewModel>> GetNewsInCategoryOrTag(string categoryId, string TagId)
+        public async Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInCategoryOrTag(string id, bool isCategory , int pageIndex , int pageSize)
         {
             var obj = await _context.News.AsNoTracking()
                     .Include(d => d.Comments)
@@ -410,22 +411,22 @@ namespace NewsWebsite.Data.Repositories
                     .Include(d => d.NewsTags).ThenInclude(e => e.Tag)
                     .Include(d => d.User)
                     .Include(d => d.Visits)
-                    .Where(d => d.IsPublish == true)
+                    .Where(d => d.IsPublish == true && isCategory == true ? d.NewsCategories.Any(e=>e.CategoryId== id) :d.NewsTags.Any(e=>e.TagId == id))
+                    .Skip(pageIndex * pageSize).Take(pageSize)
                     .ToListAsync();
-            var news = _mapper.Map<List<NewsViewModel>>(obj);
-            var res = SetCategoryAndTagNames(news, 0);
-            if (categoryId.HasValue())
+            var news = _mapper.Map<List<NewsInCategoriesAndTagsViewModel>>(obj);
+            foreach (var item in news)
             {
-                res = res.Where(d => d.NewsCategories.Any(e => e.CategoryId == categoryId)).ToList();
+                foreach (var category in item.NewsCategories.Select(e => e.Category))
+                {
+                    if (item.NameOfCategories == null)
+                        item.NameOfCategories = category.CategoryName;
+                    else
+                        item.NameOfCategories = item.NameOfCategories + "-" + category.CategoryName;
+                }
             }
-            else
-            {
-                res = res.Where(d => d.NewsTags.Any(e => e.TagId == TagId)).ToList();
-            }
-
-            return res;
+            return news;
         }
-
         public async Task<List<NewsViewModel>> GetUserBookmarksAsync(int userId)
         {
             return await (from u in _context.Users
@@ -495,7 +496,7 @@ namespace NewsWebsite.Data.Repositories
             return _mapper.Map<List<NewsViewModel>>(obj);
         }
 
-        private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news, int offset)
+        private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news , int offset)
         {
             foreach (var item in news)
             {

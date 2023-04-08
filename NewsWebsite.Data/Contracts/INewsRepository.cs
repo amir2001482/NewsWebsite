@@ -1,4 +1,5 @@
 ﻿using NewsWebsite.Entities;
+using NewsWebsite.ViewModels.Home;
 using NewsWebsite.ViewModels.News;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace NewsWebsite.Data.Contracts
         Task BindSubComments(Comment comment);
         Task<List<NewsViewModel>> GetRelatedNews(int number, List<string> tagIdList, string newsId);
         Task<List<NewsViewModel>> Search(string searchText);
-        Task<List<NewsViewModel>> GetNewsInCategoryOrTag(string categoryId, string TagId);
+        Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInCategoryOrTag(string id, bool isCategory, int pageIndex, int pageSize);
         Task<List<NewsViewModel>> GetUserBookmarksAsync(int userId);
         //Task<NewsViewModel> LikeOrdisLikeAsync(bool isLike, string newsId, string ip);
         Task<bool> BookMarkAsync(string newsId, int UserId);

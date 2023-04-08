@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div id="container"></div>
-                <div id="progress" class="text-center">
+                <div id="progress" class="text-center" style="display:none">
                     <p>در حال بارگزاری اطلاعات ...</p>
                     <div class="loadingCricle m-auto"></div>
                 </div>
@@ -52,10 +52,48 @@
 
                     @await Html.PartialAsync("_RegisterInNewsletter", new NewsletterViewModel())
                     <!-- ***** Single Widget ***** -->
-                    @await Component.InvokeAsync("MostTalkNews" , "day")
+                    @await Component.InvokeAsync("MostTalkNews", "day")
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- ##### Archive List Posts Area End ##### -->
+<script>
+    var pageSize = 5;
+    var pageIndex = 0;
+    GetData();
+    $(window).scroll(function () {
+        if (Math.ceil($(window).scrollTop()) == $(document).height() - $(window).height()) {
+            GetData();
+        }
+    });
+
+    function GetData() {
+        console.log("1111111111");
+        $.ajax({
+            type: 'GET',
+            url: '/Home/GetNewsInCategoryAndTag',
+            data: { "pageindex": pageIndex, "pagesize": pageSize, "id": '@Model.Id', "isCategory": '@Model.IsCategory'},
+            dataType: 'json',
+            success: function (data) {
+                if (data != null) {
+                   $.each(data, function (i) {
+                       $("#container").append("<div class='single-post-area style-2'><div class='row align-items-center'><div class='col-12 col-md-6'> <div class='post-thumbnail'><img src='/newsImage/" + data[i].imageName + "' alt='" + data[i].imageName + "' /><span class='video-duration'>" + data[i].persianPublishTime + "</span></div></div><div class='col-12 col-md-6'><div class='post-content mt-0'><a href='#' class='post-cata cata-sm cata-success'>" + data[i].nameOfCategories + "</a> <a href='/News/" + data[i].newsId + "/" + data[i].url + "' class='post-title mb-2'>" + data[i].title + "</a><div class='post-meta d-flex align-items-center mb-2'><a href='#' class='post-author'>" + data[i].authorName + "</a><i class='fa fa-circle' aria-hidden='true'></i><a href='#' class='post-date'>" + data[i].persianPublishDate + "</a></div><p class='mb-2'>"
+                          +data[i].abstract+"</p><div class='post-meta d-flex'><a href='#'><i class='fa fa-comments-o' aria-hidden='true'></i> "+ data[i].numberOfComments+"</a><a href='#'><i class='fa fa-eye' aria-hidden='true'></i> "+ data[i].numberOfVisit+"</a><a href='#'><i class='fa fa-thumbs-o-up' aria-hidden='true'></i> "+ data[i].numberOfLike+"</a><a href='#'><i class='fa fa-thumbs-o-down' aria-hidden='true'></i> "+ data[i].numberOfDisLike+"</a></div></div></div></div></div> ");
+                   });
+                   pageIndex++;
+                }
+            },
+            beforeSend : function () {
+                $("#progress").show();
+            },
+            complete : function () {
+                $("#progress").hide();
+            },
+            error: function () {
+                 ShowSweetErrorAlert();
+            }
+        });
+    }
+</script>
+

@@ -127,15 +127,21 @@ namespace NewsWebsite.Controllers
             return View("NewsInCategoryAndTag" , new CategoryOrTagInfoViewModel { Id = category.CategoryId , Title = category.CategoryName , IsCategory = true });
         }
         [Route("Tag/{tagId}")]
-        public async Task<IActionResult> NewsInCategory(string tagId)
+        public async Task<IActionResult> NewsInTag(string tagId)
         {
             if (!tagId.HasValue())
                 return NotFound();
             var tag = await _uw.BaseRepository<Tag>().FindByIdAsync(tagId);
             if (tag == null)
                 return NotFound();
-            ViewBag.Tag = tag.TagName;
-            return View("NewsInCategoryAndTag", await _uw.NewsRepository.GetNewsInCategoryOrTag("", tagId));
+            return View("NewsInCategoryAndTag", new CategoryOrTagInfoViewModel { Id = tag.TagId, Title = tag.TagName, IsCategory = false });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetNewsInCategoryAndTag(int pageindex, int pagesize, string id, bool isCategory)
+        {
+            var news = await _uw.NewsRepository.GetNewsInCategoryOrTag(id, isCategory, pageindex, pagesize);
+            return Json(news);
         }
 
         [Route("Videos")]

@@ -3087,6 +3087,7 @@ a:not([href]):not([tabindex]) {
             color: #4C8FBD;
             border-color: #C5D0DC
         }
+
 .loadingCricle {
     width: 40px;
     height: 40px;
@@ -3105,4 +3106,3 @@ a:not([href]):not([tabindex]) {
         transform: rotate(360deg)
     }
 }
-
