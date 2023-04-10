@@ -1,21 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace NewsWebsite.ViewModels.Video
 {
     public class VideoViewModel
     {
-        [JsonProperty("Id")]
+        [JsonPropertyName("Id")]
         public string VideoId { get; set; }
 
-        [JsonProperty("ردیف")]
+        [JsonPropertyName("ردیف")]
         public int Row { get; set; }
 
-        [JsonProperty("عنوان ویدیو"),Display(Name ="عنوان ویدیو")]
+        [JsonPropertyName("عنوان ویدیو"),Display(Name ="عنوان ویدیو")]
         [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
         public string Title { get; set; }
 
@@ -32,7 +32,7 @@ namespace NewsWebsite.ViewModels.Video
         [JsonIgnore]
         public DateTime? PublishDateTime { get; set; }
 
-        [JsonProperty("تاریخ انتشار")]
+        [JsonPropertyName("تاریخ انتشار")]
         public string PersianPublishDateTime { get; set; }
     }
 }

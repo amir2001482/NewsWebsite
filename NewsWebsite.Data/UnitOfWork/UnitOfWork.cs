@@ -59,7 +59,7 @@ namespace NewsWebsite.Data.UnitOfWork
             get
             {
                 if (_tagRepository == null)
-                    _tagRepository = new TagRepository(_Context);
+                    _tagRepository = new TagRepository(_Context , _mapper);
 
                 return _tagRepository;
             }
@@ -79,7 +79,7 @@ namespace NewsWebsite.Data.UnitOfWork
             get
             {
                 if (_newsletterRepository == null)
-                    _newsletterRepository = new NewsletterRepository(_Context);
+                    _newsletterRepository = new NewsletterRepository(_Context , _mapper);
 
                 return _newsletterRepository;
             }
@@ -89,7 +89,7 @@ namespace NewsWebsite.Data.UnitOfWork
             get
             {
                 if (_commentRepository == null)
-                    _commentRepository = new CommentRepository(_Context);
+                    _commentRepository = new CommentRepository(_Context , _mapper);
 
                 return _commentRepository;
             }

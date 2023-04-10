@@ -6,6 +6,7 @@ using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Home;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.News;
 using NewsWebsite.ViewModels.Settings;
 using System;
@@ -14,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace NewsWebsite.Data.Repositories
 {
@@ -158,7 +160,7 @@ namespace NewsWebsite.Data.Repositories
             return fileName;
         }
 
-        public async Task<List<NewsViewModel>> GetPaginateNewsAsync(NewsPaginateModel model)
+        public async Task<List<NewsViewModel>> GetPaginateNewsAsync(PaginateModel model , bool? isPublish , bool? isInternal)
         {
             try
             {
@@ -169,15 +171,10 @@ namespace NewsWebsite.Data.Repositories
                 .Include(e => e.Visits)
                 .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
                 .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
-                .Where(d => (model.isPublish == null ? true : d.IsPublish == model.isPublish && d.PublishDateTime <= DateTime.Now) && model.isInternal == null ? true : d.IsInternal == model.isInternal)
-                .AsNoTracking().ToListAsync();
-
-                var res = _mapper.Map<List<NewsViewModel>>(newsList)
-                    .OrderBy(model.orderByAsc)
-                    .OrderByDescending(model.orderByDes)
-                    .Skip(model.offset).Take(model.limit)
-                    .ToList();
-                return SetCategoryAndTagNames(res, model.offset);
+                .Where(d => (isPublish == null ? true : d.IsPublish == isPublish && d.PublishDateTime <= DateTime.Now) && isInternal == null ? true : d.IsInternal == isInternal)
+                .OrderBy(model.orderBy).Skip(model.offset).Take(model.limit)
+                .Select(c=>_mapper.Map<NewsViewModel>(c)) .AsNoTracking().ToListAsync();
+                return SetCategoryAndTagNames(newsList, model.offset);
             }
             catch (Exception ex)
             {

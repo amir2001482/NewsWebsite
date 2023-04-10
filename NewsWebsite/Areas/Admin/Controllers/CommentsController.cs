@@ -11,6 +11,7 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Comments;
 using NewsWebsite.ViewModels.DynamicAccess;
+using NewsWebsite.ViewModels.Models;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
@@ -30,7 +31,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             _mapper.CheckArgumentIsNull(nameof(_mapper));
         }
         [DisplayName("مشاهده")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index(string newsId , bool? isConfirm)
         {
             return View(nameof(Index) , new CommentViewModel { NewsId = newsId , IsConfirm = isConfirm });
@@ -38,8 +39,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public IActionResult GetComments(string search, string order, int offset, int limit, string sort , string newsId , bool? isConfirm)
+        public async Task<IActionResult> GetComments(string search, string order, int offset, int limit, string sort , string newsId , bool? isConfirm)
         {
+            var model = new PaginateModel();
             List <CommentViewModel> comments;
             int total = _uw.BaseRepository<Comment>().CountEntities();
             if (!search.HasValue())
@@ -50,33 +52,34 @@ namespace NewsWebsite.Areas.Admin.Controllers
             if (limit == 0)
                 limit = total;
 
-            if (sort == "نام")
+            switch (sort)
             {
-                if (order == "asc")
-                    comments = _uw.CommentRepository.GetPaginateComments(offset, limit,item=>item.Name , item=>"", search , newsId , isConfirm);
-                else
-                    comments = _uw.CommentRepository.GetPaginateComments(offset, limit, item => "", item => item.Name, search , newsId, isConfirm);
+                case ("نام"):
+                    if (order == "asc")
+                        model.orderBy = "Name";
+                    else
+                        model.orderBy = "Name Desc";
+                    break;
+                case ("ایمیل"):
+                    if (order == "asc")
+                        model.orderBy = "Email";
+                    else
+                        model.orderBy = "Email Desc";
+                    break;
+                case ("تاریخ ارسال"):
+                    if (order == "asc")
+                        model.orderBy = "PostageDateTime";
+                    else
+                        model.orderBy = "PostageDateTime Desc";
+                    break;
+                default:
+                    model.orderBy = "PostageDateTime";
+                    break;
             }
-
-
-            else if (sort == "ایمیل")
-            {
-                if (order == "asc")
-                    comments = _uw.CommentRepository.GetPaginateComments(offset, limit, item => item.Email, item=>"", search, newsId, isConfirm);
-                else
-                    comments = _uw.CommentRepository.GetPaginateComments(offset, limit,item=>"", item => item.Email, search, newsId, isConfirm);
-            }
-
-            else if (sort == "تاریخ ارسال")
-            {
-                if (order == "asc")
-                    comments = _uw.CommentRepository.GetPaginateComments(offset, limit, item => item.PersianPostageDateTime, item => "", search, newsId, isConfirm);
-                else
-                    comments = _uw.CommentRepository.GetPaginateComments(offset, limit, item => "", item => item.PersianPostageDateTime, search, newsId, isConfirm);
-            }
-
-            else
-                comments = _uw.CommentRepository.GetPaginateComments(offset, limit,item=>"",item=>item.PersianPostageDateTime, search, newsId, isConfirm);
+            model.searchText = search;
+            model.limit = limit;
+            model.offset = offset;
+            comments = await _uw.CommentRepository.GetPaginateCommentsAsync(model , newsId , isConfirm);
 
             if (search != "")
                 total = comments.Count();
@@ -86,7 +89,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("حذف")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+       //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string commentId)
         {
             if (!commentId.HasValue())
@@ -128,7 +131,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("تایید یا رد")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ConfirmOrInconfirm(string commentId)
         {
             if (!commentId.HasValue())
@@ -194,7 +197,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("ارسال نظر")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult SendComment(string parentCommentId, string newsId)
         {
             return PartialView("_SendComment",new CommentViewModel(parentCommentId, newsId));

@@ -12,6 +12,7 @@ using NewsWebsite.Common.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.DynamicAccess;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.Video;
 
 namespace NewsWebsite.Areas.Admin.Controllers
@@ -37,7 +38,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [DisplayName("مشاهده")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -47,7 +48,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVideos(string search, string order, int offset, int limit, string sort)
         {
-            var model = new VideoPaginateModel();                                 
+            var model = new PaginateModel();                                 
             List<VideoViewModel> videos;
             int total = _uw.BaseRepository<Video>().CountEntities();
             if (!search.HasValue())
@@ -58,31 +59,18 @@ namespace NewsWebsite.Areas.Admin.Controllers
             {
                 case ("عنوان ویدیو"):
                     if (order == "asc")
-                    {
-                        model.orderByAsc = item => item.Title;
-                        model.orderByDes = item => "";
-                    }
+                        model.orderBy = "Title";
                     else
-                    {
-                        model.orderByDes = item => item.Title;
-                        model.orderByAsc = item => "";
-                    }
+                        model.orderBy = "Title Desc";
                     break;
                 case ("تاریخ انتشار"):
                     if (order == "asc")
-                    {
-                        model.orderByAsc = item => item.PublishDateTime;
-                        model.orderByDes = item => "";
-                    }
+                        model.orderBy = "PublishDateTime";
                     else
-                    {
-                        model.orderByDes = item => item.PublishDateTime;
-                        model.orderByAsc = item => "";
-                    }
+                        model.orderBy = "PublishDateTime Desc";
                     break;
                 default:
-                    model.orderByDes = item => "";
-                    model.orderByAsc = item => "";
+                    model.orderBy = "PublishDateTime";
                     break;
             }
             model.searchText = search;
@@ -97,7 +85,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet,AjaxOnly()]
         [DisplayName("افزودن یا ویرایش")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderVideo(string videoId)
         {
             var videoViewModel = new VideoViewModel();
@@ -159,7 +147,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet, AjaxOnly()]
         [DisplayName("حذف")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string videoId)
         {
             if (!videoId.HasValue())
@@ -201,7 +189,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpPost, ActionName("DeleteGroup"), AjaxOnly()]
         [DisplayName("حذف گروهی")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)

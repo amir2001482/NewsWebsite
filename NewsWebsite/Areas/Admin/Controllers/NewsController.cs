@@ -39,7 +39,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("مشاهده")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();

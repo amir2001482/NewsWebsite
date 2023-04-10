@@ -1,13 +1,15 @@
 ﻿using NewsWebsite.ViewModels.Comments;
+using NewsWebsite.ViewModels.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NewsWebsite.Data.Contracts
 {
     public interface ICommentRepository
     {
-        List<CommentViewModel> GetPaginateComments(int offset, int limit, Func<CommentViewModel, Object> orderByAscFunc, Func<CommentViewModel, Object> orderByDescFunc, string searchText, string newsId, bool? isConfirm);
+        Task<List<CommentViewModel>> GetPaginateCommentsAsync(PaginateModel model, string newsId, bool? isConfirm);
         int UnConfiremCommentCount();
     }
 }

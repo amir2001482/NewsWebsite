@@ -21,9 +21,9 @@ namespace NewsWebsite.Data
             base.OnModelCreating(builder);
             builder.AddCustomIdentityMapping();
             builder.AddCustomNewsWebsiteMapping();
-            builder.Entity<Video>().Property(b => b.PublishDateTime).HasDefaultValueSql("CONVERT(datetime,GetDate())");
-            builder.Entity<User>().Property(b => b.RegisterDateTime).HasDefaultValueSql("CONVERT(datetime,GetDate())");
-            builder.Entity<NewsLetter>().Property(b => b.RegisterDateTime).HasDefaultValueSql("CONVERT(datetime,GetDate())");
+            builder.Entity<Video>().Property(b => b.PublishDateTime).HasDefaultValueSql("CONVERT(DATETIME, CONVERT(VARCHAR(20), @date, 120))");
+            builder.Entity<User>().Property(b => b.RegisterDateTime).HasDefaultValueSql("CONVERT(DATETIME, CONVERT(VARCHAR(20), @date, 120))");
+            builder.Entity<NewsLetter>().Property(b => b.RegisterDateTime).HasDefaultValueSql("CONVERT(DATETIME, CONVERT(VARCHAR(20), @date, 120))");
             builder.Entity<User>().Property(b => b.IsActive).HasDefaultValueSql("1");
             builder.Entity<NewsLetter>().Property(b => b.IsActive).HasDefaultValueSql("1");
         }

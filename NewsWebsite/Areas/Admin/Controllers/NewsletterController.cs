@@ -10,6 +10,7 @@ using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.DynamicAccess;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.Newsletter;
 
 namespace NewsWebsite.Areas.Admin.Controllers
@@ -38,37 +39,40 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public IActionResult GetNewsletter(string search, string order, int offset, int limit, string sort)
+        public async Task<IActionResult> GetNewsletter(string search, string order, int offset, int limit, string sort)
         {
             List<NewsletterViewModel> newsletter;
+            var model = new PaginateModel();
             int total = _uw.BaseRepository<NewsLetter>().CountEntities();
             if (!search.HasValue())
                 search = "";
 
             if (limit == 0)
                 limit = total;
-
-            if (sort == "Id")
+            switch (sort)
             {
-                if (order == "asc")
-                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit, "Email", search);
-                else
-                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit, "Email Desc", search);
+                case ("Id"):
+                    if (order == "asc")
+                        model.orderBy = "Email";
+                    else
+                        model.orderBy = "Email Desc";
+                    break;
+                case ("تاریخ عضویت"):
+                    if (order == "asc")
+                        model.orderBy = "RegisterDateTime";
+                    else
+                        model.orderBy = "RegisterDateTime Desc";
+                    break;
+                default:
+                    model.orderBy = "RegisterDateTime";
+                    break;
             }
-
-            else if (sort == "تاریخ عضویت")
-            {
-                if (order == "asc")
-                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit, "RegisterDateTime", search);
-                else
-                    newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit , "RegisterDateTime Desc", search);
-            }
-            else
-                newsletter = _uw.NewsletterRepository.GetPaginateNewsletter(offset, limit, "RegisterDateTime", search);
-
+            model.searchText = search;
+            model.limit = limit;
+            model.offset = offset;
+            newsletter = await _uw.NewsletterRepository.GetPaginateNewsletterAsync(model);
             if (search != "")
                 total = newsletter.Count();
-
             return Json(new { total = total, rows = newsletter });
         }
 

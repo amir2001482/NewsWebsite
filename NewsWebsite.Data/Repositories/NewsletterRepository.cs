@@ -1,13 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.Newsletter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-
+using System.Threading.Tasks;
 
 namespace NewsWebsite.Data.Repositories
 {
@@ -15,33 +17,23 @@ namespace NewsWebsite.Data.Repositories
     {
 
         private readonly NewsDBContext _context;
-        public NewsletterRepository(NewsDBContext context)
+        private readonly IMapper _mapper;
+        public NewsletterRepository(NewsDBContext context , IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
-        public List<NewsletterViewModel> GetPaginateNewsletter(int offset, int limit, string orderByAsc, string searchText)
+        public async Task<List<NewsletterViewModel>> GetPaginateNewsletterAsync(PaginateModel model)
         {
-            DateTime? startMiladiDate = Convert.ToDateTime("01/01/01");
-            DateTime? endMiladiDate = Convert.ToDateTime("01/01/01");
-            var dateTimeResult = searchText.CheckShamsiDate();
-            if (dateTimeResult.IsShamsi)
-            {
-                startMiladiDate = (DateTime)dateTimeResult.MiladiDate;
-                if (searchText.Contains(":"))
-                    endMiladiDate = startMiladiDate;
-                else
-                    endMiladiDate = startMiladiDate.Value.Date + new TimeSpan(23, 59, 59);
-            }
-            List<NewsletterViewModel> newsletter = _context.Newsletters.Where(c => c.Email.Contains(searchText) || (c.RegisterDateTime >= startMiladiDate && c.RegisterDateTime <= endMiladiDate))
-                                   .OrderBy(orderByAsc)
-                                   .Skip(offset).Take(limit)
-                                   .Select(l => new NewsletterViewModel { Email = l.Email, IsActive = l.IsActive, PersianRegisterDateTime = l.RegisterDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت hh:mm:ss") }).ToList();
-
+            var startAndEndDate = ConvertDateTime.GetStartAndEndDateForSearch(model.searchText);
+            List<NewsletterViewModel> newsletter = await _context.Newsletters.Where(c => c.Email.Contains(model.searchText) || (c.RegisterDateTime >= startAndEndDate.StartMiladiDate && c.RegisterDateTime <= startAndEndDate.EndMiladiDate))
+                                   .OrderBy(model.orderBy)
+                                   .Skip(model.offset).Take(model.limit)
+                                   .Select(l => _mapper.Map<NewsletterViewModel>(l)).AsNoTracking().ToListAsync();
             foreach (var item in newsletter)
-                item.Row = ++offset;
-
+                item.Row = ++model.offset;
             return newsletter;
         }
 

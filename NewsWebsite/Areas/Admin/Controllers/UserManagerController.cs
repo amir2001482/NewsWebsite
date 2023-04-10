@@ -13,6 +13,7 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.DynamicAccess;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.UserManager;
 
 namespace NewsWebsite.Areas.Admin.Controllers
@@ -50,67 +51,68 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
         public async Task<JsonResult> GetUsers(string search, string order, int offset, int limit, string sort)
         {
-            List<UsersViewModel> allUsers;
-            int total = _userManager.Users.Count();
-
-            if (string.IsNullOrWhiteSpace(search))
-                search = "";
-
-            if (limit == 0)
-                limit = total;
-
-            if (sort == "نام")
+            try
             {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, true, null, null, null,null, search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, false, null, null, null,null, search);
+                List<UsersViewModel> allUsers;
+                var model = new PaginateModel();
+                int total = _userManager.Users.Count();
+                if (string.IsNullOrWhiteSpace(search))
+                    search = "";
+                if (limit == 0)
+                    limit = total;
+                switch (sort)
+                {
+                    case ("نام"):
+                        if (order == "asc")
+                            model.orderBy = "FirstName";
+                        else
+                            model.orderBy = "FirstName Desc";
+                        break;
+                    case ("نام خانوادگی"):
+                        if (order == "asc")
+                            model.orderBy = "LastName";
+                        else
+                            model.orderBy = "LastName Desc";
+                        break;
+                    case ("ایمیل"):
+                        if (order == "asc")
+                            model.orderBy = "Email";
+                        else
+                            model.orderBy = "Email Desc";
+                        break;
+                    case ("نام کاربری"):
+                        if (order == "asc")
+                            model.orderBy = "UserName";
+                        else
+                            model.orderBy = "UserName Desc";
+                        break;
+                    case ("تاریخ عضویت"):
+                        if (order == "asc")
+                            model.orderBy = "RegisterDateTime";
+                        else
+                            model.orderBy = "RegisterDateTime Desc";
+                        break;
+                    default:
+                        model.orderBy = "RegisterDateTime";
+                        break;
+                }
+                model.searchText = search;
+                model.limit = limit;
+                model.offset = offset;
+                allUsers = await _userManager.GetPaginateUsersAsync(model);
+                if (search != "")
+                    total = allUsers.Count();
+                return Json(new { total = total, rows = allUsers });
             }
-
-            else if (sort == "نام خانوادگی")
+            catch(Exception ex)
             {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, null, true, null, null,null, search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, null, false, null, null,null, search);
+                return new JsonResult(ex.Message) ;
             }
-
-            else if (sort == "ایمیل")
-            {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, null, null, true, null,null, search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, null, null, false, null,null, search);
-            }
-
-            else if (sort == "نام کاربری")
-            {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, null, null, null, true,null, search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, null, null, null, false,null, search);
-            }
-
-            else if (sort == "تاریخ عضویت")
-            {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, null, null, null,null, true, search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, null, null, null,null, false, search);
-            }
-
-            else
-                allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, null, null, null, null,null, search);
-
-            if (search != "")
-                total = allUsers.Count();
-
-            return Json(new { total = total, rows = allUsers });
         }
 
         [HttpGet]
         [DisplayName("افزودن یا ویرایش")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderUser(int? userId)
         {
             var user = new UsersViewModel();
@@ -193,7 +195,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("حذف")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string userId)
         {
             if (!userId.HasValue())
@@ -233,7 +235,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpPost, ActionName("DeleteGroup")]
         [DisplayName("حذف گروهی")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)
@@ -252,7 +254,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return PartialView("_DeleteGroup");
         }
         [DisplayName("مشاهده جزئیات")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Details(int userId)
         {
             if (userId == 0)
@@ -273,7 +275,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [DisplayName("فعال و غیر فعال کردن فقل حساب کاربر")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ChangeLockOutEnable(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -309,7 +311,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [DisplayName("فعال و غیر فعال کردن کاربر")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> InActiveOrActiveUser(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -342,7 +344,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [DisplayName("فعال و غیر فعال کردن احرازهویت دو مرحله ای")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ChangeTwoFactorEnabled(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -375,7 +377,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [DisplayName("تایید و عدم تایید وضعیت ایمیل کاربر")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ChangeEmailConfirmed(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -408,7 +410,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [DisplayName("تایید و عدم تایید وضعیت شماره موبایل کاربر")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ChangePhoneNumberConfirmed(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -441,7 +443,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [DisplayName("قفل و خروج از حالت قفل حساب کاربر")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> LockOrUnLockUserAccount(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -482,7 +484,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [DisplayName("نمایش صفحه بازنشانی کلمه عبور")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ResetPassword(int userId)
         {
             var User = await _userManager.FindByIdAsync(userId.ToString());
@@ -526,10 +528,5 @@ namespace NewsWebsite.Areas.Admin.Controllers
             }
             return View(viewModel);
         }
-
-
-
-
-
     }
 }

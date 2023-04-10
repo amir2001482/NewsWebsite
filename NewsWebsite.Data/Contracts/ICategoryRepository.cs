@@ -1,5 +1,6 @@
 ﻿using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Category;
+using NewsWebsite.ViewModels.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +12,7 @@ namespace NewsWebsite.Data.Contracts
     {
         Category FindByCategoryName(string categoryName);
         Task<List<TreeViewCategory>> GetAllCategoriesAsync();
-        Task<List<CategoryViewModel>> GetPaginateCategoriesAsync(int offset, int limit, bool? categoryNameSortAsc, bool? parentCategoryNameSortAsc, string searchText);
+        Task<List<CategoryViewModel>> GetPaginateCategoriesAsync(PaginateModel model);
         bool IsExistCategory(string categoryName, string recentCategoryId = null);
     }
 }

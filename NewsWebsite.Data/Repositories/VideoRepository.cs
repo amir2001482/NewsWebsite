@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
+using NewsWebsite.ViewModels.Models;
 
 namespace NewsWebsite.Data.Repositories
 {
@@ -21,25 +23,19 @@ namespace NewsWebsite.Data.Repositories
             _context = context;
             _mapper = mapper;
         }
-
-
-        public async Task<List<VideoViewModel>> GetPaginateVideosAsync(VideoPaginateModel model)
+        public async Task<List<VideoViewModel>> GetPaginateVideosAsync(PaginateModel model)
         {
-            var obj = await _context.Videos.AsNoTracking()
-           .Where(c => c.Title.Contains(model.searchText))
-           .ToListAsync();
-
-            var videos = _mapper.Map<List<VideoViewModel>>(obj)
-                 .OrderBy(model.orderByAsc)
-                 .OrderByDescending(model.orderByDes)
-                 .Skip(model.offset).Take(model.limit).ToList();
+            var startAndEndDate = ConvertDateTime.GetStartAndEndDateForSearch(model.searchText);
+            var videos = await _context.Videos
+                .Where(c => c.Title.Contains(model.searchText) || (c.PublishDateTime >= startAndEndDate.StartMiladiDate && c.PublishDateTime <= startAndEndDate.EndMiladiDate))
+                .OrderBy(model.orderBy)
+                .Skip(model.offset).Take(model.limit)
+                .Select(c => _mapper.Map<VideoViewModel>(c)).AsNoTracking().ToListAsync();
 
             foreach (var item in videos)
                 item.Row = ++model.offset;
-
             return videos;
         }
-
         public string CheckVideoFileName(string fileName)
         {
             string fileExtension = Path.GetExtension(fileName);

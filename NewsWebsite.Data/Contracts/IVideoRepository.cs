@@ -1,4 +1,5 @@
-﻿using NewsWebsite.ViewModels.Video;
+﻿using NewsWebsite.ViewModels.Models;
+using NewsWebsite.ViewModels.Video;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,6 @@ namespace NewsWebsite.Data.Contracts
     public interface IVideoRepository
     {
         string CheckVideoFileName(string fileName);
-        Task<List<VideoViewModel>> GetPaginateVideosAsync(VideoPaginateModel model);
+        Task<List<VideoViewModel>> GetPaginateVideosAsync(PaginateModel model);
     }
 }

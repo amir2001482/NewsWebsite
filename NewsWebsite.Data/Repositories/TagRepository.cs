@@ -2,38 +2,38 @@
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.Tag;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
+using AutoMapper;
 
 namespace NewsWebsite.Data.Repositories
 {
     public class TagRepository : ITagRepository
     {
         private readonly NewsDBContext _context;
-        public TagRepository(NewsDBContext context)
+        private readonly IMapper _mapper;
+        public TagRepository(NewsDBContext context , IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
-
-
-        public async Task<List<TagViewModel>> GetPaginateTagsAsync(int offset, int limit, bool? tagNameSortAsc, string searchText)
+        public async Task<List<TagViewModel>> GetPaginateTagsAsync(PaginateModel model)
         {
-            List<TagViewModel> tags = await _context.Tags.Where(c => c.TagName.Contains(searchText))
-                                   .Select(t => new TagViewModel {TagId=t.TagId,TagName=t.TagName}).Skip(offset).Take(limit).AsNoTracking().ToListAsync();
-
-            if (tagNameSortAsc != null)
-                tags = tags.OrderBy(c => (tagNameSortAsc == true && tagNameSortAsc != null) ? c.TagName : "").OrderByDescending(c => (tagNameSortAsc == false && tagNameSortAsc != null) ? c.TagName : "").ToList();
-
+            List<TagViewModel> tags = await _context.Tags
+                .Where(c => c.TagName.Contains(model.searchText))
+                .OrderBy(model.orderBy)
+                .Skip(model.offset).Take(model.limit)
+                .Select(c => _mapper.Map<TagViewModel>(c)).AsNoTracking().ToListAsync();          
             foreach (var item in tags)
-                item.Row = ++offset;
-
+                item.Row = ++model.offset;
             return tags;
         }
-
         public bool IsExistTag(string tagName, string recentTagId = null)
         {
             if (!recentTagId.HasValue())

@@ -11,6 +11,7 @@ using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Home;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.News;
 using NewsWebsite.ViewModels.Video;
 
@@ -59,13 +60,11 @@ namespace NewsWebsite.Controllers
                 var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(newsPaginateModel);
                 newsPaginateModel.isInternal = false;
                 var forignNews = await _uw.NewsRepository.GetPaginateNewsAsync(newsPaginateModel);
-                var videosPaginateModel = new VideoPaginateModel()
+                var videosPaginateModel = new PaginateModel()
                 {
-
                     offset = 0,
                     limit = 10,
-                    orderByDes = item => item.PublishDateTime,
-                    orderByAsc = item => "",
+                    orderBy = "PublishDateTime",
                     searchText = ""
                 };
                 var videos = await _uw.VideoRepository.GetPaginateVideosAsync(videosPaginateModel);

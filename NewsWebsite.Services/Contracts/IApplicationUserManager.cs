@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NewsWebsite.Entities.identity;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.UserManager;
 using System;
 using System.Collections.Generic;
@@ -122,7 +123,7 @@ namespace NewsWebsite.Services.Contracts
         Task<UsersViewModel> FindUserWithRolesByIdAsync(int UserId);
         Task<string> GetFullName(ClaimsPrincipal User);
         Task<User> GetUserAsync(ClaimsPrincipal User);
-        Task<List<UsersViewModel>> GetPaginateUsersAsync(int offset, int limit, bool? firstnameSortAsc, bool? lastnameSortAsc, bool? emailSortAsc, bool? usernameSortAsc, bool? registerDateTimeSortAsc, string searchText);
+        Task<List<UsersViewModel>> GetPaginateUsersAsync(PaginateModel model);
         string CheckAvatarFileName(string fileName);
         Task<User> FindClaimsInUser(int userId);
         Task<IdentityResult> AddOrUpdateClaimsAsync(int userId, string userClaimType, IList<string> selectedUserClaimValues);

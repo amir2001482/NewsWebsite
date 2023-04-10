@@ -7,6 +7,7 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.Category;
 using NewsWebsite.ViewModels.DynamicAccess;
+using NewsWebsite.ViewModels.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,7 +33,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("مشاهده")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -41,32 +42,35 @@ namespace NewsWebsite.Areas.Admin.Controllers
         public async Task<IActionResult> GetCategories(string search, string order, int offset, int limit, string sort)
         {
             List<CategoryViewModel> categories;
+            var model = new PaginateModel();
             int total = _uw.BaseRepository<Category>().CountEntities();
             if (!search.HasValue())
                 search = "";
 
             if (limit == 0)
                 limit = total;
-
-            if (sort == "دسته")
+            switch (sort)
             {
-                if (order == "asc")
-                    categories = await _uw.CategoryRepository.GetPaginateCategoriesAsync(offset, limit, true, null, search);
-                else
-                    categories = await _uw.CategoryRepository.GetPaginateCategoriesAsync(offset, limit, false, null, search);
+                case ("دسته"):
+                    if (order == "asc")
+                        model.orderBy = "CategoryName";
+                    else
+                        model.orderBy = "CategoryName Desc";
+                    break;
+                case ("دسته پدر"):
+                    if (order == "asc")
+                        model.orderBy = "Parent.CategoryName";
+                    else
+                        model.orderBy = "Parent.CategoryName Desc";
+                    break;
+                default:
+                    model.orderBy = "CategoryName";
+                    break;
             }
-
-            else if (sort == "دسته پدر")
-            {
-                if (order == "asc")
-                    categories = await _uw.CategoryRepository.GetPaginateCategoriesAsync(offset, limit, null, true, search);
-                else
-                    categories = await _uw.CategoryRepository.GetPaginateCategoriesAsync(offset, limit, null, false, search);
-            }
-
-            else
-                categories = await _uw.CategoryRepository.GetPaginateCategoriesAsync(offset, limit, null, null, search);
-
+            model.searchText = search;
+            model.limit = limit;
+            model.offset = offset;
+            categories = await _uw.CategoryRepository.GetPaginateCategoriesAsync(model);
             if (search != "")
                 total = categories.Count();
             var res = Json(new { total = total, rows = categories });
@@ -76,7 +80,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet , AjaxOnly()]
         [DisplayName("افزودن و ویرایش")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderCategory(string categoryId)
         {
             var categoryViewModel = new CategoryViewModel();
@@ -149,7 +153,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
         [HttpGet]
         [DisplayName("حذف")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string categoryId)
         {
             if (!categoryId.HasValue())
@@ -202,7 +206,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpPost, ActionName("DeleteGroup") , AjaxOnly()]
         [DisplayName("حذف گروهی")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)

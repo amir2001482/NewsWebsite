@@ -10,6 +10,7 @@ using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.DynamicAccess;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.Tag;
 
 namespace NewsWebsite.Areas.Admin.Controllers
@@ -31,7 +32,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             _mapper.CheckArgumentIsNull(nameof(_mapper));
         }
         [DisplayName("مشاهده")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -40,33 +41,36 @@ namespace NewsWebsite.Areas.Admin.Controllers
         public async Task<IActionResult> GetTags(string search, string order, int offset, int limit, string sort)
         {
             List<TagViewModel> tags;
+            var model = new PaginateModel();
             int total = _uw.BaseRepository<Tag>().CountEntities();
             if (!search.HasValue())
                 search = "";
-
             if (limit == 0)
                 limit = total;
-
-            if (sort == "برچسب")
+            switch (sort)
             {
-                if (order == "asc")
-                    tags = await _uw.TagRepository.GetPaginateTagsAsync(offset, limit, true, search);
-                else
-                    tags = await _uw.TagRepository.GetPaginateTagsAsync(offset, limit, false, search);
+                case ("برچسب"):
+                    if (order == "asc")
+                        model.orderBy = "TagName";
+                    else
+                        model.orderBy = "TagName Desc";
+                    break;
+                default:
+                    model.orderBy = "TagName";
+                    break;
             }
-
-            else
-                tags = await _uw.TagRepository.GetPaginateTagsAsync(offset, limit,null,search);
-
+            model.searchText = search;
+            model.limit = limit;
+            model.offset = offset;
+            tags = await _uw.TagRepository.GetPaginateTagsAsync(model);
             if (search != "")
                 total = tags.Count();
-
             return Json(new { total = total, rows = tags });
         }
 
         [HttpGet]
         [DisplayName("افزودن یا ویرایش")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderTag(string tagId)
         {
             var tagViewModel = new TagViewModel();
@@ -119,7 +123,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("حذف")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string tagId)
         {
             if (!tagId.HasValue())
@@ -160,7 +164,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpPost, ActionName("DeleteGroup")]
         [DisplayName("حذف گروهی")]
-        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)
