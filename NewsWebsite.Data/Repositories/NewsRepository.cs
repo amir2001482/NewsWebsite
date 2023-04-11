@@ -24,7 +24,7 @@ namespace NewsWebsite.Data.Repositories
         private readonly NewsDBContext _context;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public NewsRepository(NewsDBContext context, IMapper mapper , IConfiguration configuration)
+        public NewsRepository(NewsDBContext context, IMapper mapper, IConfiguration configuration)
         {
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));
@@ -142,7 +142,7 @@ namespace NewsWebsite.Data.Repositories
 
         public int CountNews() => _context.News.Count();
         public int CountFuturePublishedNews() => _context.News.Where(n => n.PublishDateTime > DateTime.Now).Count();
-        public int CountNewsPublishedOrDraft(bool isPublish) => _context.News.Where(n => isPublish ? n.IsPublish && n.PublishDateTime <=DateTime.Now : !n.IsPublish).Count();
+        public int CountNewsPublishedOrDraft(bool isPublish) => _context.News.Where(n => isPublish ? n.IsPublish && n.PublishDateTime <= DateTime.Now : !n.IsPublish).Count();
         public int CountNewsPublished() => _context.News.Where(n => n.IsPublish == true && n.PublishDateTime <= DateTime.Now).Count();
 
         public string CheckNewsFileName(string fileName)
@@ -160,26 +160,101 @@ namespace NewsWebsite.Data.Repositories
             return fileName;
         }
 
-        public async Task<List<NewsViewModel>> GetPaginateNewsAsync(PaginateModel model , bool? isPublish , bool? isInternal)
+        public async Task<List<NewsViewModel>> GetPaginateNewsAsync(PaginateModel model, bool? isPublish, bool? isInternal)
         {
-            try
+            string NameOfCategories = "";
+            string NameOfTags = "";
+            List<NewsViewModel> newsViewModel = new List<NewsViewModel>();
+            var startAndEndDate = model.searchText.GetStartAndEndDateForSearch();
+            var convertIsPublish = Convert.ToBoolean(isPublish);
+            var convertIsInternall = Convert.ToBoolean(isInternal);
+            var newsList = await (from n in (_context.News
+            .Include(e => e.Comments)
+            .Include(e => e.Likes)
+            .Include(e => e.User)
+            .Include(e => e.Visits)
+            .AsNoTracking()
+            .Where(d => (d.Title.Contains(model.searchText) || (d.PublishDateTime >= startAndEndDate.First() && d.PublishDateTime <= startAndEndDate.Last())) && (isPublish == null || (convertIsPublish ? d.IsPublish && d.PublishDateTime <= DateTime.Now : !d.IsPublish)) && (isInternal == null || convertIsInternall ? d.IsInternal : !d.IsInternal))
+            .Select(c => _mapper.Map<NewsViewModel>(c))
+            .OrderBy(model.orderBy).Skip(model.offset).Take(model.limit))
+                            join c in _context.NewsCategories on n.NewsId equals c.NewsId into nc
+                            from bct in nc.DefaultIfEmpty()
+                            join ct in _context.Categories on bct.CategoryId equals ct.CategoryId into ctn
+                            from bctn in ctn.DefaultIfEmpty()
+                            join nt in _context.NewsTags on n.NewsId equals nt.NewsId into ntc
+                            from fntc in ntc.DefaultIfEmpty()
+                            join t in _context.Tags on fntc.TagId equals t.TagId into tnn
+                            from tog in tnn.DefaultIfEmpty()
+                            select (new NewsViewModel
+                            {
+                                NewsId = n.NewsId,
+                                Title = n.Title,
+                                Abstract = n.Abstract,
+                                ShortTitle = n.Title.Length > 50 ? n.Title.Substring(0, 50) + "..." : n.Title,
+                                Url = n.Url,
+                                ImageName = n.ImageName,
+                                Description = n.Description,
+                                NumberOfVisit = n.NumberOfVisit,
+                                NumberOfLike = n.NumberOfLike,
+                                NumberOfDisLike = n.NumberOfDisLike,
+                                NumberOfComment = n.NumberOfComment,
+                                AuthorName = n.AuthorName,
+                                IsPublish = n.IsPublish,
+                                NewsType = n.NewsType,
+                                PublishDateTime = n.PublishDateTime,
+                                NameOfCategories = bctn != null ? bctn.CategoryName : "",
+                                NameOfTags = tog != null ? tog.TagName : "",
+                            }))
+            .AsNoTracking().ToListAsync();
+            var newsGroup = newsList.GroupBy(g => g.NewsId).Select(g => new { NewsId = g.Key, NewsGroup = g });
+            foreach (var item in newsGroup)
             {
-                var newsList = await _context.News
-                .Include(e => e.Comments)
-                .Include(e => e.Likes)
-                .Include(e => e.User)
-                .Include(e => e.Visits)
-                .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
-                .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
-                .Where(d => (isPublish == null ? true : d.IsPublish == isPublish && d.PublishDateTime <= DateTime.Now) && isInternal == null ? true : d.IsInternal == isInternal)
-                .OrderBy(model.orderBy).Skip(model.offset).Take(model.limit)
-                .Select(c=>_mapper.Map<NewsViewModel>(c)) .AsNoTracking().ToListAsync();
-                return SetCategoryAndTagNames(newsList, model.offset);
+                NameOfCategories = "";
+                NameOfTags = "";
+                foreach (var a in item.NewsGroup.Select(a => a.NameOfCategories).Distinct())
+                {
+                    if (NameOfCategories == "")
+                        NameOfCategories = a;
+                    else
+                        NameOfCategories = NameOfCategories + " - " + a;
+                }
+
+                foreach (var a in item.NewsGroup.Select(a => a.NameOfTags).Distinct())
+                {
+                    if (NameOfTags == "")
+                        NameOfTags = a;
+                    else
+                        NameOfTags = NameOfTags + " - " + a;
+                }
+
+                NewsViewModel news = new NewsViewModel()
+                {
+                    NewsId = item.NewsId,
+                    Title = item.NewsGroup.First().Title,
+                    ShortTitle = item.NewsGroup.First().ShortTitle,
+                    Abstract = item.NewsGroup.First().Abstract,
+                    Url = item.NewsGroup.First().Url,
+                    Description = item.NewsGroup.First().Description,
+                    NumberOfVisit = item.NewsGroup.First().NumberOfVisit,
+                    NumberOfDisLike = item.NewsGroup.First().NumberOfDisLike,
+                    NumberOfLike = item.NewsGroup.First().NumberOfLike,
+                    NewsType = item.NewsGroup.First().NewsType,
+                    Status = item.NewsGroup.First().IsPublish == false ? "پیش نویس" : (item.NewsGroup.First().PublishDateTime > DateTime.Now ? "انتشار در آینده" : "منتشر شده"),
+                    NameOfCategories = NameOfCategories,
+                    NameOfTags = NameOfTags,
+                    ImageName = item.NewsGroup.First().ImageName,
+                    AuthorName = item.NewsGroup.First().AuthorName,
+                    NumberOfComment = item.NewsGroup.First().NumberOfComment,
+                    PublishDateTime = item.NewsGroup.First().PublishDateTime,
+                    PersianPublishDate = item.NewsGroup.First().PublishDateTime == null ? "-" : DateTimeExtensions.ConvertMiladiToShamsi(item.NewsGroup.First().PublishDateTime, "yyyy/MM/dd ساعت HH:mm"),
+                };
+                newsViewModel.Add(news);
             }
-            catch (Exception ex)
-            {
-                return new List<NewsViewModel>();
-            }
+
+            foreach (var item in newsViewModel)
+                item.Row = ++model.offset;
+
+            return newsViewModel;
 
         }
 
@@ -264,7 +339,7 @@ namespace NewsWebsite.Data.Repositories
                                       NewsType = n.IsInternal == true ? "داخلی" : "خارجی",
                                       PublishDateTime = n.PublishDateTime == null ? new DateTime(01, 01, 01) : n.PublishDateTime,
                                       PersianPublishDate = n.PublishDateTime == null ? "-" : n.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت HH:mm:ss"),
-                                       Bookmarked = n.Bookmarks.Any(b => b.UserId == userId && b.NewsId == newsId),
+                                      Bookmarked = n.Bookmarks.Any(b => b.UserId == userId && b.NewsId == newsId),
                                   })).AsNoTracking().ToListAsync();
 
             var newsGroup = newsInfo.GroupBy(g => g.NewsId).Select(g => new { NewsId = g.Key, NewsGroup = g });
@@ -413,7 +488,7 @@ namespace NewsWebsite.Data.Repositories
             return _context.News.Where(c => c.IsPublish == true).Count();
         }
 
-        public async Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInCategoryOrTag(string id, bool isCategory , int pageIndex , int pageSize)
+        public async Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInCategoryOrTag(string id, bool isCategory, int pageIndex, int pageSize)
         {
             var obj = await _context.News.AsNoTracking()
                     .Include(d => d.Comments)
@@ -422,7 +497,7 @@ namespace NewsWebsite.Data.Repositories
                     .Include(d => d.NewsTags).ThenInclude(e => e.Tag)
                     .Include(d => d.User)
                     .Include(d => d.Visits)
-                    .Where(d => d.IsPublish == true && isCategory == true ? d.NewsCategories.Any(e=>e.CategoryId== id) :d.NewsTags.Any(e=>e.TagId == id))
+                    .Where(d => d.IsPublish == true && isCategory == true ? d.NewsCategories.Any(e => e.CategoryId == id) : d.NewsTags.Any(e => e.TagId == id))
                     .Skip(pageIndex * pageSize).Take(pageSize)
                     .ToListAsync();
             var news = _mapper.Map<List<NewsInCategoriesAndTagsViewModel>>(obj);
@@ -483,7 +558,7 @@ namespace NewsWebsite.Data.Repositories
                     ShortTitle = d.Title.Length > 50 ? d.Title.Substring(0, 50) + "..." : d.Title,
                     NewsId = d.NewsId,
                     Url = d.Url,
-                }).OrderByDescending(d=>d.PublishDateTime).AsNoTracking().ToListAsync();
+                }).OrderByDescending(d => d.PublishDateTime).AsNoTracking().ToListAsync();
             var url = _configuration.GetSection("SiteSettings.SiteInfo.Url").Value;
             foreach (var item in news)
             {
@@ -507,7 +582,7 @@ namespace NewsWebsite.Data.Repositories
             return _mapper.Map<List<NewsViewModel>>(obj);
         }
 
-        private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news , int offset)
+        private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news, int offset)
         {
             foreach (var item in news)
             {

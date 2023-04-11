@@ -46,7 +46,7 @@ namespace NewsWebsite.Controllers
                 {
                     offset = 0,
                     limit = 10,
-                    orderBy = "PersianPublishDate",
+                    orderBy = "PublishDateTime",
                     searchText = "",
                 };
 
@@ -113,7 +113,7 @@ namespace NewsWebsite.Controllers
                 {
                     limit = limit,
                     offset = offset,
-                    orderBy = "PersianPublishDate Desc",
+                    orderBy = "PublishDateTime Desc",
                     searchText = ""
                 };
                 var news = await _uw.NewsRepository.GetPaginateNewsAsync(model , true , null);

@@ -1,29 +1,30 @@
-﻿using Newtonsoft.Json;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.ViewModels.RoleManager
 {
     public class RolesViewModel
     {
-        [JsonProperty("Id")]
+        [JsonPropertyName("Id")]
         public int? Id { get; set; }
 
-        [JsonProperty("ردیف")]
+        [JsonPropertyName("ردیف")]
         public int Row { get; set; }
 
-        [Display(Name="عنوان نقش"),JsonProperty("عنوان نقش")]
+        [Display(Name="عنوان نقش"), JsonPropertyName("عنوان نقش")]
         [Required(ErrorMessage ="وارد نمودن {0} الزامی است.")]
         public string Name { get; set; }
 
-        [Display(Name = "توضیحات"),JsonProperty("توضیحات")]
+        [Display(Name = "توضیحات"), JsonPropertyName("توضیحات")]
         [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
         public string Description { get; set; }
 
-        [JsonProperty("تعداد کاربران")]
+        [JsonPropertyName("تعداد کاربران")]
         public int UsersCount { get; set; }
 
     }
