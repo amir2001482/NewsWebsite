@@ -31,7 +31,7 @@ namespace NewsWebsite.Data.Contracts
         NewsViewModel NumberOfLikeAndDislike(string newsId);
         int CountNews();
         int CountFuturePublishedNews();
-        int CountNewsPublishedOrDraft(bool? isPublish);
+        int CountNewsPublishedOrDraft(bool isPublish);
         int CountNewsPublished();
         int GetPublishedNewsCount();
 

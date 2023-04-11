@@ -28,14 +28,17 @@ namespace NewsWebsite.Data.Repositories
         }
         public async Task<List<CategoryViewModel>> GetPaginateCategoriesAsync(PaginateModel model)
         {
-            List<CategoryViewModel> categories = await _context.Categories.Include(c => c.Parent)
-                                    .Where(c => c.CategoryName.Contains(model.searchText) || c.Parent.CategoryName.Contains(model.searchText))
-                                    .OrderBy(model.orderBy)
-                                    .Skip(model.offset).Take(model.limit)
-                                    .Select(c=> _mapper.Map<CategoryViewModel>(c))
-                                    .AsNoTracking().ToListAsync();
+            List<CategoryViewModel> categories =await _context.Categories.GroupJoin(_context.Categories , 
+                (d=>d.ParentCategoryId) , 
+                (i => i.CategoryId) ,
+                ((t,h) => new { CategoryInfo = t , ParentInfo =h}))
+                .SelectMany(p => p.ParentInfo.DefaultIfEmpty(), (x, y) => new { x.CategoryInfo, ParentInfo = y })
+                .OrderBy(model.orderBy)
+                .Skip(model.offset).Take(model.limit)
+                .Select(c => new CategoryViewModel { CategoryId = c.CategoryInfo.CategoryId, CategoryName = c.CategoryInfo.CategoryName, ParentCategoryId = c.ParentInfo.CategoryId, ParentCategoryName = c.ParentInfo.CategoryName }).AsNoTracking().ToListAsync();
             foreach (var item in categories)
                 item.Row = ++model.offset;
+
             return categories;
         }
 

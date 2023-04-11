@@ -27,8 +27,8 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<List<NewsletterViewModel>> GetPaginateNewsletterAsync(PaginateModel model)
         {
-            var startAndEndDate = ConvertDateTime.GetStartAndEndDateForSearch(model.searchText);
-            List<NewsletterViewModel> newsletter = await _context.Newsletters.Where(c => c.Email.Contains(model.searchText) || (c.RegisterDateTime >= startAndEndDate.StartMiladiDate && c.RegisterDateTime <= startAndEndDate.EndMiladiDate))
+            var startAndEndDate = DateTimeExtensions.GetStartAndEndDateForSearch(model.searchText);
+            List<NewsletterViewModel> newsletter = await _context.Newsletters.Where(c => c.Email.Contains(model.searchText) || (c.RegisterDateTime >= startAndEndDate.First() && c.RegisterDateTime <= startAndEndDate.Last()))
                                    .OrderBy(model.orderBy)
                                    .Skip(model.offset).Take(model.limit)
                                    .Select(l => _mapper.Map<NewsletterViewModel>(l)).AsNoTracking().ToListAsync();

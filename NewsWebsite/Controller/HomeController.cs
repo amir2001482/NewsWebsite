@@ -42,24 +42,20 @@ namespace NewsWebsite.Controllers
                 return ViewComponent("MostTalkNews", duration);
             else
             {
-                var newsPaginateModel = new NewsPaginateModel()
+                var model = new PaginateModel()
                 {
                     offset = 0,
                     limit = 10,
-                    orderByAsc = item => "",
-                    orderByDes = item => item.PersianPublishDate,
+                    orderBy = "PersianPublishDate",
                     searchText = "",
-                    isPublish = true
                 };
 
-                var news = await _uw.NewsRepository.GetPaginateNewsAsync(newsPaginateModel);
+                var news = await _uw.NewsRepository.GetPaginateNewsAsync(model , true  , null);
                 var mostViewNews = await _uw.NewsRepository.MostViewedNewsAsync(0, 3, "day");
                 var mostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0, 3, "day");
                 //var mostPopularNews = await _uw.NewsRepository.MostPopularNewsAsync(0, 5);
-                newsPaginateModel.isInternal = true;
-                var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(newsPaginateModel);
-                newsPaginateModel.isInternal = false;
-                var forignNews = await _uw.NewsRepository.GetPaginateNewsAsync(newsPaginateModel);
+                var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(model , true , true);
+                var forignNews = await _uw.NewsRepository.GetPaginateNewsAsync(model , true , false);
                 var videosPaginateModel = new PaginateModel()
                 {
                     offset = 0,
@@ -91,12 +87,21 @@ namespace NewsWebsite.Controllers
                 await _uw.Commit();
             }
 
-            var news = await _uw.NewsRepository.GetNewsById(newsId , currentuserId);
-            var newsComments = await _uw.NewsRepository.GetNewsCommentsAsync(newsId);
-            var nextAndPreviousNews = await _uw.NewsRepository.GetNextAndPreviousNews(news.PublishDateTime);
-            var newsRelated = await _uw.NewsRepository.GetRelatedNews(2, news.TagIdsList, newsId);
-            var newsDetailsViewModel = new NewsDetailsViewModel(news, newsComments, newsRelated, nextAndPreviousNews);
-            return View(newsDetailsViewModel);
+            try
+            {
+                var news = await _uw.NewsRepository.GetNewsById(newsId, currentuserId);
+                var newsComments = await _uw.NewsRepository.GetNewsCommentsAsync(newsId);
+                var nextAndPreviousNews = await _uw.NewsRepository.GetNextAndPreviousNews(news.PublishDateTime);
+                var newsRelated = await _uw.NewsRepository.GetRelatedNews(2, news.TagIdsList, newsId);
+                var newsDetailsViewModel = new NewsDetailsViewModel(news, newsComments, newsRelated, nextAndPreviousNews);
+                return View(newsDetailsViewModel);
+            }
+
+            catch (Exception ex)
+            {
+                return View();
+            }
+            
         }
 
         [HttpGet]
@@ -104,7 +109,14 @@ namespace NewsWebsite.Controllers
         {
             try
             {
-                var news = await _uw.NewsRepository.GetPaginateNewsAsync(new NewsPaginateModel { limit = limit, offset = offset, orderByAsc = item => "", orderByDes = item => item.PersianPublishDate, isPublish = true, searchText = "" });
+                var model = new PaginateModel()
+                {
+                    limit = limit,
+                    offset = offset,
+                    orderBy = "PersianPublishDate Desc",
+                    searchText = ""
+                };
+                var news = await _uw.NewsRepository.GetPaginateNewsAsync(model , true , null);
                 return PartialView("_NewsPaginate", new NewsPaginateViewModel(_uw.NewsRepository.GetPublishedNewsCount(), news));
             }
             catch (Exception ex)

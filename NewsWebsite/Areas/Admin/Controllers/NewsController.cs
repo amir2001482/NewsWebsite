@@ -13,6 +13,7 @@ using NewsWebsite.Common.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities;
 using NewsWebsite.ViewModels.DynamicAccess;
+using NewsWebsite.ViewModels.Models;
 using NewsWebsite.ViewModels.News;
 
 namespace NewsWebsite.Areas.Admin.Controllers
@@ -49,7 +50,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetNews(string search, string order, int offset, int limit, string sort)
         {
-            var model = new NewsPaginateModel();
+            var model = new PaginateModel();
             List<NewsViewModel> news;
             int total = _uw.BaseRepository<News>().CountEntities();
             if (!search.HasValue())
@@ -61,89 +62,51 @@ namespace NewsWebsite.Areas.Admin.Controllers
             {
                 case ("ShortTitle"):
                      if (order == "asc")
-                     {
-                        model.orderByAsc = item => item.ShortTitle;
-                        model.orderByDes = item => "";
-                     }
+                        model.orderBy = "ShortTitle";
                     else
-                    {
-                        model.orderByDes = item => item.ShortTitle;
-                        model.orderByAsc = item => "";
-                    }
+                        model.orderBy = "ShortTitle Desc";
                     break;
                 case ("بازدید"):
                     if (order == "asc")
-                    {
-                        model.orderByAsc = item => item.NumberOfVisit;
-                        model.orderByDes = item => "";
-                    }
+                        model.orderBy = "NumberOfVisit";
                     else
-                    {
-                        model.orderByDes = item => item.NumberOfVisit;
-                        model.orderByAsc = item => "";
-                    }
+                        model.orderBy = "NumberOfVisit Desc";
                     break;
                 case ("لایک"):
                     if (order == "asc")
-                    {
-                        model.orderByAsc = item => item.NumberOfLike;
-                        model.orderByDes = item => "";
-                    }
+                        model.orderBy = "NumberOfLike";
                     else
-                    {
-                        model.orderByDes = item => item.NumberOfLike;
-                        model.orderByAsc = item => "";
-                    }
+                        model.orderBy = "NumberOfLike Desc";
                     break;
                 case ("دیس لایک"):
                     if (order == "asc")
-                    {
-                        model.orderByAsc = item => item.NumberOfDisLike;
-                        model.orderByDes = item => "";
-                    }
+                        model.orderBy = "NumberOfDisLike";
                     else
-                    {
-                        model.orderByDes = item => item.NumberOfDisLike;
-                        model.orderByAsc = item => "";
-
-                    }
+                        model.orderBy = "NumberOfDisLike Desc";
                     break;
                 case ("تاریخ انتشار"):
                     if (order == "asc")
-                    {
-                        model.orderByAsc = item => item.PublishDateTime;
-                        model.orderByDes = item => "";
-                    }
+                        model.orderBy = "PublishDateTime";
 
                     else
-                    {
-                        model.orderByDes = item => item.PublishDateTime;
-                        model.orderByAsc = item => "";
-                    }
+                        model.orderBy = "PublishDateTime Desc";
                     break;
                 case ("نظرات"):
                     if (order == "asc")
-                    {
-                        model.orderByAsc = item => item.NumberOfComment;
-                        model.orderByDes = item => "";
-                    }
+                        model.orderBy = "NumberOfComment";
 
                     else
-                    {
-                        model.orderByDes = item => item.NumberOfComment;
-                        model.orderByAsc = item => "";
-                    }
+                        model.orderBy = "NumberOfComment Desc";
                     break;
                 default:
-                    model.orderByAsc = item => "";
-                    model.orderByDes = item => "";
+                    model.orderBy = "PublishDateTime";
                     break;
 
             }
             model.searchText = search;
             model.offset = offset;
             model.limit = limit;
-            news = await _uw.NewsRepository.GetPaginateNewsAsync(model);
+            news = await _uw.NewsRepository.GetPaginateNewsAsync(model , null , null);
             if (search != "")
                 total = news.Count();
             return Json(new { total = total, rows = news });

@@ -25,9 +25,9 @@ namespace NewsWebsite.Data.Repositories
         }
         public async Task<List<VideoViewModel>> GetPaginateVideosAsync(PaginateModel model)
         {
-            var startAndEndDate = ConvertDateTime.GetStartAndEndDateForSearch(model.searchText);
+            var startAndEndDate = model.searchText.GetStartAndEndDateForSearch();
             var videos = await _context.Videos
-                .Where(c => c.Title.Contains(model.searchText) || (c.PublishDateTime >= startAndEndDate.StartMiladiDate && c.PublishDateTime <= startAndEndDate.EndMiladiDate))
+                .Where(c => c.Title.Contains(model.searchText) || (c.PublishDateTime >= startAndEndDate.First() && c.PublishDateTime <= startAndEndDate.Last()))
                 .OrderBy(model.orderBy)
                 .Skip(model.offset).Take(model.limit)
                 .Select(c => _mapper.Map<VideoViewModel>(c)).AsNoTracking().ToListAsync();

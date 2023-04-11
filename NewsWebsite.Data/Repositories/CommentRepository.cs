@@ -19,30 +19,24 @@ namespace NewsWebsite.Data.Repositories
     {
         private readonly NewsDBContext _context;
         private readonly IMapper _mapper;
-        public CommentRepository(NewsDBContext context , IMapper mapper)
+        public CommentRepository(NewsDBContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-        public async Task<List<CommentViewModel>> GetPaginateCommentsAsync(PaginateModel model , string newsId , bool? isConfirm)
+        public async Task<List<CommentViewModel>> GetPaginateCommentsAsync(PaginateModel model, string newsId, bool? isConfirm)
         {
-            try
-            {
-                var startAndEndDate = ConvertDateTime.GetStartAndEndDateForSearch(model.searchText);
-                List<CommentViewModel> comments = await _context.Comments
-                    .Where(c => (c.Name.Contains(model.searchText) || c.Email.Contains(model.searchText) || (c.PostageDateTime >= startAndEndDate.StartMiladiDate && c.PostageDateTime <= startAndEndDate.EndMiladiDate)) && (string.IsNullOrEmpty(newsId) == false ? c.NewsId.Contains(newsId) : true) && isConfirm == null ? (c.IsConfirm == true || c.IsConfirm == false) : (isConfirm == true ? c.IsConfirm == true : c.IsConfirm == false))
-                    .OrderBy(model.orderBy)
-                    .Skip(model.offset).Take(model.limit)
-                    .Select(c => _mapper.Map<CommentViewModel>(c)).AsNoTracking().ToListAsync();
-                foreach (var item in comments)
-                    item.Row = ++model.offset;
+            var startAndEndDate = model.searchText.GetStartAndEndDateForSearch();
+            var convertConfirm = Convert.ToBoolean(isConfirm);
+            List<CommentViewModel> comments = await _context.Comments
+                .Where(n => (isConfirm == null || (convertConfirm == true ? n.IsConfirm : !n.IsConfirm)) && n.NewsId.Contains(newsId) && (n.Name.Contains(model.searchText) || n.Email.Contains(model.searchText) || (n.PostageDateTime >= startAndEndDate.First() && n.PostageDateTime <= startAndEndDate.Last())))
+                .OrderBy(model.orderBy)
+                .Skip(model.offset).Take(model.limit)
+                .Select(c => _mapper.Map<CommentViewModel>(c)).AsNoTracking().ToListAsync();
+            foreach (var item in comments)
+                item.Row = ++model.offset;
 
-                return comments;
-            }
-            catch (Exception ex)
-            {
-                return new List<CommentViewModel>();
-            }
+            return comments;
         }
         public int UnConfiremCommentCount() => _context.Comments.Where(d => d.IsConfirm == false).Count();
     }

@@ -53,18 +53,18 @@ namespace NewsWebsite.Areas.Admin.Controllers
             {
                 case ("دسته"):
                     if (order == "asc")
-                        model.orderBy = "CategoryName";
+                        model.orderBy = "CategoryInfo.CategoryName";
                     else
-                        model.orderBy = "CategoryName Desc";
+                        model.orderBy = "CategoryInfo.CategoryName Desc";
                     break;
                 case ("دسته پدر"):
                     if (order == "asc")
-                        model.orderBy = "Parent.CategoryName";
+                        model.orderBy = "ParentInfo.CategoryName";
                     else
-                        model.orderBy = "Parent.CategoryName Desc";
+                        model.orderBy = "ParentInfo.CategoryName Desc";
                     break;
                 default:
-                    model.orderBy = "CategoryName";
+                    model.orderBy = "CategoryInfo.CategoryName";
                     break;
             }
             model.searchText = search;

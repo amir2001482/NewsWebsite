@@ -117,9 +117,9 @@ namespace NewsWebsite.Services.Identity
         {
             try
             {
-                var startAndEndDate = ConvertDateTime.GetStartAndEndDateForSearch(model.searchText);
+                var startAndEndDate = DateTimeExtensions.GetStartAndEndDateForSearch(model.searchText);
                 var users = await Users.Include(u => u.Roles).ThenInclude(d=>d.Role)
-                    .Where(t => t.LastName.Contains(model.searchText) || t.FirstName.Contains(model.searchText) || t.Email.Contains(model.searchText) || t.UserName.Contains(model.searchText) || (t.RegisterDateTime >= startAndEndDate.StartMiladiDate && t.RegisterDateTime <= startAndEndDate.EndMiladiDate))
+                    .Where(t => t.LastName.Contains(model.searchText) || t.FirstName.Contains(model.searchText) || t.Email.Contains(model.searchText) || t.UserName.Contains(model.searchText) || (t.RegisterDateTime >= startAndEndDate.First() && t.RegisterDateTime <= startAndEndDate.Last()))
                     .OrderBy(model.orderBy)
                     .Skip(model.offset).Take(model.limit)
                     .Select(t => _mapper.Map<UsersViewModel>(t)).AsNoTracking().ToListAsync();

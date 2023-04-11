@@ -142,7 +142,7 @@ namespace NewsWebsite.Data.Repositories
 
         public int CountNews() => _context.News.Count();
         public int CountFuturePublishedNews() => _context.News.Where(n => n.PublishDateTime > DateTime.Now).Count();
-        public int CountNewsPublishedOrDraft(bool? isPublish) => _context.News.Where(n => isPublish == true ? n.IsPublish == true && n.PublishDateTime <= DateTime.Now : n.IsPublish == false).Count();
+        public int CountNewsPublishedOrDraft(bool isPublish) => _context.News.Where(n => isPublish ? n.IsPublish && n.PublishDateTime <=DateTime.Now : !n.IsPublish).Count();
         public int CountNewsPublished() => _context.News.Where(n => n.IsPublish == true && n.PublishDateTime <= DateTime.Now).Count();
 
         public string CheckNewsFileName(string fileName)
@@ -234,41 +234,40 @@ namespace NewsWebsite.Data.Repositories
         public async Task<NewsViewModel> GetNewsById(string newsId, int userId)
         {
             string NameOfCategories = "";
-            var newsGroup = await (from n in _context.News.Include(v => v.Visits).Include(l => l.Likes).Include(u => u.User).Include(c => c.Comments)
-                                   join e in _context.NewsCategories on n.NewsId equals e.NewsId into bc
-                                   from bct in bc.DefaultIfEmpty()
-                                   join c in _context.Categories on bct.CategoryId equals c.CategoryId into cg
-                                   from cog in cg.DefaultIfEmpty()
-                                   join a in _context.NewsTags on n.NewsId equals a.NewsId into ac
-                                   from act in ac.DefaultIfEmpty()
-                                   join t in _context.Tags on act.TagId equals t.TagId into tg
-                                   from tog in tg.DefaultIfEmpty()
-                                   where (n.NewsId == newsId)
-                                   select (new NewsViewModel
-                                   {
-                                       NewsId = n.NewsId,
-                                       Title = n.Title,
-                                       Abstract = n.Abstract,
-                                       ShortTitle = n.Title.Length > 50 ? n.Title.Substring(0, 50) + "..." : n.Title,
-                                       Url = n.Url,
-                                       ImageName = n.ImageName,
-                                       Description = n.Description,
-                                       NumberOfVisit = n.Visits.Select(v => v.NumberOfVisit).Sum(),
-                                       NumberOfLike = n.Likes.Where(l => l.IsLiked == true).Count(),
-                                       NumberOfDisLike = n.Likes.Where(l => l.IsLiked == false).Count(),
-                                       NumberOfComment = n.Comments.Where(c => c.IsConfirm == true).Count(),
-                                       NameOfCategories = cog != null ? cog.CategoryName : "",
-                                       NameOfTags = tog != null ? tog.TagName : "",
-                                       IdOfTags = tog != null ? tog.TagId : "",
-                                       AuthorInfo = n.User,
-                                       IsPublish = n.IsPublish,
-                                       Bookmarked = n.Bookmarks.Any(d => d.NewsId == newsId && d.UserId == userId),
-                                       NewsType = n.IsInternal == true ? "داخلی" : "خارجی",
-                                       PublishDateTime = n.PublishDateTime == null ? new DateTime(01, 01, 01) : n.PublishDateTime,
-                                       PersianPublishDate = n.PublishDateTime == null ? "-" : n.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت HH:mm:ss"),
-                                   })).GroupBy(b => b.NewsId).Select(g => new { NewsId = g.Key, NewsGroup = g }).AsNoTracking().ToListAsync();
+            var newsInfo = await (from n in _context.News.Where(n => n.NewsId == newsId).Include(v => v.Visits).Include(l => l.Likes).Include(u => u.User).Include(c => c.Comments)
+                                  join e in _context.NewsCategories on n.NewsId equals e.NewsId into bc
+                                  from bct in bc.DefaultIfEmpty()
+                                  join c in _context.Categories on bct.CategoryId equals c.CategoryId into cg
+                                  from cog in cg.DefaultIfEmpty()
+                                  join a in _context.NewsTags on n.NewsId equals a.NewsId into ac
+                                  from act in ac.DefaultIfEmpty()
+                                  join t in _context.Tags on act.TagId equals t.TagId into tg
+                                  from tog in tg.DefaultIfEmpty()
+                                  select (new NewsViewModel
+                                  {
+                                      NewsId = n.NewsId,
+                                      Title = n.Title,
+                                      Abstract = n.Abstract,
+                                      ShortTitle = n.Title.Length > 50 ? n.Title.Substring(0, 50) + "..." : n.Title,
+                                      Url = n.Url,
+                                      ImageName = n.ImageName,
+                                      Description = n.Description,
+                                      NumberOfVisit = n.Visits.Select(v => v.NumberOfVisit).Sum(),
+                                      NumberOfLike = n.Likes.Where(l => l.IsLiked == true).Count(),
+                                      NumberOfDisLike = n.Likes.Where(l => l.IsLiked == false).Count(),
+                                      NumberOfComment = n.Comments.Where(c => c.IsConfirm == true).Count(),
+                                      NameOfCategories = cog != null ? cog.CategoryName : "",
+                                      NameOfTags = tog != null ? tog.TagName : "",
+                                      IdOfTags = tog != null ? tog.TagId : "",
+                                      AuthorInfo = n.User,
+                                      IsPublish = n.IsPublish,
+                                      NewsType = n.IsInternal == true ? "داخلی" : "خارجی",
+                                      PublishDateTime = n.PublishDateTime == null ? new DateTime(01, 01, 01) : n.PublishDateTime,
+                                      PersianPublishDate = n.PublishDateTime == null ? "-" : n.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت HH:mm:ss"),
+                                       Bookmarked = n.Bookmarks.Any(b => b.UserId == userId && b.NewsId == newsId),
+                                  })).AsNoTracking().ToListAsync();
 
-
+            var newsGroup = newsInfo.GroupBy(g => g.NewsId).Select(g => new { NewsId = g.Key, NewsGroup = g });
             foreach (var a in newsGroup.First().NewsGroup.Select(a => a.NameOfCategories).Distinct())
             {
                 if (NameOfCategories == "")
@@ -369,27 +368,42 @@ namespace NewsWebsite.Data.Repositories
         {
             var newsList = new List<NewsViewModel>();
             int randomRow;
-            int newsCount = _context.News.Include(t => t.NewsTags).Where(n => n.IsPublish == true && n.PublishDateTime <= DateTime.Now && tagIdList.Any(y => n.NewsTags.Select(x => x.TagId).Contains(y)) && n.NewsId != newsId).Count();
+            int recentRandomRow = 0;
+            tagIdList.Insert(0, newsId);
+            string whereExpression = "NewsId!=@0 and (";
+            for (int i = 0; i < tagIdList.Count() - 1; i++)
+                whereExpression = whereExpression + @"TagId==@" + (i + 1) + (i + 1 != tagIdList.Count - 1 ? " or " : ")");
+
+            int newsCount = (from n in _context.News.Where(n => n.IsPublish == true && n.PublishDateTime <= DateTime.Now)
+                             join t in _context.NewsTags.Where(whereExpression, tagIdList.ToArray())
+                             on n.NewsId equals t.NewsId
+                             select n).Count();
+
+
             for (int i = 0; i < number && i < newsCount; i++)
             {
-                var random = new Random();
-                randomRow = random.Next(1, newsCount + 1);
-                var news = await _context.News.Include(t => t.NewsTags).Include(c => c.Comments).Include(l => l.Likes).Include(l => l.Visits).Where(n => n.IsPublish == true && n.PublishDateTime <= DateTime.Now && tagIdList.Any(y => n.NewsTags.Select(x => x.TagId).Contains(y)) && n.NewsId != newsId)
-                    .Select(n => new NewsViewModel
-                    {
-                        Title = n.Title,
-                        Url = n.Url,
-                        NewsId = n.NewsId,
-                        ImageName = n.ImageName,
-                        PublishDateTime = n.PublishDateTime,
-                        NumberOfVisit = n.Visits.Select(v => v.NumberOfVisit).Sum(),
-                        NumberOfLike = n.Likes.Where(l => l.IsLiked == true).Count(),
-                        NumberOfDisLike = n.Likes.Where(l => l.IsLiked == false).Count(),
-                        NumberOfComment = n.Comments.Count(),
-                    })
-                    .Skip(randomRow - 1).Take(1).FirstOrDefaultAsync();
+                randomRow = CustomMethods.RandomNumber(1, newsCount + 1);
+                while (recentRandomRow == randomRow)
+                    randomRow = CustomMethods.RandomNumber(1, newsCount + 1);
+
+                var news = await (from n in _context.News.Where(n => n.IsPublish == true && n.PublishDateTime <= DateTime.Now).Include(c => c.Comments).Include(l => l.Likes).Include(l => l.Visits)
+                                  join t in _context.NewsTags.Where(whereExpression, tagIdList.ToArray())
+                                  on n.NewsId equals t.NewsId
+                                  select new NewsViewModel
+                                  {
+                                      Title = n.Title,
+                                      Url = n.Url,
+                                      NewsId = n.NewsId,
+                                      ImageName = n.ImageName,
+                                      PublishDateTime = n.PublishDateTime,
+                                      NumberOfVisit = n.Visits.Select(v => v.NumberOfVisit).Sum(),
+                                      NumberOfLike = n.Likes.Where(l => l.IsLiked == true).Count(),
+                                      NumberOfDisLike = n.Likes.Where(l => l.IsLiked == false).Count(),
+                                      NumberOfComment = n.Comments.Count(),
+                                  }).Skip(randomRow - 1).Take(1).FirstOrDefaultAsync();
 
                 newsList.Add(news);
+                recentRandomRow = randomRow;
             }
 
             return newsList;
@@ -457,7 +471,7 @@ namespace NewsWebsite.Data.Repositories
         public async Task<string> GetWeeklyNewsAsync()
         {
             string content = "";
-            int NumOfWeek = ConvertDateTime.ConvertMiladiToShamsi(DateTime.Now, "dddd").GetNumOfWeek();
+            int NumOfWeek = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Now, "dddd").GetNumOfWeek();
             DateTime StartMiladiDate = DateTime.Now.AddDays((-1) * NumOfWeek).Date + new TimeSpan(0, 0, 0);
             DateTime EndMiladiDate = DateTime.Now;
             var news = await _context.News
@@ -523,7 +537,7 @@ namespace NewsWebsite.Data.Repositories
 
             if (duration == "week")
             {
-                int NumOfWeek = ConvertDateTime.ConvertMiladiToShamsi(DateTime.Now, "dddd").GetNumOfWeek();
+                int NumOfWeek = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Now, "dddd").GetNumOfWeek();
                 StartMiladiDate = DateTime.Now.AddDays((-1) * NumOfWeek).Date + new TimeSpan(0, 0, 0);
             }
 
@@ -532,7 +546,7 @@ namespace NewsWebsite.Data.Repositories
 
             else
             {
-                string DayOfMonth = ConvertDateTime.ConvertMiladiToShamsi(DateTime.Now, "dd").Fa2En();
+                string DayOfMonth = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Now, "dd").Fa2En();
                 StartMiladiDate = DateTime.Now.AddDays((-1) * (int.Parse(DayOfMonth) - 1)).Date + new TimeSpan(0, 0, 0);
             }
 

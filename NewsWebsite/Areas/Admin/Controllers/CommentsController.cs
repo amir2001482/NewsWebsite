@@ -210,7 +210,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    viewModel.PostageDateTime = DateTime.Now;
+                    var now = DateTime.Now;
+                    viewModel.PostageDateTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+                    viewModel.CommentId = StringExtensions.GenerateId(10);
                     await _uw.BaseRepository<Comment>().CreateAsync(_mapper.Map<Comment>(viewModel));
                     await _uw.Commit();
                     TempData["notification"] = "دیدگاه شما با موفقیت ارسال شد و بعد از تایید در سایت نمایش داده می شود.";
