@@ -17,11 +17,11 @@ namespace NewsWebsite.Data.Contracts
         Task<List<NewsViewModel>> MostViewedNewsAsync(int offset, int limit, string duration);
         Task<List<NewsViewModel>> MostTalkNewsAsync(int offset, int limit, string duration);
         Task<List<NewsViewModel>> MostPopularNewsAsync(int offset, int limit);
-        Task<NewsViewModel> GetNewsById(string newsId , int userId);
+        Task<NewsViewModel> GetNewsByIdAsync(string newsId , int userId);
         Task<List<NewsViewModel>> GetNextAndPreviousNews(DateTime? PublishDateTime);
         Task<List<Comment>> GetNewsCommentsAsync(string newsId);
         Task BindSubComments(Comment comment);
-        Task<List<NewsViewModel>> GetRelatedNews(int number, List<string> tagIdList, string newsId);
+        Task<List<NewsViewModel>> GetRelatedNewsAsync(int number, List<string> tagIdList, string newsId);
         Task<List<NewsViewModel>> Search(string searchText);
         Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInCategoryOrTag(string id, bool isCategory, int pageIndex, int pageSize);
         Task<List<NewsViewModel>> GetUserBookmarksAsync(int userId);

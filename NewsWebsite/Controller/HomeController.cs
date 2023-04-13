@@ -89,10 +89,10 @@ namespace NewsWebsite.Controllers
 
             try
             {
-                var news = await _uw.NewsRepository.GetNewsById(newsId, currentuserId);
+                var news = await _uw.NewsRepository.GetNewsByIdAsync(newsId, currentuserId);
                 var newsComments = await _uw.NewsRepository.GetNewsCommentsAsync(newsId);
                 var nextAndPreviousNews = await _uw.NewsRepository.GetNextAndPreviousNews(news.PublishDateTime);
-                var newsRelated = await _uw.NewsRepository.GetRelatedNews(2, news.TagIdsList, newsId);
+                var newsRelated = await _uw.NewsRepository.GetRelatedNewsAsync(2, news.TagIdsList, newsId);
                 var newsDetailsViewModel = new NewsDetailsViewModel(news, newsComments, newsRelated, nextAndPreviousNews);
                 return View(newsDetailsViewModel);
             }
