@@ -39,23 +39,39 @@ namespace NewsWebsite.Controllers
                 return PartialView("_MostViewNews", await _uw.NewsRepository.MostViewedNewsAsync(0, 3, duration));
 
             else if (isAjax && TypeOfNews == "MostTalkNews")
-                return ViewComponent("MostTalkNews", duration);
+                return PartialView("_MostTalkNews", await _uw.NewsRepository.MostTalkNewsAsync(0, 5, duration));
             else
             {
-                var model = new PaginateModel()
-                {
-                    offset = 0,
-                    limit = 10,
-                    orderBy = "PublishDateTime",
-                    searchText = "",
-                };
-
-                var news = await _uw.NewsRepository.GetPaginateNewsAsync(model , true  , null);
                 var mostViewNews = await _uw.NewsRepository.MostViewedNewsAsync(0, 3, "day");
                 var mostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0, 3, "day");
                 //var mostPopularNews = await _uw.NewsRepository.MostPopularNewsAsync(0, 5);
-                var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(model , true , true);
-                var forignNews = await _uw.NewsRepository.GetPaginateNewsAsync(model , true , false);
+                //var model = new PaginateModel
+                //{
+                //    offset = 0,
+                //    limit = 10,
+                //    orderBy = "PublishDateTime desc",
+                //    searchText = "",
+                //};
+                var news = await _uw.NewsRepository.GetPaginateNewsAsync(new PaginateModel {
+                    offset = 0,
+                    limit = 10,
+                    orderBy = "PublishDateTime desc",
+                    searchText = "",
+                } , true  , null);
+                var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(new PaginateModel
+                {
+                    offset = 0,
+                    limit = 10,
+                    orderBy = "PublishDateTime desc",
+                    searchText = "",
+                }, true , true);
+                var forignNews = await _uw.NewsRepository.GetPaginateNewsAsync(new PaginateModel
+                {
+                    offset = 0,
+                    limit = 10,
+                    orderBy = "PublishDateTime desc",
+                    searchText = "",
+                }, true , false);
                 var videosPaginateModel = new PaginateModel()
                 {
                     offset = 0,
@@ -135,7 +151,7 @@ namespace NewsWebsite.Controllers
             var category = await _uw.BaseRepository<Category>().FindByIdAsync(categoryId);
             if (category == null)
                 return NotFound();
-            return View("NewsInCategoryAndTag" , new CategoryOrTagInfoViewModel { Id = category.CategoryId , Title = category.CategoryName , IsCategory = true });
+            return View("NewsInCategoryAndTag" , new CategoryOrTagInfoViewModel { Id = category.CategoryId , Title = category.CategoryName , IsCategory = true , MostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0 , 5 , "day") });
         }
         [Route("Tag/{tagId}")]
         public async Task<IActionResult> NewsInTag(string tagId)
@@ -149,10 +165,13 @@ namespace NewsWebsite.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetNewsInCategoryAndTag(int pageindex, int pagesize, string id, bool isCategory)
+        public async Task<ActionResult> GetNewsInCategoryAndTag(int pageIndex, int pageSize, string categoryId, string tagId)
         {
-            var news = await _uw.NewsRepository.GetNewsInCategoryOrTag(id, isCategory, pageindex, pagesize);
-            return Json(news);
+            if (categoryId.HasValue())
+                return Json(await _uw.NewsRepository.GetNewsInCategoryAsync(categoryId, pageIndex, pageSize));
+
+            else
+                return Json(await _uw.NewsRepository.GetNewsInTagAsync(tagId, pageIndex, pageSize));
         }
 
         [Route("Videos")]
@@ -205,5 +224,18 @@ namespace NewsWebsite.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Search(string searchText) => View(await _uw.NewsRepository.Search(searchText));
+        [HttpGet]
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult Error404()
+        {
+            return View();
+        }
+
     }
 }

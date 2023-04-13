@@ -12,6 +12,7 @@ namespace NewsWebsite.ViewModels.Home
         public string Title { get; set; }
         public string ShortTitle { get; set; }
         public string Abstract { get; set; }
+        public DateTime? PublishDateTime { get; set; }
         public string PersianPublishDate { get; set; }
         public string PersianPublishTime { get; set; }
         public string AuthorName { get; set; }

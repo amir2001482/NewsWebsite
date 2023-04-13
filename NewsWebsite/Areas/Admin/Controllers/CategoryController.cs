@@ -33,7 +33,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("مشاهده")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -80,7 +80,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet , AjaxOnly()]
         [DisplayName("افزودن و ویرایش")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> RenderCategory(string categoryId)
         {
             var categoryViewModel = new CategoryViewModel();
@@ -153,7 +153,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
         [HttpGet]
         [DisplayName("حذف")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string categoryId)
         {
             if (!categoryId.HasValue())
@@ -206,7 +206,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpPost, ActionName("DeleteGroup") , AjaxOnly()]
         [DisplayName("حذف گروهی")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> DeleteGroupConfirmed(string[] btSelectItem)
         {
             if (btSelectItem.Count() == 0)

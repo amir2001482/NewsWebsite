@@ -40,7 +40,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("مشاهده")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index()
         {
             return View();
@@ -64,39 +64,39 @@ namespace NewsWebsite.Areas.Admin.Controllers
                      if (order == "asc")
                         model.orderBy = "ShortTitle";
                     else
-                        model.orderBy = "ShortTitle Desc";
+                        model.orderBy = "ShortTitle desc";
                     break;
                 case ("بازدید"):
                     if (order == "asc")
                         model.orderBy = "NumberOfVisit";
                     else
-                        model.orderBy = "NumberOfVisit Desc";
+                        model.orderBy = "NumberOfVisit desc";
                     break;
                 case ("لایک"):
                     if (order == "asc")
                         model.orderBy = "NumberOfLike";
                     else
-                        model.orderBy = "NumberOfLike Desc";
+                        model.orderBy = "NumberOfLike desc";
                     break;
                 case ("دیس لایک"):
                     if (order == "asc")
                         model.orderBy = "NumberOfDisLike";
                     else
-                        model.orderBy = "NumberOfDisLike Desc";
+                        model.orderBy = "NumberOfDisLike desc";
                     break;
                 case ("تاریخ انتشار"):
                     if (order == "asc")
                         model.orderBy = "PublishDateTime";
 
                     else
-                        model.orderBy = "PublishDateTime Desc";
+                        model.orderBy = "PublishDateTime desc";
                     break;
                 case ("نظرات"):
                     if (order == "asc")
-                        model.orderBy = "NumberOfComment";
+                        model.orderBy = "NumberOfComments";
 
                     else
-                        model.orderBy = "NumberOfComment Desc";
+                        model.orderBy = "NumberOfComments desc";
                     break;
                 default:
                     model.orderBy = "PublishDateTime";

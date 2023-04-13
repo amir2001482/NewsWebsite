@@ -23,8 +23,9 @@ namespace NewsWebsite.Data.Contracts
         Task BindSubComments(Comment comment);
         Task<List<NewsViewModel>> GetRelatedNewsAsync(int number, List<string> tagIdList, string newsId);
         Task<List<NewsViewModel>> Search(string searchText);
-        Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInCategoryOrTag(string id, bool isCategory, int pageIndex, int pageSize);
         Task<List<NewsViewModel>> GetUserBookmarksAsync(int userId);
+        Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInCategoryAsync(string categoryId, int pageIndex, int pageSize);
+        Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInTagAsync(string TagId, int pageIndex, int pageSize);
         //Task<NewsViewModel> LikeOrdisLikeAsync(bool isLike, string newsId, string ip);
         Task<bool> BookMarkAsync(string newsId, int UserId);
         Task<string> GetWeeklyNewsAsync();

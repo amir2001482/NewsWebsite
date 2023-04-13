@@ -23,7 +23,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("مشاهده")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Index(int userId)
         {
             if (userId == 0)
@@ -44,7 +44,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpPost, ValidateAntiForgeryToken]
         [DisplayName("افزودن یا ویرایش")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Index(DynamicAccessIndexViewModel ViewModel)
         {
             var Result = await _userManager.AddOrUpdateClaimsAsync(ViewModel.UserId, ConstantPolicies.DynamicPermissionClaimType, ViewModel.ActionIds.Split(","));

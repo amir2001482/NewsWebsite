@@ -47,6 +47,11 @@ namespace NewsWebsite.Common
             }
             return new List<DateTime?>{ StartMiladiDate , EndMiladiDate};
         }
+        public static bool IsLeapYear(this DateTime? date)
+        {
+            PersianDateTime persianDateTime = new PersianDateTime(date);
+            return persianDateTime.IsLeapYear;
+        }
     }
     public class DateTimeResult
     {

@@ -116,7 +116,7 @@
                             <ul>
                                 @for (var i = 0; i < Model.News.TagNamesList.Count(); i++)
                                 {
-                                    <li><a href="/Tag/@Model.News.TagIdsList[i]">@Model.News.TagNamesList[i]</a></li>
+                                    <li><a href="/Tag/@Model.News.TagIdsList[i+1]">@Model.News.TagNamesList[i]</a></li>
                                 }
                             </ul>
                                 }

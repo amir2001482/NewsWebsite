@@ -1,0 +1,66 @@
+﻿
+<link href="~/css/style.css" rel="stylesheet" />
+<script src="~/assets/vendor/jquery/dist/jquery-2.2.4.min.js"></script>
+<style>
+    
+:root {
+    --main-color: #eaeaea;
+    --stroke-color: black;
+}
+body {
+    background: var(--main-color);
+}
+
+h1 {
+    margin: 100px auto 0 auto;
+    color: var(--stroke-color);
+    font-size: 10rem;
+    font-family: Vazir;
+    line-height: 10rem;
+    text-align: center;
+}
+
+h2 {
+    margin: 20px auto 30px auto;
+    font-size: 1.5rem;
+    font-weight: 200;
+    text-align: center;
+    font-family:Vazir_Medium !important;
+}
+
+    h1, h2 {
+        -webkit-transition: opacity 0.5s linear, margin-top 0.5s linear; /* Safari */
+        transition: opacity 0.5s linear, margin-top 0.5s linear;
+    }
+</style>
+<body class="loading">
+    <h1>500</h1>
+    <h2>خطایی رخ داده است <b>:(</b></h2>
+    <div class="gears">
+        <div class="gear one">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <div class="gear two">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <div class="gear three">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    $(function() {
+  setTimeout(function(){
+    $('body').removeClass('loading');
+  }, 1000);
+});
+
+</script>

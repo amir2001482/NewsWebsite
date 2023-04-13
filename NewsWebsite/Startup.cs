@@ -38,20 +38,21 @@ namespace NewsWebsite
         {
             services.Configure<SiteSettings>(Configuration.GetSection(nameof(SiteSettings)));
             services.AddDbContext<NewsDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
-            services.AddMvc(opptions =>
-            {
-                opptions.EnableEndpointRouting = false;
-            });
             services.AddCustomServices();
-            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()));
-            services.AddAutoMapper(typeof(MappingProfiles));
             services.AddCustomIdentityServices();
-            services.ConfigureWritable<SiteSettings>(Configuration.GetSection("SiteSettings"));
+            services.AddAutoMapper(typeof(MappingProfiles));
             services.AddScheduler();
+            services.ConfigureWritable<SiteSettings>(Configuration.GetSection("SiteSettings"));
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(ConstantPolicies.DynamicPermission, policy => policy.Requirements.Add(new DynamicPermissionRequirement()));
             });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Admin/Manage/AccessDenied";
+            });
+            services.AddMvc();
+            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,14 +60,23 @@ namespace NewsWebsite
         {
             app.UseCustomIdentityServices();
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
+            else
+                app.UseExceptionHandler("/Home/Error");
             app.UseStaticFiles();
             var provider = app.ApplicationServices;
             provider.UseScheduler(schedule =>
             {
                 schedule.Schedule<SendWeeklyNewsLatter>().Cron("30 20 * * 5"); // UTC time
+            });
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "/home/error404";
+                    await next();
+                }
             });
             app.UseRouting();
             app.UseAuthorization();

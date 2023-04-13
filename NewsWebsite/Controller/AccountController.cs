@@ -46,8 +46,6 @@ namespace NewsWebsite.Controllers
         {
             return PartialView("_SignIn");
         }
-
-
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInViewModel viewModel)
         {
@@ -87,15 +85,11 @@ namespace NewsWebsite.Controllers
 
             return PartialView("_SignIn");
         }
-
-
-
         [HttpGet]
         public IActionResult Register()
         {
             return PartialView("_Register");
         }
-
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
@@ -134,8 +128,6 @@ namespace NewsWebsite.Controllers
 
             return PartialView("_Register");
         }
-
-
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null)
@@ -151,8 +143,6 @@ namespace NewsWebsite.Controllers
 
             return View();
         }
-
-
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
@@ -161,8 +151,6 @@ namespace NewsWebsite.Controllers
 
             return View(new UserPanelViewModel(user, await _uw.NewsRepository.GetUserBookmarksAsync(userId)));
         }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignOut()
@@ -170,7 +158,6 @@ namespace NewsWebsite.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
         [HttpGet, AjaxOnly]
         public IActionResult DeleteBookmark(int userId, string newsId)
         {
@@ -186,7 +173,6 @@ namespace NewsWebsite.Controllers
             }
             return PartialView("_DeleteConfirmation");
         }
-
         [HttpPost, ActionName("DeleteBookmark"), AjaxOnly]
         public async Task<IActionResult> DeleteBookmarkConfirmed(Bookmark model)
         {
@@ -206,9 +192,7 @@ namespace NewsWebsite.Controllers
             }
             return PartialView("_DeleteConfirmation");
         }
-
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> ChangePassword()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -216,8 +200,6 @@ namespace NewsWebsite.Controllers
                 return NotFound();
             return PartialView("_ChangePassword" , new ChangePasswordViewModel());
         }
-
-
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel ViewModel)
         {

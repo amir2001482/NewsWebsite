@@ -39,15 +39,10 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 else
                     EndDateTimeMiladi = DateTimeExtensions.ConvertShamsiToMiladi($"{year}/01/01");
 
-                //numberOfVisit = _uw._Context.News.Where(n => n.PublishDateTime < EndDateTimeMiladi && StartDateTimeMiladi <= n.PublishDateTime).Include(v => v.Visits).Select(k => k.Visits.Select(v => v.NumberOfVisit).Sum()).Sum();
-                var numberOfVisitsPerNewsItem = _uw._Context.News
-                .Where(n => n.PublishDateTime < EndDateTimeMiladi && StartDateTimeMiladi <= n.PublishDateTime)
-                .SelectMany(n => n.Visits)
-                .GroupBy(v => v.NewsId)
-                .Select(g => g.Sum(v => v.NumberOfVisit));
-                numberOfVisit = numberOfVisitsPerNewsItem.Sum();
+                numberOfVisit = _uw._Context.News.Where(n => n.PublishDateTime < EndDateTimeMiladi && StartDateTimeMiladi <= n.PublishDateTime).Include(v => v.Visits).Select(k => k.Visits.Sum(v => v.NumberOfVisit)).AsEnumerable().Sum();
                 numberOfVisitList.Add(new NumberOfVisitChartViewModel { Name = month[i], Value = numberOfVisit });
             }
+
             ViewBag.NumberOfVisitChart = numberOfVisitList;
             return View();
         }

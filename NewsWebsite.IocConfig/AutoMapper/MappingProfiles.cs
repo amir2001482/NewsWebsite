@@ -67,6 +67,8 @@ namespace NewsWebsite.IocConfig.Mapping
             CreateMap<NewsViewModel, News>();
             CreateMap<Comment, CommentViewModel>()
                 .ForMember(p => p.PersianPostageDateTime, opt => opt.MapFrom(d => d.PostageDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت HH:mm:ss")));
+            CreateMap<CommentViewModel, Comment>()
+                .ForMember(p => p.comment, opt => opt.Ignore());
             CreateMap<Video, VideoViewModel>()
                 .ForMember(p => p.PersianPublishDateTime, opt => opt.MapFrom(d => d.PublishDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت HH:mm:ss")));
             CreateMap<News, NewsInCategoriesAndTagsViewModel>()

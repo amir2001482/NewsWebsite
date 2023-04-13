@@ -52,7 +52,7 @@
 
                     @await Html.PartialAsync("_RegisterInNewsletter", new NewsletterViewModel())
                     <!-- ***** Single Widget ***** -->
-                    @await Component.InvokeAsync("MostTalkNews", "day")
+                    @await Html.PartialAsync("_MostTalkNews" , Model.MostTalkNews)
                 </div>
             </div>
         </div>
@@ -69,11 +69,10 @@
     });
 
     function GetData() {
-        console.log("1111111111");
         $.ajax({
             type: 'GET',
             url: '/Home/GetNewsInCategoryAndTag',
-            data: { "pageindex": pageIndex, "pagesize": pageSize, "id": '@Model.Id', "isCategory": '@Model.IsCategory'},
+            data: {"pageindex":pageIndex,"pagesize":pageSize,"categoryId":'@(Model.IsCategory?Model.Id:"")',"tagId":'@(Model.IsCategory==false?Model.Id:"")'},
             dataType: 'json',
             success: function (data) {
                 if (data != null) {

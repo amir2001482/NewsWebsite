@@ -31,7 +31,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             _mapper.CheckArgumentIsNull(nameof(_mapper));
         }
         [DisplayName("مشاهده")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult Index(string newsId , bool? isConfirm)
         {
             return View(nameof(Index) , new CommentViewModel { NewsId = newsId , IsConfirm = isConfirm });
@@ -89,7 +89,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("حذف")]
-       //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+       [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> Delete(string commentId)
         {
             if (!commentId.HasValue())
@@ -131,7 +131,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("تایید یا رد")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public async Task<IActionResult> ConfirmOrInconfirm(string commentId)
         {
             if (!commentId.HasValue())
@@ -197,7 +197,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
         [HttpGet]
         [DisplayName("ارسال نظر")]
-        //[Authorize(Policy = ConstantPolicies.DynamicPermission)]
+        [Authorize(Policy = ConstantPolicies.DynamicPermission)]
         public IActionResult SendComment(string parentCommentId, string newsId)
         {
             return PartialView("_SendComment",new CommentViewModel(parentCommentId, newsId));
