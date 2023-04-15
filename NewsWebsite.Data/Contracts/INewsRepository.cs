@@ -22,7 +22,7 @@ namespace NewsWebsite.Data.Contracts
         Task<List<Comment>> GetNewsCommentsAsync(string newsId);
         Task BindSubComments(Comment comment);
         Task<List<NewsViewModel>> GetRelatedNewsAsync(int number, List<string> tagIdList, string newsId);
-        Task<List<NewsViewModel>> Search(string searchText);
+        Task<List<NewsViewModel>> Search(string searchText, int offset, int limit);
         Task<List<NewsViewModel>> GetUserBookmarksAsync(int userId);
         Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInCategoryAsync(string categoryId, int pageIndex, int pageSize);
         Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInTagAsync(string TagId, int pageIndex, int pageSize);

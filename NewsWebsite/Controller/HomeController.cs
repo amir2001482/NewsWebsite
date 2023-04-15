@@ -24,7 +24,7 @@ namespace NewsWebsite.Controllers
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public HomeController(IUnitOfWork uw, IHttpContextAccessor accessor, IMapper mapper , IConfiguration configuration)
+        public HomeController(IUnitOfWork uw, IHttpContextAccessor accessor, IMapper mapper, IConfiguration configuration)
         {
             _uw = uw;
             _accessor = accessor;
@@ -52,26 +52,27 @@ namespace NewsWebsite.Controllers
                 //    orderBy = "PublishDateTime desc",
                 //    searchText = "",
                 //};
-                var news = await _uw.NewsRepository.GetPaginateNewsAsync(new PaginateModel {
+                var news = await _uw.NewsRepository.GetPaginateNewsAsync(new PaginateModel
+                {
                     offset = 0,
                     limit = 10,
                     orderBy = "PublishDateTime desc",
                     searchText = "",
-                } , true  , null);
+                }, true, null);
                 var internalNews = await _uw.NewsRepository.GetPaginateNewsAsync(new PaginateModel
                 {
                     offset = 0,
                     limit = 10,
                     orderBy = "PublishDateTime desc",
                     searchText = "",
-                }, true , true);
+                }, true, true);
                 var forignNews = await _uw.NewsRepository.GetPaginateNewsAsync(new PaginateModel
                 {
                     offset = 0,
                     limit = 10,
                     orderBy = "PublishDateTime desc",
                     searchText = "",
-                }, true , false);
+                }, true, false);
                 var videosPaginateModel = new PaginateModel()
                 {
                     offset = 0,
@@ -80,7 +81,7 @@ namespace NewsWebsite.Controllers
                     searchText = ""
                 };
                 var videos = await _uw.VideoRepository.GetPaginateVideosAsync(videosPaginateModel);
-                var homePageViewModel = new HomePageViewModel(news, mostViewNews, mostTalkNews, internalNews, forignNews, videos, _uw.NewsRepository.GetPublishedNewsCount());
+                var homePageViewModel = new HomePageViewModel(news, mostViewNews, mostTalkNews, internalNews, forignNews, videos,_uw.NewsRepository.GetPublishedNewsCount());
                 return View(homePageViewModel);
             }
         }
@@ -117,33 +118,25 @@ namespace NewsWebsite.Controllers
             {
                 return View();
             }
-            
+
         }
 
         [HttpGet]
         public async Task<IActionResult> GetNewsPaginate(int offset, int limit)
         {
-            try
+            var model = new PaginateModel()
             {
-                var model = new PaginateModel()
-                {
-                    limit = limit,
-                    offset = offset,
-                    orderBy = "PublishDateTime Desc",
-                    searchText = ""
-                };
-                var news = await _uw.NewsRepository.GetPaginateNewsAsync(model , true , null);
-                return PartialView("_NewsPaginate", new NewsPaginateViewModel(_uw.NewsRepository.GetPublishedNewsCount(), news));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-
+                limit = limit,
+                offset = offset,
+                orderBy = "PublishDateTime Desc",
+                searchText = ""
+            };
+            var news = await _uw.NewsRepository.GetPaginateNewsAsync(model, true, null);
+            return PartialView("_NewsPaginate", new NewsPaginateViewModel(_uw.NewsRepository.GetPublishedNewsCount(), news));
         }
 
         [Route("Category/{categoryId}/{url}")]
-        public async Task<IActionResult> NewsInCategory(string categoryId , string url)
+        public async Task<IActionResult> NewsInCategory(string categoryId, string url)
         {
             if (!categoryId.HasValue())
                 return NotFound();
@@ -151,7 +144,7 @@ namespace NewsWebsite.Controllers
             var category = await _uw.BaseRepository<Category>().FindByIdAsync(categoryId);
             if (category == null)
                 return NotFound();
-            return View("NewsInCategoryAndTag" , new CategoryOrTagInfoViewModel { Id = category.CategoryId , Title = category.CategoryName , IsCategory = true , MostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0 , 5 , "day") });
+            return View("NewsInCategoryAndTag", new CategoryOrTagInfoViewModel { Id = category.CategoryId, Title = category.CategoryName, IsCategory = true, MostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0, 5, "day") });
         }
         [Route("Tag/{tagId}")]
         public async Task<IActionResult> NewsInTag(string tagId)
@@ -223,7 +216,20 @@ namespace NewsWebsite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Search(string searchText) => View(await _uw.NewsRepository.Search(searchText));
+        public async Task<IActionResult> Search(string searchText)
+        {
+            var news = await _uw.NewsRepository.Search(searchText , 0 , 5);
+            var res = new HomePageViewModel(news, null, null, null, null, null, news.Count());
+            return View(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchPaginate( string searchText, int offset, int limit)
+        {
+            var news = await _uw.NewsRepository.Search(searchText, offset, limit);
+            return PartialView("_NewsPaginate", new NewsPaginateViewModel(news.Count(), news));
+        }
+
         [HttpGet]
         public IActionResult Error()
         {

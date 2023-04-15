@@ -794,21 +794,70 @@ namespace NewsWebsite.Data.Repositories
             return content;
         }
 
-        public async Task<List<NewsViewModel>> Search(string searchText)
+        public async Task<List<NewsViewModel>> Search(string searchText ,int offset , int limit)
         {
-            var obj = await _context.News.AsNoTracking()
-                .Where(e => e.Title.Contains(searchText.Trim()) || e.Abstract.Contains(searchText.Trim()) || e.Description.Contains(searchText.Trim()))
-                .Include(e => e.Bookmarks)
-                .Include(e => e.Comments)
-                .Include(e => e.Likes)
-                .Include(e => e.NewsCategories).ThenInclude(d => d.Category)
-                .Include(e => e.NewsTags).ThenInclude(d => d.Tag)
-                .Include(e => e.User)
-                .Include(e => e.Visits)
-                .ToListAsync();
-            return _mapper.Map<List<NewsViewModel>>(obj);
+            List<NewsViewModel> newsViewModel = new List<NewsViewModel>();
+            var allNews = await (from n in _context.News.AsNoTracking()
+               .Where(e => e.Title.Contains(searchText.Trim()) || e.Abstract.Contains(searchText.Trim()) || e.Description.Contains(searchText.Trim()))
+               .Include(e => e.Bookmarks).Include(e => e.Likes).Include(e => e.User).Include(e => e.Visits)
+               .Skip(offset).Take(limit)
+                             join nc in _context.NewsCategories on n.NewsId equals nc.NewsId into nnc
+                             from lnnc in nnc.DefaultIfEmpty()
+                             join c in _context.Categories on lnnc.CategoryId equals c.CategoryId into ncc
+                             from lncc in ncc.DefaultIfEmpty()
+                             select (new NewsViewModel
+                             {
+                                 NewsId = n.NewsId,
+                                 Title = n.Title,
+                                 Abstract = n.Abstract,
+                                 ShortTitle = n.Title.Length > 50 ? n.Title.Substring(0, 50) + "..." : n.Title,
+                                 Url = n.Url,
+                                 ImageName = n.ImageName,
+                                 Description = n.Description,
+                                 NumberOfVisit = n.Visits.Select(v => v.NumberOfVisit).Sum(),
+                                 NumberOfLike = n.Likes.Where(l => l.IsLiked == true).Count(),
+                                 NumberOfDisLike = n.Likes.Where(l => l.IsLiked == false).Count(),
+                                 NumberOfComment = n.Comments.Count(),
+                                 AuthorName = n.User.FirstName + " " + n.User.LastName,
+                                 IsPublish = n.IsPublish,
+                                 NewsType = n.IsInternal == true ? "داخلی" : "خارجی",
+                                 PublishDateTime = n.PublishDateTime,
+                                 NameOfCategories = lncc != null ? lncc.CategoryName : "",
+                             })).ToListAsync();
+            var newsGroup = allNews.GroupBy(n => n.NewsId).Select(n => new { NewsId = n.Key, Group = n });
+            foreach (var item in newsGroup)
+            {
+                string NameOfCategories = "";
+                foreach (var a in item.Group.Select(s=>s.NameOfCategories).Distinct())
+                {
+                    if (NameOfCategories == "")
+                        NameOfCategories = a;
+                    else
+                        NameOfCategories = NameOfCategories + " - " + a;
+                }
+                NewsViewModel news = new NewsViewModel()
+                {
+                    NewsId = item.NewsId,
+                    Title = item.Group.First().Title,
+                    ShortTitle = item.Group.First().ShortTitle,
+                    Abstract = item.Group.First().Abstract,
+                    Url = item.Group.First().Url,
+                    NumberOfVisit = item.Group.First().NumberOfVisit,
+                    NumberOfDisLike = item.Group.First().NumberOfDisLike,
+                    NumberOfLike = item.Group.First().NumberOfLike,
+                    ImageName = item.Group.First().ImageName,
+                    AuthorName = item.Group.First().AuthorName,
+                    NumberOfComment = item.Group.First().NumberOfComment,
+                    PersianPublishDate = item.Group.First().PersianPublishDate,
+                    PersianPublishTime = item.Group.First().PersianPublishTime,
+                    NameOfCategories = item.Group.First().NameOfCategories,
+                    SearchText = searchText,
+                    PublishDateTime = item.Group.First().PublishDateTime,
+                };
+                newsViewModel.Add(news);
+            }
+            return newsViewModel;
         }
-
         private List<NewsViewModel> SetCategoryAndTagNames(List<NewsViewModel> news, int offset)
         {
             foreach (var item in news)

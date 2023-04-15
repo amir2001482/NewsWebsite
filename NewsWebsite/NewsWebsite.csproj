@@ -38,4 +38,8 @@
     <None Include="wwwroot\assets\fonts\Without-Latin\Vazir-WOL.woff2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+  </ItemGroup>
+
 </Project>

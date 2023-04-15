@@ -83,6 +83,8 @@ namespace NewsWebsite.ViewModels.News
         [JsonIgnore]
         public bool Bookmarked { get; set; }
         [JsonIgnore]
+        public string SearchText { get; set; }
+        [JsonIgnore]
         public NewsCategoriesViewModel NewsCategoriesViewModel { get; set; }
         [JsonIgnore]
         public virtual ICollection<NewsCategory> NewsCategories { get; set; }

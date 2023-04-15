@@ -1,12 +1,11 @@
-﻿@model List<NewsWebsite.ViewModels.News.NewsViewModel>
+﻿@model NewsWebsite.ViewModels.Home.HomePageViewModel
 @using NewsWebsite.Common
 @using NewsWebsite.ViewModels.Newsletter
+@using NewsWebsite.ViewModels.Home
+
 @{
-    ViewData["Title"] = "Search";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-
 <div class="vizew-breadcrumb">
     <div class="container">
         <div class="row">
@@ -21,64 +20,32 @@
         </div>
     </div>
 </div>
-<!-- ##### Breadcrumb Area End ##### -->
-<!-- ##### Archive List Posts Area Start ##### -->
+ @*##### Breadcrumb Area End ##### 
+ ##### Archive List Posts Area Start #####*@ 
 <div class="vizew-archive-list-posts-area mb-80">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-8">
-                <!-- Archive Catagory & View Options -->
+                 @*Archive Catagory & View Options*@ 
                 <div class="archive-catagory-view mb-30 d-flex align-items-center justify-content-between">
-                    <!-- Catagory -->
+                     @*Catagory*@ 
                     <div class="archive-catagory">
                         <h4> نتایج جستجو </h4>
                     </div>
-                    <!-- View Options -->
+                     @*View Options*@ 
                     <div class="view-options">
                         <a href="archive-grid.html"><i class="fa fa-th-large" aria-hidden="true"></i></a>
                         <a href="archive-list.html" class="active"><i class="fa fa-list-ul" aria-hidden="true"></i></a>
                     </div>
                 </div>
-                @if (Model.Count() != 0)
+                @if (Model.News.Count() != 0)
                 {
-                    @foreach (var item in Model)
-                    {
-                        <!-- Single Post Area -->
-                        <div class="single-post-area style-2">
-                            <div class="row align-items-center">
-                                <div class="col-12 col-md-6">
-                                    <!-- Post Thumbnail -->
-                                    <div class="post-thumbnail">
-                                        <img src="~/newsImage/@item.ImageName" alt="@item.ImageName">
-
-                                        <!-- Video Duration -->
-                                        <span class="video-duration">@item.PublishDateTime.ConvertMiladiToShamsi("HH:mm")</span>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <!-- Post Content -->
-                                    <div class="post-content mt-0">
-                                        <a href="#" class="post-cata cata-sm cata-success">@item.NameOfCategories</a>
-                                        <a href="~/News/@item.NewsId/@item.Url" class="post-title mb-2">@item.Title</a>
-                                        <div class="post-meta d-flex align-items-center mb-2">
-                                            <a href="#" class="post-author">@item.AuthorName</a>
-                                            <i class="fa fa-circle" aria-hidden="true"></i>
-                                            <a href="#" class="post-date">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</a>
-                                        </div>
-                                        <p class="mb-2">@item.Abstract</p>
-                                        <div class="post-meta d-flex">
-                                            <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @item.NumberOfComment</a>
-                                            <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @item.NumberOfVisit</a>
-                                            <a href="#"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> @item.NumberOfLike</a>
-                                            <a href="#"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> @item.NumberOfDisLike</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    }
-
+                    <div id="NewsPaginate">
+                        @await Html.PartialAsync("_SearchPaginate", new NewsPaginateViewModel(Model.CountNewsPublished, Model.News.Take(5).ToList()))
+                    </div>
+                    <div id="page" class="mt-5">
+                        <ul class="pagination"></ul>
+                    </div>
                 }
                 else
                 {
@@ -88,19 +55,31 @@
 
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="sidebar-area">
-                    <!-- ***** MostPopularNews***** -->
-                    @*@if (Model.MostPopularNews.Count() != 0)
-                        {
-                            @await Html.PartialAsync("_MostPopularNews", Model.MostPopularNews)
-                        }*@
-
                     @await Html.PartialAsync("_RegisterInNewsletter", new NewsletterViewModel())
-                    <!-- ***** Single Widget ***** -->
-                    @*<div id="MostTalkNewsDiv">
-                            @await Html.PartialAsync("_MostTalkNews", Model.MostTalkNews)
-                        </div>*@
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script src="~/js/pagination.min.js"></script>
+<script>
+
+    $(function () {
+        $('#page').Pagination({
+            size: 20,
+            limit: 5,
+        }, function (obj) {
+            var offset = (obj.page - 1) * 5;
+            $.ajax({
+                url: '/Home/SearchPaginate?searchText=' + @Model.News.First().SearchText + '&&offset=' + offset + '&&limit=5',
+                beforeSend: function () { $('#modal-placeholder').after('<div class="preloader d-flex align-items-center justify-content-center"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>'); },
+                complete: function () { $('.preloader').remove(); },
+                error: function () {
+                    ShowSweetErrorAlert();
+                }
+            }).done(function (result) {
+                $("#NewsPaginate").html(result);
+            });
+        });
+    });
+</script>

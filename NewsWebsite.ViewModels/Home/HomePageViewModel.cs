@@ -31,5 +31,6 @@ namespace NewsWebsite.ViewModels.Home
         public List<NewsViewModel> ForignNews { get; set; }
         public List<VideoViewModel> Videos { get; set; }
         public int CountNewsPublished { get; set; }
+        public string SearchText { get; set; }
     }
 }
