@@ -69,7 +69,7 @@ namespace NewsWebsite.Data.UnitOfWork
             get
             {
                 if (_newsRepository == null)
-                    _newsRepository = new NewsRepository(_Context, _mapper , _configuration);
+                    _newsRepository = new NewsRepository(_Context, _mapper , _configuration , this);
 
                 return _newsRepository;
             }

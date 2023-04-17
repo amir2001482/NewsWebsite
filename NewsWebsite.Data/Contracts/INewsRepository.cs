@@ -26,6 +26,7 @@ namespace NewsWebsite.Data.Contracts
         Task<List<NewsViewModel>> GetUserBookmarksAsync(int userId);
         Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInCategoryAsync(string categoryId, int pageIndex, int pageSize);
         Task<List<NewsInCategoriesAndTagsViewModel>> GetNewsInTagAsync(string TagId, int pageIndex, int pageSize);
+        Task InsertVisitOfUserAsync(string newsId, string ipAddress);
         //Task<NewsViewModel> LikeOrdisLikeAsync(bool isLike, string newsId, string ip);
         Task<bool> BookMarkAsync(string newsId, int UserId);
         Task<string> GetWeeklyNewsAsync();

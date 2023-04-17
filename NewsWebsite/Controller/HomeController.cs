@@ -76,44 +76,29 @@ namespace NewsWebsite.Controllers
                     searchText = ""
                 };
                 var videos = await _uw.VideoRepository.GetPaginateVideosAsync(videosPaginateModel);
-                var homePageViewModel = new HomePageViewModel(news, mostViewNews, mostTalkNews, internalNews, forignNews, videos,_uw.NewsRepository.GetPublishedNewsCount());
+                var homePageViewModel = new HomePageViewModel(news, mostViewNews, mostTalkNews, internalNews, forignNews, videos, _uw.NewsRepository.GetPublishedNewsCount());
                 return View(homePageViewModel);
             }
         }
         [Route("News/{newsId}/{url}")]
         public async Task<IActionResult> NewsDetails(string newsId, string url)
         {
+            if (!newsId.HasValue())
+                return NotFound();
             var currentuserId = User.Identity.GetUserId<int>();
-            string ipAddress = _accessor.HttpContext?.Connection?.RemoteIpAddress.ToString();
-            Visit visit = _uw.BaseRepository<Visit>().FindByConditionAsync(n => n.NewsId == newsId && n.IpAddress == ipAddress).Result.FirstOrDefault();
-            if (visit != null && visit.LastVisitDateTime.Date != DateTime.Now.Date)
+            var news = await _uw.NewsRepository.GetNewsByIdAsync(newsId, currentuserId);
+            if (news == null)
+                return NotFound();
+            else
             {
-                visit.NumberOfVisit = visit.NumberOfVisit + 1;
-                visit.LastVisitDateTime = DateTime.Now;
-                await _uw.Commit();
-            }
-            else if (visit == null)
-            {
-                visit = new Visit { IpAddress = ipAddress, LastVisitDateTime = DateTime.Now, NewsId = newsId, NumberOfVisit = 1 };
-                await _uw.BaseRepository<Visit>().CreateAsync(visit);
-                await _uw.Commit();
-            }
-
-            try
-            {
-                var news = await _uw.NewsRepository.GetNewsByIdAsync(newsId, currentuserId);
+                var ipAdress = _accessor.HttpContext?.Connection?.RemoteIpAddress.ToString();
+                await _uw.NewsRepository.InsertVisitOfUserAsync(newsId, ipAdress);
                 var newsComments = await _uw.NewsRepository.GetNewsCommentsAsync(newsId);
                 var nextAndPreviousNews = await _uw.NewsRepository.GetNextAndPreviousNews(news.PublishDateTime);
                 var newsRelated = await _uw.NewsRepository.GetRelatedNewsAsync(2, news.TagIdsList, newsId);
                 var newsDetailsViewModel = new NewsDetailsViewModel(news, newsComments, newsRelated, nextAndPreviousNews);
                 return View(newsDetailsViewModel);
             }
-
-            catch (Exception ex)
-            {
-                return View();
-            }
-
         }
 
         [HttpGet]
@@ -213,13 +198,13 @@ namespace NewsWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> Search(string searchText)
         {
-            var news = await _uw.NewsRepository.Search(searchText , 0 , 5);
+            var news = await _uw.NewsRepository.Search(searchText, 0, 5);
             var res = new HomePageViewModel(news, null, null, null, null, null, news.Count());
             return View(res);
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchPaginate( string searchText, int offset, int limit)
+        public async Task<IActionResult> SearchPaginate(string searchText, int offset, int limit)
         {
             var news = await _uw.NewsRepository.Search(searchText, offset, limit);
             return PartialView("_NewsPaginate", new NewsPaginateViewModel(news.Count(), news));

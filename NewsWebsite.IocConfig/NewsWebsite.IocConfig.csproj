@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NewsWebsite.Data\NewsWebsite.Data.csproj" />
     <ProjectReference Include="..\NewsWebsite.Services\NewsWebsite.Services.csproj" />
   </ItemGroup>

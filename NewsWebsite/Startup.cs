@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Coravel;
-using Coravel.Scheduling.Schedule.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using NewsWebsite.Data;
 using NewsWebsite.IocConfig;
+using NewsWebsite.IocConfig.Api.Middlewares;
 using NewsWebsite.IocConfig.Mapping;
 using NewsWebsite.Services;
 using NewsWebsite.ViewModels.DynamicAccess;
@@ -42,6 +37,7 @@ namespace NewsWebsite
             services.AddCustomIdentityServices();
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddScheduler();
+            services.AddApiVersioning();
             services.ConfigureWritable<SiteSettings>(Configuration.GetSection("SiteSettings"));
             services.AddAuthorization(options =>
             {
@@ -59,10 +55,19 @@ namespace NewsWebsite
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCustomIdentityServices();
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-            else
-                app.UseExceptionHandler("/Home/Error");
+            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
+            {
+                appBuilder.UseCustomExceptionHandler();
+            });
+
+            app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), appBuilder =>
+            {
+                if (env.IsDevelopment())
+                    appBuilder.UseDeveloperExceptionPage();
+                else
+                    appBuilder.UseExceptionHandler("/Home/Error");
+            });
+
             app.UseStaticFiles();
             var provider = app.ApplicationServices;
             provider.UseScheduler(schedule =>
