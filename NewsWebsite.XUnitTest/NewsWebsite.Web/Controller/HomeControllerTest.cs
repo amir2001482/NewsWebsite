@@ -13,21 +13,24 @@ namespace NewsWebsite.XUnitTest.NewsWebsite.Web.Controller
 {
     public class HomeControllerTest
     {
+        private Mock<IUnitOfWork> moqIUnitOfWork;
+        private Mock<IHttpContextAccessor> moqIHttpContextAccessor;
+        private HomeController _controller;
+        public HomeControllerTest()
+        {
+            moqIUnitOfWork = new Mock<IUnitOfWork>();
+            moqIHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            _controller = new HomeController(moqIUnitOfWork.Object, moqIHttpContextAccessor.Object);
+        }
         [Fact]
         public void CheckReturnViewForTestActionMethod()
         {
-            var moqIUnitOfWork = new Mock<IUnitOfWork>();
-            var moqIHttpContextAccessor = new Mock<IHttpContextAccessor>();
-            var controller = new HomeController(moqIUnitOfWork.Object, moqIHttpContextAccessor.Object);
-            Assert.IsType<ViewResult>(controller.Test());
+            Assert.IsType<ViewResult>(_controller.Test());
         }
         [Fact]
         public async Task CheckReturnnotFoundIfCategoriIdIsNullInNewsInCategory()
         {
-            var moqIUnitOfWork = new Mock<IUnitOfWork>();
-            var moqIHttpContextAccessor = new Mock<IHttpContextAccessor>();
-            var controller = new HomeController(moqIUnitOfWork.Object, moqIHttpContextAccessor.Object);
-            Assert.IsType<NotFoundResult>(await controller.NewsInCategory(null, null));
+            Assert.IsType<NotFoundResult>(await _controller.NewsInCategory(null, null));
         }
     }
 }
