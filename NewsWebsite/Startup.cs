@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using NewsWebsite.Data;
 using NewsWebsite.IocConfig;
 using NewsWebsite.IocConfig.Api.Middlewares;
+using NewsWebsite.IocConfig.Api.Swagger;
 using NewsWebsite.IocConfig.Mapping;
 using NewsWebsite.Services;
 using NewsWebsite.ViewModels.DynamicAccess;
@@ -23,9 +24,11 @@ namespace NewsWebsite
     {
         private  IConfiguration Configuration { get; }
         private IServiceProvider Services { get; }
+        private SiteSettings SiteSettings { get; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            SiteSettings = configuration.GetSection(nameof(SiteSettings)).Get<SiteSettings>();
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -38,7 +41,9 @@ namespace NewsWebsite
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddScheduler();
             services.AddApiVersioning();
+            services.AddCustomAuthentication(SiteSettings);
             services.ConfigureWritable<SiteSettings>(Configuration.GetSection("SiteSettings"));
+            services.AddSwagger();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(ConstantPolicies.DynamicPermission, policy => policy.Requirements.Add(new DynamicPermissionRequirement()));
@@ -69,6 +74,7 @@ namespace NewsWebsite
             });
 
             app.UseStaticFiles();
+            app.UseSwaggerAndUI();
             var provider = app.ApplicationServices;
             provider.UseScheduler(schedule =>
             {

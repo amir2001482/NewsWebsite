@@ -9,6 +9,7 @@ namespace NewsWebsite.ViewModels.Settings
         public AdminUserSeed AdminUserSeed { get; set; }
         public EmailSetting EmailSetting { get; set; }
         public SiteInfo SiteInfo { get; set; }
+        public JwtSettings JwtSettings { get; set; }
     }
 
 
@@ -37,6 +38,16 @@ namespace NewsWebsite.ViewModels.Settings
         public string Logo { get; set; }
         public string Favicon { get; set; }
         public string MetaDescriptionTag { get; set; }
+    }
+    public class JwtSettings
+    {
+        public string SecretKey { get; set; }
+        public string EncrypKey { get; set; }
+        public string Issuer { get; set; }
+        public string Audience { get; set; }
+        public int NotBeforeMinutes { get; set; }
+        public int ExpirationMinutes { get; set; }
+
     }
 
 }
