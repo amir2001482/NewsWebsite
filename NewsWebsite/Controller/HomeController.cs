@@ -21,15 +21,10 @@ namespace NewsWebsite.Controllers
     {
         private readonly IUnitOfWork _uw;
         private readonly IHttpContextAccessor _accessor;
-        private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
-
-        public HomeController(IUnitOfWork uw, IHttpContextAccessor accessor, IMapper mapper, IConfiguration configuration)
+        public HomeController(IUnitOfWork uw, IHttpContextAccessor accessor)
         {
             _uw = uw;
             _accessor = accessor;
-            _mapper = mapper;
-            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index(string TypeOfNews, string duration)
@@ -239,6 +234,10 @@ namespace NewsWebsite.Controllers
 
         [HttpGet]
         public IActionResult Error404()
+        {
+            return View();
+        }
+        public IActionResult Test()
         {
             return View();
         }
