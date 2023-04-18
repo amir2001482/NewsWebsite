@@ -1,15 +1,19 @@
-﻿
-
-
+﻿@using NewsWebsite.Services.Contracts
+@inject ISecurityTrimmingService _securityTrimmingService
 <div id="toolbar">
-    <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderUser","UserManager")">
-        <i class="fa fa-plus"></i> | افزودن کاربر جدید
-    </button>
-    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","UserManager")">
-        <i class="fa fa-trash"></i> | حذف گروهی
-    </button>
+    @if (_securityTrimmingService.CanUserAccess(User, "Admin", "UserManager", "RenderUser"))
+    {
+        <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderUser","UserManager")">
+            <i class="fa fa-plus"></i> | افزودن کاربر جدید
+        </button>
+    }
+    @if (_securityTrimmingService.CanUserAccess(User, "Admin", "UserManager", "DeleteGroup"))
+    {
+        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","UserManager")">
+            <i class="fa fa-trash"></i> | حذف گروهی
+        </button>
+    }
 </div>
-
 <table id="table"
        data-toolbar="#toolbar"
        data-search="true"
@@ -95,21 +99,21 @@
         }
 
 
-         function operateFormatter(value, row, index) {
-        return [
-            '<a class="btn btn btn-primary btn-sm" href=@Url.Action("Details","UserManager")?userId=' + row.Id + ' title="Management">',
-            '<i class="fa fa-user"></i> | مدیریت ', '</a>',
-            '<a class="btn btn btn-success mr-2 btn-sm" href=@Url.Action("Index", "DynamicAccess")?userId=' + row.Id + ' title="Management">',
-            '<i class="fa fa-user"></i> | سطح دسترسی ', '</a>',
-
-            '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderUser", "UserManager")?userId=' + row.Id + ' title="ویرایش">',
-            '<i class="fa fa-edit"></i>',
-            '</button >',
-
-            '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "UserManager")/?userId=' + row.Id + ' title="حذف">',
-            '<i class="fa fa-trash"></i>',
-            '</button >'
-        ].join('')
+    function operateFormatter(value, row, index) {
+        var access = "";
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","UserManager","Details")' == 'True') {
+            access = access + '<a class="btn btn btn-primary btn-sm" href=@Url.Action("Details","UserManager")?userId=' + row.Id + ' title="مدیریت"><i class="fa fa-user"></i> | مدیریت </a>';
+        }
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","DynamicAccess","Index")' == 'True') {
+            access = access + '<a class="btn btn btn-success mr-1 btn-sm" href=@Url.Action("Index","DynamicAccess")?userId=' + row.Id + '> سطح دسترسی </a>';
+        }
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","UserManager","RenderUser")' == 'True') {
+            access = access + '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderUser", "UserManager")?userId=' + row.Id + ' title="ویرایش"><i class="fa fa-edit"></i></button >';
+        }
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","UserManager","Delete")' == 'True') {
+            access = access + '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "UserManager")/?userId=' + row.Id + ' title="حذف"><i class="fa fa-trash"></i></button >';
+        }
+        return access;
     }
 
      function checkBoxFormat(value, row) {

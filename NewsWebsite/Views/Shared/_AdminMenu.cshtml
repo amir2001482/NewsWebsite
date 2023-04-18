@@ -1,50 +1,70 @@
 ﻿@using NewsWebsite.Common;
+@addTagHelper*,NewsWebsite
 <ul class="navbar-nav">
     <li class="nav-item">
-        <a class="nav-link" asp-action="Index" asp-controller="Dashboard">
-            <i class="ni ni-tv-2 text-primary"></i> داشبورد
-        </a>
+        <security-trimming asp-action="Index" asp-controller="Dashboard" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="Dashboard">
+                <i class="ni ni-tv-2 text-primary"></i> داشبورد
+            </a>
+        </security-trimming>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Index" asp-controller="Category">
-            <i class="ni ni-bullet-list-67 text-red"></i> مدیریت دسته بندی ها
-        </a>
+        <security-trimming asp-action="Index" asp-controller="Category" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="Category">
+                <i class="ni ni-bullet-list-67 text-red"></i> مدیریت دسته بندی ها
+            </a>
+        </security-trimming>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Index" asp-controller="Tag">
-            <i class="ni ni-bullet-list-67 text-red"></i> مدیریت برچسب ها
-        </a>
+        <security-trimming asp-action="Index" asp-controller="Tag" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="Tag">
+                <i class="ni ni-bullet-list-67 text-red"></i> مدیریت برچسب ها
+            </a>
+        </security-trimming>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Index" asp-controller="News">
-            <i class="ni ni-folder-17 text-blue"></i> مدیریت اخبار
-        </a>
+        <security-trimming asp-action="Index" asp-controller="News" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="News">
+                <i class="ni ni-folder-17 text-blue"></i> مدیریت اخبار
+            </a>
+        </security-trimming>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" hasp-action="Index" asp-controller="RoleManager">
-            <i class="fa fa-user text-pink"></i> مدیریت نقش ها
-        </a>
+        <security-trimming asp-action="Index" asp-controller="RoleManager" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="RoleManager">
+                <i class="fa fa-user text-pink"></i> مدیریت نقش ها
+            </a>
+        </security-trimming>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Index" asp-controller="UserManager">
-            <i class="fa fa-users text-yellow"></i> مدیریت کاربران
-        </a>
+        <security-trimming asp-action="Index" asp-controller="UserManager" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="UserManager">
+                <i class="fa fa-users text-yellow"></i> مدیریت کاربران
+            </a>
+        </security-trimming>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Index" asp-controller="Video">
-            <i class="fa fa-video text-primary"></i> مدیریت ویدیوها
-        </a>
+        <security-trimming asp-action="Index" asp-controller="Video" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="Video">
+                <i class="fa fa-video text-primary"></i> مدیریت ویدیوها
+            </a>
+        </security-trimming>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Index" asp-controller="Comments">
-            <i class="fa fa-comments text-info"></i> مدیریت نظرات
-        </a>
+        <security-trimming asp-action="Index" asp-controller="Comments" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="Comments">
+                <i class="fa fa-comments text-info"></i> مدیریت نظرات
+            </a>
+        </security-trimming>
+
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Index" asp-controller="Newsletter">
-            <i class="ni ni-notification-70 text-danger"></i> مدیریت خبرنامه
-        </a>
+        <security-trimming asp-action="Index" asp-controller="Newsletter" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="Newsletter">
+                <i class="ni ni-notification-70 text-danger"></i> مدیریت خبرنامه
+            </a>
+        </security-trimming>
     </li>
 
     <li class="nav-item">
@@ -53,9 +73,11 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" asp-action="Index" asp-controller="SiteSetting">
-            <i class="ni ni-settings-gear-65 text-suceess"></i> تنظیمات سایت
-        </a>
+        <security-trimming asp-action="Index" asp-controller="SiteSetting" asp-area="Admin">
+            <a class="nav-link" asp-action="Index" asp-controller="SiteSetting">
+                <i class="ni ni-settings-gear-65 text-suceess"></i> تنظیمات سایت
+            </a>
+        </security-trimming>
     </li>
     <li class="nav-item">
         <a class="nav-link" asp-action="" asp-controller="">

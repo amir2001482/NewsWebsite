@@ -1,18 +1,24 @@
-﻿
+﻿@using NewsWebsite.Services.Contracts
+@inject ISecurityTrimmingService _securityTrimmingService
 <style>
     .fixed-table-header {
-    margin-right: 0px !important;
-}
+        margin-right: 0px !important;
+    }
 </style>
-    <div id="toolbar">
-        <a  class="btn btn-success text-white" asp-action="CreateOrUpdate">
+<div id="toolbar">
+    @if (_securityTrimmingService.CanUserAccess(User, "Admin", "News", "CreateOrUpdate"))
+    {
+        <a class="btn btn-success text-white" asp-action="CreateOrUpdate">
             <i class="fa fa-plus"></i> | افزودن خبر جدید
         </a>
-
-        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Category")">
+    }
+    @if (_securityTrimmingService.CanUserAccess(User, "Admin", "News", "DeleteGroup"))
+    {
+        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","News")">
             <i class="fa fa-trash"></i> | حذف گروهی
         </button>
-    </div>
+    }
+</div>
 <table id="table"
        data-toolbar="#toolbar"
        data-search="true"
@@ -84,15 +90,14 @@
 
 
      function operateFormatter(value, row, index) {
-        return [
-            '<a class="text-success" href="/Admin/News/CreateOrUpdate?newsId='+row.Id+'" title="ویرایش">',
-            '<i class="fa fa-edit"></i>',
-            '</a >',
-
-            '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "News")/?newsId=' + row.Id + ' title="حذف">',
-            '<i class="fa fa-trash"></i>',
-            '</button >'
-        ].join('')
+         var access = "";
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","News","CreateOrUpdate")' == 'True') {
+            access = access + '<a class="text-success" href="/Admin/News/CreateOrUpdate?newsId=' + row.Id + '" title="ویرایش"><i class="fa fa-edit"></i></a>';
+        }
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","News","Delete")' == 'True') {
+            access = access + '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "News")/?newsId=' + row.Id + ' title="حذف"><i class="fa fa-trash"></i></button>';
+        }
+        return access;
     }
 
       function likeFormatter(value, row, index) {

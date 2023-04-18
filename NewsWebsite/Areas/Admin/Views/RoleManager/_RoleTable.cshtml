@@ -1,11 +1,18 @@
-﻿
+﻿@using NewsWebsite.Services.Contracts
+@inject ISecurityTrimmingService _securityTrimmingService
 <div id="toolbar">
-    <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderRole","RoleManager")">
-        <i class="fa fa-plus"></i> | افزودن نقش جدید
-    </button>
-    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Base")">
-        <i class="fa fa-trash"></i> | حذف گروهی
-    </button>
+    @if (_securityTrimmingService.CanUserAccess(User, "Admin", "RoleManager", "RenderRole"))
+    {
+        <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderRole","RoleManager")">
+            <i class="fa fa-plus"></i> | افزودن نقش جدید
+        </button>
+    }
+    @if (_securityTrimmingService.CanUserAccess(User, "Admin", "RoleManager", "DeleteGroup"))
+    {
+        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Base")">
+            <i class="fa fa-trash"></i> | حذف گروهی
+        </button>
+    }
 </div>
 <table id="table"
        data-toolbar="#toolbar"
@@ -63,16 +70,15 @@
         }
 
 
-         function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderRole", "RoleManager")?roleId=' + row.Id + ' title="ویرایش">',
-            '<i class="fa fa-edit"></i>',
-            '</button >',
-
-            '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "RoleManager")/?roleId=' + row.Id + ' title="حذف">',
-            '<i class="fa fa-trash"></i>',
-            '</button >'
-        ].join('')
+    function operateFormatter(value, row, index) {
+         var access = "";
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","RoleManager","RenderRole")' == 'True') {
+            access = access + '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderRole", "RoleManager")?roleId=' + row.Id + ' title="ویرایش"><i class="fa fa-edit"></i></button>';
+        }
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","RoleManager","Delete")' == 'True') {
+            access = access + '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "RoleManager")/?roleId=' + row.Id + ' title="حذف"><i class="fa fa-trash"></i></button>';
+        }
+        return access;
     }
 
      function checkBoxFormat(value, row) {

@@ -1,9 +1,12 @@
 ﻿@using NewsWebsite.Services.Contracts
 @inject ISecurityTrimmingService securityTrimmingService
 <div id="toolbar">
-    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Newsletter")">
-        <i class="fa fa-trash"></i> | حذف گروهی
-    </button>
+    @if (securityTrimmingService.CanUserAccess(User, "Admin", "Newsletter", "DeleteGroup"))
+    {
+        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Newsletter")">
+            <i class="fa fa-trash"></i> | حذف گروهی
+        </button>
+    }
 </div>
 <table id="table"
        data-toolbar="#toolbar"

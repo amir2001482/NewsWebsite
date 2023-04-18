@@ -1,9 +1,14 @@
 ﻿@model NewsWebsite.ViewModels.Comments.CommentViewModel
-    <div id="toolbar">
+@using NewsWebsite.Services.Contracts
+@inject ISecurityTrimmingService _securityTrimmingService
+<div id="toolbar">
+    @if (_securityTrimmingService.CanUserAccess(User, "Admin", "Tag", "DeleteGroup"))
+    {
         <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Tag")">
             <i class="fa fa-trash"></i> | حذف گروهی
         </button>
-    </div>
+    }
+</div>
 <table id="table"
        data-toolbar="#toolbar"
        data-search="true"
@@ -60,16 +65,15 @@
 
 
 
-     function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("ConfirmOrInconfirm", "Comments")?commentId=' + row.Id + ' title="تایید / عدم تایید">',
-            '<i class="fa fa-check"></i>',
-            '</button >',
-
-            '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "Comments")/?commentId=' + row.Id + ' title="حذف">',
-            '<i class="fa fa-trash"></i>',
-            '</button >'
-        ].join('')
+    function operateFormatter(value, row, index) {
+          var access = "";
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","Comments","ConfirmOrInconfirm")' == 'True') {
+            access = access + '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("ConfirmOrInconfirm", "Comments")?commentId=' + row.Id + ' title="تایید / عدم تایید"><i class="fa fa-check"></i></button>';
+        }
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","Comments","Delete")' == 'True') {
+            access = access + '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "Comments")/?commentId=' + row.Id + ' title="حذف"><i class="fa fa-trash"></i></button>';
+        }
+        return access;
     }
 
    function isConfirmFormatter(value, row, index) {

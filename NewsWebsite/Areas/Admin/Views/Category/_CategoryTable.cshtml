@@ -1,10 +1,18 @@
-﻿<div id="toolbar">
-    <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderCategory","Category")">
-        <i class="fa fa-plus"></i> | افزودن دسته بندی جدید
-    </button>
-    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Category")">
-        <i class="fa fa-trash"></i> | حذف گروهی
-    </button>
+﻿@using NewsWebsite.Services.Contracts
+@inject ISecurityTrimmingService _securityTrimmingService
+<div id="toolbar">
+    @if (_securityTrimmingService.CanUserAccess(User, "Admin", "Category", "RenderCategory"))
+    {
+        <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderCategory","Category")">
+            <i class="fa fa-plus"></i> | افزودن دسته بندی جدید
+        </button>
+    }
+    @if (_securityTrimmingService.CanUserAccess(User, "Admin", "Category", "DeleteGroup"))
+    {
+        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-url="@Url.Action("DeleteGroup","Category")">
+            <i class="fa fa-trash"></i> | حذف گروهی
+        </button>
+    }
 </div>
 <table id="table"
        data-toolbar="#toolbar"
@@ -62,16 +70,15 @@
             return html.join('')
         }
 
-   function operateFormatter(value, row, index) {
-        return [
-            '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderCategory", "Category")?categoryId=' + row.Id + ' title="ویرایش">',
-            '<i class="fa fa-edit"></i>',
-            '</button >',
-
-            '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "Category")/?categoryId=' + row.Id + ' title="حذف">',
-            '<i class="fa fa-trash"></i>',
-            '</button >'
-        ].join('')
+    function operateFormatter(value, row, index) {
+          var access = "";
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","Category","RenderCategory")' == 'True') {
+            access = access + '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderCategory", "Category")?categoryId=' + row.Id + ' title="ویرایش"><i class="fa fa-edit"></i></button>';
+        }
+        if ('@_securityTrimmingService.CanUserAccess(User,"Admin","Category","Delete")' == 'True') {
+            access = access + '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "Category")/?categoryId=' + row.Id + ' title="حذف"><i class="fa fa-trash"></i></button>';
+        }
+        return access;
     }
 
    function checkBoxFormat(value, row) {
