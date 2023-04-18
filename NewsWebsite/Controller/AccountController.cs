@@ -17,9 +17,11 @@ using NewsWebsite.Common.Attributes;
 using NewsWebsite.Entities;
 using Microsoft.AspNetCore.Authorization;
 using NewsWebsite.Areas.Admin.Controllers;
+using System.Security.Claims;
 
 namespace NewsWebsite.Controllers
 {
+    [Area("Admin")]
     public class AccountController : Controller
     {
         private readonly IUnitOfWork _uw;
@@ -223,5 +225,6 @@ namespace NewsWebsite.Controllers
             }
             return PartialView("_ChangePassword" , ViewModel);
         }
+       
     }
 }

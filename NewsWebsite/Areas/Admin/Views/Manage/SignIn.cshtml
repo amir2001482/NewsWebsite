@@ -6,6 +6,46 @@
 <html>
 
 <head>
+    <style>
+        .loginBtn {
+            box-sizing: border-box;
+            margin: 0.2em;
+            padding: 0 15px 0 15px;
+            line-height: 34px;
+            border-radius: 0.2em;
+            color: #FFF !important;
+            border: none;
+            cursor: pointer;
+        }
+
+            .loginBtn .fab {
+                font-size: 25px;
+                padding: 4px 0px;
+            }
+        /* Facebook */
+        .loginBtn--facebook {
+            background-color: #4C69BA;
+            background-image: linear-gradient(#4C69BA, #3B55A0);
+            text-shadow: 0 -1px 0 #354C8C;
+        }
+
+        /* Google */
+        .loginBtn--google {
+            background: #DD4B39;
+        }
+
+        .border-light {
+            border-color: #dbdfe2 !important;
+        }
+
+        .faceBookfavi {
+            width: 50px;
+        }
+
+        .googlefavi {
+            width: 50px;
+        }
+    </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
@@ -78,13 +118,15 @@
                         <div class="card-header bg-transparent pb-4">
                             <div class="text-muted text-center mt-2 mb-3"><small>ورود به سایت با</small></div>
                             <div class="btn-wrapper text-center">
-                                <a href="#" class="btn btn-neutral btn-icon">
-                                    <span class="btn-inner--icon"><img src="../assets/img/icons/common/github.svg"></span>
-                                    <span class="btn-inner--text">Github</span>
+                                
+                                <a asp-controller="Manage" asp-action="ExternalLogin" asp-route-provider="GitHub" type="button" class="loginBtn loginBtn--facebook btn-block">
+                                    <img class="faceBookfavi" src="https://img.icons8.com/plasticine/100/null/facebook-new.png" />
+                                    ورود با حساب فیسبوک
                                 </a>
-                                <a href="#" class="btn btn-neutral btn-icon">
-                                    <span class="btn-inner--icon"><img src="../assets/img/icons/common/google.svg"></span>
-                                    <span class="btn-inner--text">Google</span>
+                               
+                                <a asp-controller="Manage" asp-action="ExternalLogin" asp-route-provider="Google" type="button" class="loginBtn loginBtn--google btn-block">
+                                    <img class="googlefavi" src="https://img.icons8.com/plasticine/100/null/google-logo.png" />
+                                    ورود با حساب گوگل
                                 </a>
                             </div>
                         </div>

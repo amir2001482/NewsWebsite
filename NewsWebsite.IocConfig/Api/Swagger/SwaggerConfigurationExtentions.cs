@@ -96,11 +96,11 @@ namespace NewsWebsite.IocConfig.Api.Swagger
         public static void UseSwaggerAndUI(this IApplicationBuilder app)
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Api v1");
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "My Api v2");
-            });
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Api v1");
+            //    c.SwaggerEndpoint("/swagger/v2/swagger.json", "My Api v2");
+            //});
 
         }
     }

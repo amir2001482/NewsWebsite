@@ -165,28 +165,5 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             return PartialView("_RegisterInNewsLetter");
         }
-
-
-        //public async Task<IActionResult> ActiveOrInactive(string email)
-        //{
-        //    if (!email.HasValue())
-        //        ModelState.AddModelError(string.Empty, EmailNotFound);
-        //    else
-        //    {
-        //        var newsletter = await _uw.BaseRepository<Newsletter>().FindByIdAsync(email);
-        //        if (newsletter == null)
-        //            ModelState.AddModelError(string.Empty, EmailNotFound);
-        //        else
-        //        {
-        //            if (newsletter.IsActive == true)
-        //                newsletter.IsActive = false;
-        //            else
-        //                newsletter.IsActive = true;
-        //            await _uw.Commit();
-        //        }
-        //    }
-
-        //    return PartialView();
-        //}
     }
 }

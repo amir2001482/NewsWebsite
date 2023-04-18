@@ -10,6 +10,7 @@ namespace NewsWebsite.ViewModels.Settings
         public EmailSetting EmailSetting { get; set; }
         public SiteInfo SiteInfo { get; set; }
         public JwtSettings JwtSettings { get; set; }
+        public GoogleCreditional GoogleCreditional { get; set; }
     }
 
 
@@ -47,7 +48,11 @@ namespace NewsWebsite.ViewModels.Settings
         public string Audience { get; set; }
         public int NotBeforeMinutes { get; set; }
         public int ExpirationMinutes { get; set; }
-
+    }
+    public class GoogleCreditional
+    {
+        public string ClientId { get; set; }
+        public string SecretId { get; set; }
     }
 
 }

@@ -5,9 +5,11 @@ using Coravel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using NewsWebsite.Data;
 using NewsWebsite.IocConfig;
@@ -59,6 +61,7 @@ namespace NewsWebsite
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var cachePeriod = env.IsDevelopment() ? "600" : "605800";
             app.UseCustomIdentityServices();
             app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
             {
@@ -73,7 +76,15 @@ namespace NewsWebsite
                     appBuilder.UseExceptionHandler("/Home/Error");
             });
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CacheFiles")),
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers.Append("Cache-Control", $"public,max-age={cachePeriod}");
+                },
+                RequestPath = "/CacheFiles",
+            });
             app.UseSwaggerAndUI();
             var provider = app.ApplicationServices;
             provider.UseScheduler(schedule =>

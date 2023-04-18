@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NewsWebsite.Common;
@@ -90,18 +91,12 @@ namespace NewsWebsite.IocConfig
                       }
 
                   };
+              })
+              .AddGoogle(options =>
+              {
+                  options.ClientId = siteSettings.GoogleCreditional.ClientId;
+                  options.ClientSecret = siteSettings.GoogleCreditional.SecretId;
               });
-              //.AddGoogle(options =>
-              //{
-              //    options.ClientId = "315654760867-d01fsd0fb847vft0fbo6hvbgqghrt5ph.apps.googleusercontent.com";
-              //    options.ClientSecret = "F7rY4md1LciG24O_4J_RAPct";
-              //})
-              //.AddYahoo(options =>
-              //{
-              //    options.ClientId = "dj0yJmk9aWxnZVZNTGVwVXhWJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWQz";
-              //    options.ClientSecret = "9d68b57943e8035cd0771f49d2b54af10797eb4e";
-              //});
-
             return services;
         }
     }

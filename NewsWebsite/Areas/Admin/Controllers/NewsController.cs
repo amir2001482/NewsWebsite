@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
@@ -24,9 +25,10 @@ namespace NewsWebsite.Areas.Admin.Controllers
         private readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _env;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _accessor;
         private const string NewsNotFound = "خبر یافت نشد.";
 
-        public NewsController(IUnitOfWork uw, IMapper mapper, IWebHostEnvironment env)
+        public NewsController(IUnitOfWork uw, IMapper mapper, IWebHostEnvironment env , IHttpContextAccessor accessor)
         {
             _uw = uw;
             _uw.CheckArgumentIsNull(nameof(_uw));
@@ -36,6 +38,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             _mapper = mapper;
             _mapper.CheckArgumentIsNull(nameof(_mapper));
+
+            _accessor = accessor;
+            _accessor.CheckArgumentIsNull(nameof(_accessor));
         }
 
         [HttpGet]
@@ -329,6 +334,11 @@ namespace NewsWebsite.Areas.Admin.Controllers
             }
 
             return PartialView("_DeleteGroup");
+        }
+        public async Task<JsonResult> UploadNewsImage(IFormFile file)
+        {
+            await FileExtensions.UploadFileAsync(file, $"{_env.WebRootPath}/newsImage/{file.FileName}");
+            return Json(new { location = $"{_accessor.HttpContext.Request.Scheme}://{_accessor.HttpContext.Request.Host}/newsImage/{file.FileName}" });
         }
     }
 }
