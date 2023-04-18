@@ -21,6 +21,10 @@
     font-family: Vazir_Medium !important;
 }
 
+.font_Vazir_FD {
+    font-family: Vazir_FD !important;
+}
+
 :root {
     --blue: #5e72e4;
     --indigo: #5603ad;
@@ -14985,6 +14989,7 @@ a.text-lighter:focus {
         box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08);
     }
 
+   
     .btn i:not(:first-child),
     .btn svg:not(:first-child) {
         margin-left: .5rem;
@@ -15539,10 +15544,6 @@ a.btn-icon-only {
     .card-lift--hover:hover {
         transition: none;
     }
-}
-
-.card-stats .card-body {
-    padding: 1rem 1.5rem;
 }
 
 .card-stats .card-status-bullet {
@@ -19334,4 +19335,5 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle {
 body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
     overflow: auto !important;
 }
+
 

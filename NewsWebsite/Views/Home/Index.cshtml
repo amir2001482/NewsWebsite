@@ -200,10 +200,10 @@
                     }
                     else
                     {
-                    <div id="NewsPaginate">
-                        @await Html.PartialAsync("_NewsPaginate", new NewsPaginateViewModel(Model.CountNewsPublished, Model.News.Take(5).ToList()))
-                    </div>
-                       
+                        <div id="NewsPaginate">
+                            @await Html.PartialAsync("_NewsPaginate", new NewsPaginateViewModel(Model.CountNewsPublished, Model.News.Take(5).ToList()))
+                        </div>
+
 
                         <div id="page" class="mt-5">
                             <ul class="pagination"></ul>
@@ -236,25 +236,26 @@
     </div>
 </section>
 <script src="~/js/pagination.min.js"></script>
+<script src="~/CacheFiles/js/pagination.min.js"></script>
 
 @*// for pagination*@
 <script>
-    $(function() {
-	$('#page').Pagination({
+    $(function () {
+        $('#page').Pagination({
             size: 20,
             limit: 5,
-    	}, function(obj){
-              var offset=(obj.page-1)*5;
-              $.ajax({
-                url: '/Home/GetNewsPaginate?offset='+offset+'&&limit=5',
-                beforeSend: function () { $('#modal-placeholder').after('<div class="preloader d-flex align-items-center justify-content-center"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>');},
-                complete: function () { $('.preloader').remove();},
+        }, function (obj) {
+            var offset = (obj.page - 1) * 5;
+            $.ajax({
+                url: '/Home/GetNewsPaginate?offset=' + offset + '&&limit=5',
+                beforeSend: function () { $('#modal-placeholder').after('<div class="preloader d-flex align-items-center justify-content-center"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>'); },
+                complete: function () { $('.preloader').remove(); },
                 error: function () {
-                     ShowSweetErrorAlert();
+                    ShowSweetErrorAlert();
                 }
-             }).done(function (result) {
+            }).done(function (result) {
                 $("#NewsPaginate").html(result);
-             });
-    	});
-});
+            });
+        });
+    });
 </script>

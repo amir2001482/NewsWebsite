@@ -4,20 +4,20 @@
     ViewData["Title"] = "RenderNews";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<link href="~/lib/croppie/croppie.css" rel="stylesheet" />
-<script src="~/lib/croppie/croppie.min.js"></script>
+<link href="~/CacheFiles/lib/croppie/croppie.css" rel="stylesheet" />
+<script src="~/CacheFiles/lib/croppie/croppie.min.js"></script>
 
-<link href="~/lib/treeView/TreeView.css" rel="stylesheet" />
-<script src="~/lib/treeView/TreeView.js"></script>
+<link href="~/CacheFiles/lib/treeView/TreeView.css" rel="stylesheet" />
+<script src="~/CacheFiles/lib/treeView/TreeView.js"></script>
 
-<link href="~/lib/Bootstrap4-tags-inputmaster/css/typeahead.css" rel="stylesheet" />
-<script src="~/lib/Bootstrap4-tags-inputmaster/js/tagsinput.js"></script>
-<script src="~/lib/Bootstrap4-tags-inputmaster/js/typeahead.js"></script>
+<link href="~/CacheFiles/lib/Bootstrap4-tags-inputmaster/css/typeahead.css" rel="stylesheet" />
+<script src="~/CacheFiles/lib/Bootstrap4-tags-inputmaster/js/tagsinput.js"></script>
+<script src="~/CacheFiles/lib/Bootstrap4-tags-inputmaster/js/typeahead.js"></script>
 
-<link href="~/lib/clockPicker/bootstrap-clockpicker.min.css" rel="stylesheet" />
-<script src="~/lib/clockPicker/bootstrap-clockpicker.min.js"></script>
+<link href="~/CacheFiles/lib/clockPicker/bootstrap-clockpicker.min.css" rel="stylesheet" />
+<script src="~/CacheFiles/lib/clockPicker/bootstrap-clockpicker.min.js"></script>
 
-<script src="~/lib/tinymce/tinymce.min.js"></script>
+<script src="~/CacheFiles/lib/tinymce/tinymce.min.js"></script>
 
 <style>
 
@@ -65,7 +65,7 @@
             @if (Model.NewsId.HasValue())
             {
                 <li>
-                    <a class="h4 mb-0 text-white d-lg-inline-block"  asp-action="CreateOrUpdate" asp-route-newsId="@Model.NewsId">ویرایش خبر </a>
+                    <a class="h4 mb-0 text-white d-lg-inline-block" asp-action="CreateOrUpdate" asp-route-newsId="@Model.NewsId">ویرایش خبر </a>
                 </li>
             }
             else
@@ -104,14 +104,14 @@
                 <div class="card-body">
                     @if (ViewBag.Alert != null)
                     {
-                    <div class="col-md-12">
-                        <div class="alert alert-success mb-4 alert-dismissable">
-                            @ViewBag.Alert
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                        <div class="col-md-12">
+                            <div class="alert alert-success mb-4 alert-dismissable">
+                                @ViewBag.Alert
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
                     }
                     <div class="row">
                         <div class="col-md-9">
@@ -120,7 +120,7 @@
                                 <span asp-validation-for="Title" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <input asp-for="Abstract" class="form-control" placeholder="چکیده خبر" maxlength="100"/>
+                                <input asp-for="Abstract" class="form-control" placeholder="چکیده خبر" maxlength="100" />
                                 <span asp-validation-for="Abstract" class="text-danger"></span>
                             </div>
                             <div class="form-group row">
@@ -167,7 +167,7 @@
 
                                                 <input asp-for="PersianPublishTime" class="form-control">
                                             </div>
-                                           
+
                                             <span asp-validation-for="PersianPublishTime" class="text-danger"></span>
                                         </div>
                                     </div>
