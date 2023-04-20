@@ -2,6 +2,7 @@
 using NewsWebsite.Common;
 using NewsWebsite.Entities;
 using NewsWebsite.Entities.identity;
+using NewsWebsite.Entities.identity.Enums;
 using NewsWebsite.ViewModels.Category;
 using NewsWebsite.ViewModels.Comments;
 using NewsWebsite.ViewModels.Home;

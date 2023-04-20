@@ -18,6 +18,8 @@ using NewsWebsite.Entities;
 using Microsoft.AspNetCore.Authorization;
 using NewsWebsite.Areas.Admin.Controllers;
 using System.Security.Claims;
+using AutoMapper;
+using NewsWebsite.ViewModels.UserManager;
 
 namespace NewsWebsite.Controllers
 {
@@ -30,8 +32,16 @@ namespace NewsWebsite.Controllers
         private readonly IEmailSender _emailSender;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
+        private readonly IMapper _mapper;
         private const string BookmarkNotFound = "خبر بوکمارک شده یافت نشد.";
-        public AccountController(IUnitOfWork uw, IHttpContextAccessor accessor, IApplicationUserManager userManager, IApplicationRoleManager roleManager, IEmailSender emailSender, SignInManager<User> signInManager, ILogger<AccountController> logger)
+        public AccountController(IUnitOfWork uw,
+            IHttpContextAccessor accessor,
+            IApplicationUserManager userManager,
+            IApplicationRoleManager roleManager,
+            IEmailSender emailSender,
+            SignInManager<User> signInManager,
+            ILogger<AccountController> logger,
+            IMapper mapper)
         {
             _uw = uw;
             _accessor = accessor;
@@ -40,6 +50,7 @@ namespace NewsWebsite.Controllers
             _emailSender = emailSender;
             _signInManager = signInManager;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -149,8 +160,31 @@ namespace NewsWebsite.Controllers
         {
             int userId = User.Identity.GetUserId<int>();
             var user = await _userManager.FindByIdAsync(userId.ToString());
-
-            return View(new UserPanelViewModel(user, await _uw.NewsRepository.GetUserBookmarksAsync(userId)));
+            var res = _mapper.Map<UsersViewModel>(user);
+            var books = await _uw.NewsRepository.GetUserBookmarksAsync(userId);
+            return View(new UserPanelViewModel(res , books));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Profile(UserPanelViewModel model)
+        {
+            try
+            {
+                if (model.User.Id <= 0)
+                    return NotFound();
+                var user = _uw.BaseRepository<User>().FindByIdAsync(model.User.Id);
+                if (user == null)
+                    return NotFound();
+                _uw.BaseRepository<User>().Update(_mapper.Map<User>(model.User));
+                await _uw.Commit();
+                TempData["notification"] = "ویرایش اطلاعات با موفقیت انجام شد.";
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+            
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

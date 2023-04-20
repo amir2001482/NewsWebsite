@@ -13,14 +13,14 @@ namespace NewsWebsite.Services
 {
     public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
     {
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly IOptionsMonitor<T> _options;
         private readonly IConfigurationRoot _configuration;
         private readonly string _section;
         private readonly string _file;
 
         public WritableOptions(
-            IHostingEnvironment environment,
+            IWebHostEnvironment environment,
             IOptionsMonitor<T> options,
             IConfigurationRoot configuration,
             string section,
