@@ -18,6 +18,7 @@ namespace NewsWebsite.IocConfig
         {
             services.AddScoped<IUnitOfWork,UnitOfWork>();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<ISmsSender, SmsSender>();
             services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddTransient<IjwtService, jwtService>();
             services.AddTransient<SendWeeklyNewsLatter>();

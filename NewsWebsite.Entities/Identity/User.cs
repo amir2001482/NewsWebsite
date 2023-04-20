@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using NewsWebsite.Entities.identity.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,12 +26,4 @@ namespace NewsWebsite.Entities.identity
 
     }
 
-    public enum GenderType
-    {
-        [Display(Name = "مرد")]
-        male = 1,
-        [Display(Name = "زن")]
-        famale = 2
-
-    }
 }

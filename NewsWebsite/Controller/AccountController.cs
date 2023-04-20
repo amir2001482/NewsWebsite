@@ -21,7 +21,6 @@ using System.Security.Claims;
 
 namespace NewsWebsite.Controllers
 {
-    [Area("Admin")]
     public class AccountController : Controller
     {
         private readonly IUnitOfWork _uw;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using NewsWebsite.Entities.identity;
+using NewsWebsite.Entities.identity.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

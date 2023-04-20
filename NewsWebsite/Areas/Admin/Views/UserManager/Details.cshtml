@@ -1,5 +1,6 @@
 ﻿@model NewsWebsite.ViewModels.UserManager.UsersViewModel
 @using NewsWebsite.Common
+@using NewsWebsite.Entities.identity.Enums
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -223,19 +224,22 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
-                                                    اهرازهویت دو مرحله ای
-                                                </td>
-                                                <td>
-                                                    <span id="ChangeTwoFactorEnabled" class="badge @(Model.TwoFactorEnabled==true?"badge-success":"badge-danger")">
-                                                        @(Model.TwoFactorEnabled == true ? "فعال" : "غیرفعال")
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <a id="btnChangeTwoFactorEnabled" onclick="ConfigureSettings('@Model.Id','ChangeTwoFactorEnabled')" class="btn btn-sm btn-block @(Model.TwoFactorEnabled==true?"btn-danger":"btn-success")">
-                                                        @(Model.TwoFactorEnabled == true ? "غیرفعال شود" : "فعال شود")
-                                                    </a>
-                                                </td>
+                                                @if (Model.RoleName == "مدیر سایت")
+                                                {
+                                                    <td>
+                                                        اهرازهویت دو مرحله ای
+                                                    </td>
+                                                    <td>
+                                                        <span id="ChangeTwoFactorEnabled" class="badge @(Model.TwoFactorEnabled==true?"badge-success":"badge-danger")">
+                                                            @(Model.TwoFactorEnabled == true ? "فعال" : "غیرفعال")
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <a id="btnChangeTwoFactorEnabled" onclick="ConfigureSettings('@Model.Id','ChangeTwoFactorEnabled')" class="btn btn-sm btn-block @(Model.TwoFactorEnabled==true?"btn-danger":"btn-success")">
+                                                            @(Model.TwoFactorEnabled == true ? "غیرفعال شود" : "فعال شود")
+                                                        </a>
+                                                    </td>
+                                                }
                                             </tr>
                                             <tr>
                                                 @{

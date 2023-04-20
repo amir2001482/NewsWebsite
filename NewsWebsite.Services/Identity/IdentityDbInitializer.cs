@@ -11,6 +11,7 @@ using NewsWebsite.Entities.identity;
 using NewsWebsite.Common;
 using NewsWebsite.Data;
 using NewsWebsite.ViewModels.Settings;
+using NewsWebsite.Entities.identity.Enums;
 
 namespace NewsWebsite.Services.Identity
 {

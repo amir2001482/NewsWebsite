@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using NewsWebsite.Common;
 using NewsWebsite.Entities.identity;
@@ -25,8 +26,18 @@ namespace NewsWebsite.Areas.Admin.Controllers
         private readonly IHttpContextAccessor _accessor;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
+        private readonly IEmailSender _emailSender;
+        private readonly ISmsSender _smsSender;
 
-        public ManageController(IApplicationRoleManager roleManager, IApplicationUserManager userManager, SignInManager<User> signInManager, ILogger<ManageController> logger, IHttpContextAccessor accessor, IMapper mapper, IWebHostEnvironment env)
+        public ManageController(IApplicationRoleManager roleManager,
+            IApplicationUserManager userManager,
+            SignInManager<User> signInManager,
+            ILogger<ManageController> logger,
+            IHttpContextAccessor accessor,
+            IMapper mapper,
+            IWebHostEnvironment env ,
+            IEmailSender emailSender,
+            ISmsSender smsSender)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -35,6 +46,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
             _accessor = accessor;
             _mapper = mapper;
             _env = env;
+            _emailSender = emailSender;
+            _smsSender = smsSender;
         }
 
         [HttpGet]
@@ -220,6 +233,108 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 //return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
                 return View("Signin");
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> SendCode(bool RememberMe)
+        {
+            var FactorOptions = new List<SelectListItem>();
+            var User = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (User == null)
+                return NotFound();
+
+            var UserFactors = await _userManager.GetValidTwoFactorProvidersAsync(User);
+            foreach (var item in UserFactors)
+            {
+                if (item == "Authenticator")
+                {
+                    FactorOptions.Add(new SelectListItem { Text = "اپلیکشن احراز هویت", Value = item });
+                }
+
+                else
+                {
+                    FactorOptions.Add(new SelectListItem { Text = (item == "Email" ? "ارسال ایمیل" : "ارسال پیامک"), Value = item });
+                }
+            }
+            return View(new SendCodeViewModel { Providers = FactorOptions, RememberMe = RememberMe });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendCode(SendCodeViewModel ViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(ViewModel);
+            }
+
+            var User = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (User == null)
+                return NotFound();
+
+            if (ViewModel.SelectedProvider != "Authenticator")
+            {
+                var Code = await _userManager.GenerateTwoFactorTokenAsync(User, ViewModel.SelectedProvider);
+                if (string.IsNullOrWhiteSpace(Code))
+                    return View("Error");
+
+                var Message = "<p style='direction:rtl;font-size:14px;font-family:tahoma'>کد اعتبارسنجی شما :" + Code + "</p>";
+
+                if (ViewModel.SelectedProvider == "Email")
+                    await _emailSender.SendEmailAsync(User.Email, "کد اعتبارسنجی", Message);
+
+                else if (ViewModel.SelectedProvider == "Phone")
+                {
+                    string ResponseSms = await _smsSender.SendAuthSmsAsync(Code, User.PhoneNumber);
+                    if (ResponseSms == "Failed")
+                    {
+                        ModelState.AddModelError(string.Empty, "در ارسال پیامک خطایی رخ داده است.");
+                        return View(ViewModel);
+                    }
+
+                }
+
+                return RedirectToAction("VerifyCode", new { Provider = ViewModel.SelectedProvider, RememberMe = ViewModel.RememberMe });
+
+            }
+
+            else
+                return View(ViewModel);
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> VerifyCode(string Provider, bool RememberMe)
+        {
+            var User = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (User == null)
+                return NotFound();
+            return View(new VerifyCodeViewModel { Provider = Provider, RememberMe = RememberMe });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyCode(VerifyCodeViewModel ViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(ViewModel);
+            }
+
+            var Result = await _signInManager.TwoFactorSignInAsync(ViewModel.Provider, ViewModel.Code, ViewModel.RememberMe, ViewModel.RememberBrowser);
+            if (Result.Succeeded)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            else if (Result.IsLockedOut)
+            {
+                ModelState.AddModelError(string.Empty, "حساب کاربری شما به دلیل تلاش های ناموفق به مدت 20 دقیقه قفل شد.");
+            }
+
+            else
+            {
+                ModelState.AddModelError(string.Empty, "کد اعتبارسنجی صحیح نمی باشد");
+            }
+
+            return View(ViewModel);
+
         }
     }
 }

@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using NewsWebsite.Entities.identity.Enums;
 
 namespace NewsWebsite.ViewModels.UserManager
 {
@@ -90,6 +91,8 @@ namespace NewsWebsite.ViewModels.UserManager
 
         [JsonPropertyName("نقش")]
         public string RoleName { get; set; }
+        [JsonIgnore]
+        public RoleType RoleEnum { get; set; }
 
         [JsonIgnore]
         public bool PhoneNumberConfirmed { get; set; }

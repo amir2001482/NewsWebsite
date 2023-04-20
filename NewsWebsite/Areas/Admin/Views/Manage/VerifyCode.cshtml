@@ -1,0 +1,74 @@
+﻿
+@model NewsWebsite.ViewModels.Manage.VerifyCodeViewModel
+@{
+    ViewData["Title"] = "ChangePassword";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <ul class="nav nav-sitemap justify-content-center justify-content-xl-end">
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html"> داشبورد </a>
+            </li>
+            <li class="pr-2 pl-2">
+                <i class="fa fa-angle-left text-white align-middle"></i>
+            </li>
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html">احراز هویت دو مرحله ای</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<!-- Header -->
+<div class="header bg-gradient-primary pb-4 pt-5 pt-md-8">
+</div>
+<div class="container-fluid mt--7">
+    <div class="row mt-5">
+        <div class="card shadow w-100">
+            <div class="card-header font_Vazir_Medium">
+                ارسال کد اعتبارسنجی
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (ViewBag.Alert != null)
+                        {
+                            <div class="alert alert-success alert-dismissable mb-3">
+                                @ViewBag.Alert
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                        <p class="alert alert-success">یک کد اعتبارسنجی برای شما ارسال شد این کد را وارد کنید.</p>
+                        <form asp-action="VerifyCode" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input asp-for="Provider" type="hidden" />
+                            <input asp-for="RememberMe" type="hidden" />
+                            <div class="form-group">
+                                <label asp-for="Code" class="col-md-4 control-label"></label>
+                                <div class="col-md-12">
+                                    <input asp-for="Code" class="form-control" placeholder="کد اعتبارسنجی" />
+                                    <span asp-validation-for="Code" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="custom-control custom-checkbox mt-4 form-group">
+                                        <input type="checkbox" class="custom-control-input" id="login" asp-for="RememberBrowser">
+                                        <label class="custom-control-label" for="login" asp-for="RememberBrowser"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary float-left">ارسال</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

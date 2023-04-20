@@ -1,0 +1,64 @@
+﻿
+@model NewsWebsite.ViewModels.Manage.SendCodeViewModel
+@{
+    ViewData["Title"] = "ChangePassword";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <ul class="nav nav-sitemap justify-content-center justify-content-xl-end">
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html"> داشبورد </a>
+            </li>
+            <li class="pr-2 pl-2">
+                <i class="fa fa-angle-left text-white align-middle"></i>
+            </li>
+            <li>
+                <a class="h4 mb-0 text-white d-lg-inline-block" href="./index.html">احراز هویت دو مرحله ای</a>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+<!-- Header -->
+<div class="header bg-gradient-primary pb-4 pt-5 pt-md-8">
+</div>
+<div class="container-fluid mt--7">
+    <div class="row mt-5">
+        <div class="card shadow w-100">
+            <div class="card-header font_Vazir_Medium">
+                احراز هویت دو مرحله ای
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (ViewBag.Alert != null)
+                        {
+                            <div class="alert alert-success alert-dismissable mb-3">
+                                @ViewBag.Alert
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                        <form asp-action="SendCode" method="post">
+                            <input asp-for="RememberMe" type="hidden" />
+                            <ul class="alert alert-success">
+                                <li>با انتخاب احراز هویت از طریق ایمیل یک ایمیل حاوی کد اعتبارسنجی به شما ارسال می شود.</li>
+                                <li>با انتخاب احراز هویت از طریق پیامک یک پیامک حاوی کد اعتبارسنجی به شما ارسال می شود</li>
+                            </ul>
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    احراز هویت دو مرحله ای از طریق
+                                    <select asp-for="SelectedProvider" asp-items="Model.Providers" class="form-control input-sm d-inline-block" style="width:auto;font-size: 12px;vertical-align: -3px;"></select>
+                                    <button type="submit" class="btn btn-primary mt-2 mr-4">ارسال</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

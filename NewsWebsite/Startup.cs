@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,7 @@ namespace NewsWebsite
 {
     public class Startup
     {
-        private  IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
         private IServiceProvider Services { get; }
         private SiteSettings SiteSettings { get; }
         public Startup(IConfiguration configuration)
@@ -36,6 +37,9 @@ namespace NewsWebsite
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+                               options.TokenLifespan = TimeSpan.FromHours(1));
+
             services.Configure<SiteSettings>(Configuration.GetSection(nameof(SiteSettings)));
             services.AddDbContext<NewsDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
             services.AddCustomServices();
@@ -75,16 +79,16 @@ namespace NewsWebsite
                 else
                     appBuilder.UseExceptionHandler("/Home/Error");
             });
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CacheFiles")),
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers.Append("Cache-Control", $"public,max-age={cachePeriod}");
-                },
-                RequestPath = "/CacheFiles",
-            });
+            app.UseStaticFiles();
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CacheFiles")),
+            //    OnPrepareResponse = ctx =>
+            //    {
+            //        ctx.Context.Response.Headers.Append("Cache-Control", $"public,max-age={cachePeriod}");
+            //    },
+            //    RequestPath = "/CacheFiles",
+            //});
             app.UseSwaggerAndUI();
             var provider = app.ApplicationServices;
             provider.UseScheduler(schedule =>
@@ -101,6 +105,7 @@ namespace NewsWebsite
                 }
             });
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(routes =>
             {
