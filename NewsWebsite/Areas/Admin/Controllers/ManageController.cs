@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
@@ -141,8 +142,11 @@ namespace NewsWebsite.Areas.Admin.Controllers
         public async Task<IActionResult> Profile(int? userId)
         {
             var profileViewModel = new ProfileViewModel();
+            var loginUserId = User.Identity.GetUserId<int>();
             if (userId == null)
                 return NotFound();
+            if (userId != loginUserId)
+                return View("AccessDenied");
             else
             {
                 var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -336,5 +340,75 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return View(ViewModel);
 
         }
+        [HttpGet]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel ViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var User = await _userManager.FindByEmailAsync(ViewModel.Email);
+                if (User == null)
+                    ModelState.AddModelError(string.Empty, "ایمیل شما صحیح نمی باشد.");
+                else
+                {
+                    if (!await _userManager.IsEmailConfirmedAsync(User))
+                        ModelState.AddModelError(string.Empty, "لطفا با تایید ایمیل حساب کاربری خود را فعال کنید.");
+                    else
+                    {
+                        var Code = await _userManager.GeneratePasswordResetTokenAsync(User);
+                        var CallbackUrl = Url.Action("ResetPassword", "Manage", values: new { Code }, protocol: Request.Scheme);
+                        await _emailSender.SendEmailAsync(ViewModel.Email, "بازیابی کلمه عبور", $"<p style='font-family:tahoma;font-size:14px'> برای بازنشانی کلمه عبور خود <a href='{HtmlEncoder.Default.Encode(CallbackUrl)}'>اینجا کلیک کنید</a> </p>");
+                        ViewBag.success = "برای بازیابی کلمه عبور ایمیل خود را چک کنید";
+                    }
+                }
+            }
+            return View(ViewModel);
+        }
+        [HttpGet]
+        public IActionResult ResetPassword(string Code = null)
+        {
+            if (Code == null)
+                return NotFound();
+            else
+            {
+                var ViewModel = new ResetPasswordViewModel { Code = Code };
+                return View(ViewModel);
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel ViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var User = await _userManager.FindByEmailAsync(ViewModel.Email);
+                if (User == null)
+                    ModelState.AddModelError(string.Empty, "ایمیل شما صحیح نمی باشد.");
+
+                else
+                {
+                    var Result = await _userManager.ResetPasswordAsync(User, ViewModel.Code, ViewModel.Password);
+                    if (Result.Succeeded)
+                        return RedirectToAction("ResetPasswordConfirmation");
+                    else
+                    {
+                        foreach (var error in Result.Errors)
+                            ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            return View(ViewModel);
+        }
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
     }
 }
