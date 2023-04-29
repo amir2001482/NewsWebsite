@@ -199,7 +199,9 @@ namespace NewsWebsite.Controllers
         public async Task<IActionResult> Search(string searchText)
         {
             var news = await _uw.NewsRepository.Search(searchText, 0, 5);
-            var res = new HomePageViewModel(news, null, null, null, null, null, news.Count());
+            var mostViewNews = await _uw.NewsRepository.MostViewedNewsAsync(0, 3, "day");
+            var mostTalkNews = await _uw.NewsRepository.MostTalkNewsAsync(0, 3, "day");
+            var res = new HomePageViewModel(news, mostViewNews, mostTalkNews, null, null, null, news.Count());
             return View(res);
         }
 

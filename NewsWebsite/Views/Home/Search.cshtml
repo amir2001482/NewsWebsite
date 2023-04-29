@@ -34,8 +34,8 @@
                     </div>
                     @*View Options*@
                     <div class="view-options">
-                        <a href="archive-grid.html"><i class="fa fa-th-large" aria-hidden="true"></i></a>
-                        <a href="archive-list.html" class="active"><i class="fa fa-list-ul" aria-hidden="true"></i></a>
+                        @*<a href="archive-grid.html"><i class="fa fa-th-large" aria-hidden="true"></i></a>
+                        <a href="archive-list.html" class="active"><i class="fa fa-list-ul" aria-hidden="true"></i></a>*@
                     </div>
                 </div>
                 @if (Model.News.Count() != 0)
@@ -56,6 +56,9 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="sidebar-area">
                     @await Html.PartialAsync("_RegisterInNewsletter", new NewsletterViewModel())
+                </div>
+                <div id="MostTalkNewsDiv">
+                    @await Html.PartialAsync("_MostTalkNews", Model.MostTalkNews)
                 </div>
             </div>
         </div>

@@ -20,6 +20,7 @@ using NewsWebsite.Areas.Admin.Controllers;
 using System.Security.Claims;
 using AutoMapper;
 using NewsWebsite.ViewModels.UserManager;
+using Microsoft.AspNetCore.Hosting;
 
 namespace NewsWebsite.Controllers
 {
@@ -33,6 +34,7 @@ namespace NewsWebsite.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _env;
         private const string BookmarkNotFound = "خبر بوکمارک شده یافت نشد.";
         public AccountController(IUnitOfWork uw,
             IHttpContextAccessor accessor,
@@ -41,7 +43,8 @@ namespace NewsWebsite.Controllers
             IEmailSender emailSender,
             SignInManager<User> signInManager,
             ILogger<AccountController> logger,
-            IMapper mapper)
+            IMapper mapper,
+            IWebHostEnvironment env)
         {
             _uw = uw;
             _accessor = accessor;
@@ -51,6 +54,7 @@ namespace NewsWebsite.Controllers
             _signInManager = signInManager;
             _logger = logger;
             _mapper = mapper;
+            _env = env;
         }
 
         [HttpGet]
@@ -164,27 +168,43 @@ namespace NewsWebsite.Controllers
             var books = await _uw.NewsRepository.GetUserBookmarksAsync(userId);
             return View(new UserPanelViewModel(res , books));
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Profile(UserPanelViewModel model)
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
         {
-            try
+            int userId = User.Identity.GetUserId<int>();
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            return View("EditProfile" ,_mapper.Map<ProfileViewModel>(user));
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(ProfileViewModel viewModel)
+        {
+            if (viewModel.Id == null)
+                return NotFound();
+            else
             {
-                if (model.User.Id <= 0)
-                    return NotFound();
-                var user = _uw.BaseRepository<User>().FindByIdAsync(model.User.Id);
+                var user = await _userManager.FindByIdAsync(viewModel.Id.ToString());
                 if (user == null)
                     return NotFound();
-                _uw.BaseRepository<User>().Update(_mapper.Map<User>(model.User));
-                await _uw.Commit();
-                TempData["notification"] = "ویرایش اطلاعات با موفقیت انجام شد.";
-                return View();
+                else
+                {
+                    if (viewModel.ImageFile != null)
+                    {
+                        viewModel.Image = viewModel.ImageFile.FileName;
+                        await viewModel.ImageFile.UploadFileAsync($"{_env.WebRootPath}/avatars/{viewModel.Image}");
+                    }
+
+                    else
+                        viewModel.Image = user.Image;
+
+                    viewModel.BirthDate = viewModel.PersianBirthDate.ConvertShamsiToMiladi();
+                    var result = await _userManager.UpdateAsync(_mapper.Map(viewModel, user));
+                    if (result.Succeeded)
+                        return RedirectToAction(nameof(Profile));
+                    else
+                        ModelState.AddErrorsFromResult(result);
+                }
+                return View("");
             }
-            catch (Exception ex)
-            {
-                return View();
-            }
-            
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

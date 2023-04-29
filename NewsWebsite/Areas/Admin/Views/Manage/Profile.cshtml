@@ -102,7 +102,6 @@
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                             </div>
-
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label asp-for="FirstName" class="control-label"></label>
@@ -121,7 +120,6 @@
                                     <span asp-validation-for="LastName" class="text-danger"></span>
                                 </div>
                             </div>
-
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label asp-for="Gender" class="control-label"></label>
@@ -140,7 +138,6 @@
                                     <span asp-validation-for="Gender" class="text-danger"></span>
                                 </div>
                             </div>
-
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label asp-for="PhoneNumber" class="control-label"></label>
@@ -162,11 +159,19 @@
                                             </span>
                                         </div>
                                         <input asp-for="PersianBirthDate" class="form-control" id="InputBirthDate" style="direction:ltr" />
-
                                     </div>
                                 </div>
 
                                 <span asp-validation-for="PersianBirthDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label asp-for="Bio" class="control-label"></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea asp-for="Bio" class="form-control"></textarea>
+                                    <span asp-validation-for="Bio" class="text-danger"></span>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -28,8 +28,9 @@ namespace NewsWebsite.ViewComponents
             {
                 randomRow = CustomMethods.RandomNumber(1, _uw.BaseRepository<Video>().CountEntities()+1);
                 var video = await _uw._Context.Videos.Select(n => new VideoViewModel { Title = n.Title, Url = n.Url, VideoId = n.VideoId, Poster = n.Poster }).Skip(randomRow - 1).Take(1).FirstOrDefaultAsync();
-                videoList.Add(video);
-            }
+                if(video!=null)
+                    videoList.Add(video);
+        }
 
             return View(videoList);
         }

@@ -19,7 +19,7 @@
 
         <!-- Post Content -->
         <div class="post-content">
-            <a href="/@Model.First()/@Model.First().Url" class="post-title"> @Model.First().Title </a>
+            <a href="~/News/@Model.First().NewsId/@Model.First().Url" class="post-title"> @Model.First().Title </a>
             <div class="post-meta d-flex">
                 <a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> @Model.First().NumberOfComment</a>
                 <a href="#"><i class="fa fa-eye" aria-hidden="true"></i> @Model.First().NumberOfVisit</a>

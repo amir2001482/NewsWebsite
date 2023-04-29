@@ -123,11 +123,12 @@
                                 <input asp-for="Abstract" class="form-control" placeholder="چکیده خبر" maxlength="100" />
                                 <span asp-validation-for="Abstract" class="text-danger"></span>
                             </div>
+                            <p class="alert alert-warning"><i class="fa fa-exclamation-triangle ml-2"></i>آدرس نباید شامل فضای خالی و "/" و "\" باشد.</p>
                             <div class="form-group row">
                                 <div class="col-md-9 p-0">
                                     <input asp-for="Url" class="form-control text-left" placeholder="...Enter Url" />
                                 </div>
-                                <div class="col-md-3 text-left p-0">@string.Format("/{0}:://{1}", Context.Request.Scheme, Context.Request.Host)</div>
+                                <div class="col-md-2 text-left p-0 mt-2">@string.Format("/{0}:://{1}", Context.Request.Scheme, Context.Request.Host)</div>
                                 <span asp-validation-for="Url" class="text-danger"></span>
                             </div>
                             <textarea id="mytextarea" asp-for="Description"></textarea>

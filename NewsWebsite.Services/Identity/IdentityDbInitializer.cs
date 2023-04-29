@@ -12,6 +12,9 @@ using NewsWebsite.Common;
 using NewsWebsite.Data;
 using NewsWebsite.ViewModels.Settings;
 using NewsWebsite.Entities.identity.Enums;
+using System.Security.Claims;
+using System.Collections.Generic;
+using NewsWebsite.ViewModels.DynamicAccess;
 
 namespace NewsWebsite.Services.Identity
 {
@@ -141,7 +144,12 @@ namespace NewsWebsite.Services.Identity
                 _logger.LogError($"{thisMethodName}: adminUser AddToRoleAsync failed. {addToRoleResult.DumpErrors()}");
                 return IdentityResult.Failed();
             }
-
+            var addToClaimsResult = await _applicationUserManager.AddClaimsAsync(adminUser, new List<Claim> { new Claim(ConstantPolicies.DynamicPermissionClaimType, "Admin:DynamicAccess:Index"), new Claim(ConstantPolicies.DynamicPermissionClaimType, "Admin:UserManager:Index") });
+            if (addToClaimsResult == IdentityResult.Failed())
+            {
+                _logger.LogError($"{thisMethodName}: adminUser AddToClaimsAsync failed. {addToClaimsResult.DumpErrors()}");
+                return IdentityResult.Failed();
+            }
             return IdentityResult.Success;
         }
     }
