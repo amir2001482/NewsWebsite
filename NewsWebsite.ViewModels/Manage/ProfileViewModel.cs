@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Entities.identity.Enums;
+using NewsWebsite.ViewModels.News;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -50,6 +51,9 @@ namespace NewsWebsite.ViewModels.Manage
         [Display(Name = "جنسیت")]
         [Required(ErrorMessage = "انتخاب {0} الزامی است.")]
         public GenderType? Gender { get; set; }
+        [Display(Name ="معرفی")]
+        public string Bio { get; set; }
+        public IList<NewsViewModel> BookmarkNews { get; set; }
 
     }
 }

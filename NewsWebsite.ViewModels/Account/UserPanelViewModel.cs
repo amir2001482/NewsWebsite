@@ -1,4 +1,5 @@
 ﻿using NewsWebsite.Entities.identity;
+using NewsWebsite.ViewModels.Manage;
 using NewsWebsite.ViewModels.News;
 using NewsWebsite.ViewModels.UserManager;
 using System;
@@ -9,12 +10,12 @@ namespace NewsWebsite.ViewModels.Account
 {
     public class UserPanelViewModel
     {
-        public UserPanelViewModel(UsersViewModel user, List<NewsViewModel> bookmarks)
+        public UserPanelViewModel(ProfileViewModel user, List<NewsViewModel> bookmarks)
         {
             User = user;
             Bookmarks = bookmarks;
         }
-        public UsersViewModel User { get; set; }
+        public ProfileViewModel User { get; set; }
         public List<NewsViewModel> Bookmarks { get; set; }
     }
 }

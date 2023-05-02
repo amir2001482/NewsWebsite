@@ -101,10 +101,10 @@
                             @foreach (var item in Model.Videos)
                             {
                                 <div class="single-feature-post video-post bg-img" style="background-image: url(/posters/@item.Poster);">
-                                    <a href="/Videos/@item.VideoId" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
+                                    <a href="/Video/@item.VideoId" class="btn play-btn"><i class="fa fa-play" aria-hidden="true"></i></a>
 
                                     <div class="post-content">
-                                        <a href="/Videos/@item.VideoId" class="post-title">@item.Title</a>
+                                        <a href="/Video/@item.VideoId" class="post-title">@item.Title</a>
                                     </div>
 
                                     <span class="video-duration direction-rtl">@item.PublishDateTime.ConvertMiladiToShamsi("dd MMMM yyyy")</span>

@@ -1,4 +1,5 @@
-﻿<style>
+﻿@using NewsWebsite.Entities.identity.Enums
+<style>
     .btn-link {
         font-size: 13px !important;
         color: #6c6b6b;
@@ -13,11 +14,18 @@
         <button type="submit" class="btn btn-link mr-2">
             <i class="ni ni-user-run"></i> خروج
         </button>
-    </form>
-    <span class="m-2">|</span>
-    <a asp-action="Profile" asp-controller="Account" class="btn-link">پنل کاربری</a>
+    </form><span class="m-2">|</span>
+    if (User.IsInRole("مدیر سایت"))
+    {
+        <a asp-area="Admin" asp-action="Index" asp-controller="Dashboard" class="btn-link">پنل مدیریتی</a>
+    }
+    else
+    {
+        <a asp-action="Profile" asp-controller="Account" class="btn-link">پنل کاربری</a>
+
+    }
 }
 else
 {
-    <a href="#" class="login-btn" data-toggle="ajax-modal" data-url="@Url.Action("SignIn","Account")"><i class="fa fa-user" aria-hidden="true"></i></a>
+<a href="#" class="login-btn" data-toggle="ajax-modal" data-url="@Url.Action("SignIn","Account")"><i class="fa fa-user" aria-hidden="true"></i></a>
 }

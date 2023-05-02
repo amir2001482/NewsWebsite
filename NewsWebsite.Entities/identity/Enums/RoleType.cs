@@ -10,6 +10,6 @@ namespace NewsWebsite.Entities.identity.Enums
        [Display(Name = "مدیر سایت")]
         admin = 1,
        [Display(Name = "کاربر")]
-        user = 2,
+        user = 5,
     }
 }

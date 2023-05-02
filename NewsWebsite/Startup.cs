@@ -56,6 +56,7 @@ namespace NewsWebsite
             });
             services.ConfigureApplicationCookie(options =>
             {
+                options.LoginPath = "/Home/Index";
                 options.AccessDeniedPath = "/Admin/Manage/AccessDenied";
             });
             services.AddMvc();
@@ -80,15 +81,15 @@ namespace NewsWebsite
                     appBuilder.UseExceptionHandler("/Home/Error");
             });
             app.UseStaticFiles();
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CacheFiles")),
-            //    OnPrepareResponse = ctx =>
-            //    {
-            //        ctx.Context.Response.Headers.Append("Cache-Control", $"public,max-age={cachePeriod}");
-            //    },
-            //    RequestPath = "/CacheFiles",
-            //});
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CacheFiles")),
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers.Append("Cache-Control", $"public,max-age={cachePeriod}");
+                },
+                RequestPath = "/CacheFiles",
+            });
             app.UseSwaggerAndUI();
             var provider = app.ApplicationServices;
             provider.UseScheduler(schedule =>

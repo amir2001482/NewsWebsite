@@ -25,14 +25,14 @@ namespace NewsWebsite.IocConfig.Api.Swagger
                         Description = "Through this Api you can access BookInfo",
                         Contact = new OpenApiContact
                         {
-                            Email = "arezoo.ebrahimi@gmail.com",
-                            Name = "arezoo ebrahimi",
-                            Url=  new Uri("http://www.mizfa.com"),
+                            Email = "amirhosseinlakzaei2000@gmail.com",
+                            Name = "Amir.H lakzaei",
+                            Url=  new Uri("https://github.com/amir2001482"),
                         },
                         License = new OpenApiLicense
                         {
                             Name = "License",
-                            Url = new Uri("http://www.mizfa.com"),
+                            Url = new Uri("https://github.com/amir2001482"),
                         },
                     });
                 c.SwaggerDoc(
@@ -44,14 +44,14 @@ namespace NewsWebsite.IocConfig.Api.Swagger
                        Description = "Through this Api you can access BookInfo",
                        Contact = new OpenApiContact
                        {
-                           Email = "arezoo.ebrahimi@gmail.com",
-                           Name = "arezoo ebrahimi",
-                           Url = new Uri("http://www.mizfa.com"),
+                           Email = "amirhosseinlakzaei2000@gmail.com",
+                           Name = "Amir.H lakzaei",
+                           Url = new Uri("https://github.com/amir2001482"),
                        },
                        License = new OpenApiLicense
                        {
                            Name = "License",
-                           Url = new Uri("http://www.mizfa.com"),
+                           Url = new Uri("https://github.com/amir2001482"),
                        },
                    });
 
@@ -96,11 +96,11 @@ namespace NewsWebsite.IocConfig.Api.Swagger
         public static void UseSwaggerAndUI(this IApplicationBuilder app)
         {
             app.UseSwagger();
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Api v1");
-            //    c.SwaggerEndpoint("/swagger/v2/swagger.json", "My Api v2");
-            //});
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Api v1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "My Api v2");
+            });
 
         }
     }
