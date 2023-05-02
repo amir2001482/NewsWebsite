@@ -33,7 +33,6 @@ namespace NewsWebsite.Data
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Like> Likes { get; set; }
         public virtual DbSet<NewsCategory> NewsCategories { get; set; }
-        public virtual DbSet<NewsImage> NewsImages { get; set; }
         public virtual DbSet<NewsLetter> Newsletters { get; set; }
         public virtual DbSet<NewsTag> NewsTags { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }

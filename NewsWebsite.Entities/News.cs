@@ -24,7 +24,6 @@ namespace NewsWebsite.Entities
         public virtual ICollection<Bookmark> Bookmarks { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Like> Likes { get; set; }
-        public virtual ICollection<NewsImage> NewsImages { get; set; }
         public virtual ICollection<Visit> Visits { get; set; }
         public virtual ICollection<NewsTag> NewsTags { get; set; }
     }

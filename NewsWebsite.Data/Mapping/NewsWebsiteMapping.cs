@@ -15,7 +15,6 @@ namespace NewsWebsite.Data.Mapping
             builder.ApplyConfiguration(new NewsTagMapping());
             builder.ApplyConfiguration(new VisitMapping());
             builder.ApplyConfiguration(new CommentMapping());
-            builder.ApplyConfiguration(new NewsImageMapping());
             builder.ApplyConfiguration(new NewsMapping());
 
         }
