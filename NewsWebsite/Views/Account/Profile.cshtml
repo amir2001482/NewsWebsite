@@ -1,11 +1,22 @@
-﻿@model NewsWebsite.ViewModels.Account.UserPanelViewModel
+﻿@*@model NewsWebsite.ViewModels.Account.UserPanelViewModel*@
+@model NewsWebsite.ViewModels.Manage.ProfileViewModel
 @using NewsWebsite.Entities.identity.Enums;
 @using NewsWebsite.ViewModels.Manage
+@using NewsWebsite.Common
 @{
     ViewData["Title"] = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link href="~/lib/bootstrap.datetimepicker/css/jquery.md.bootstrap.datetimepicker.style.css" rel="stylesheet" />
+<script src="~/lib/bootstrap.datetimepicker/js/jquery.md.bootstrap.datetimepicker.js"></script>
 
+<link href="~/css/bootstrap-fileinput.css" rel="stylesheet" />
+<script src="~/js/bootstrap-fileinput.min.js"></script>
+
+
+<script src="~/CacheFiles/js/Ajax.js"></script>
+<link href="~/CacheFiles/lib/Loading/css/preloader.css" rel="stylesheet" />
+<script src="~/CacheFiles/lib/Loading/js/jquery.preloader.min.js"></script>
 <style>
     .nav-tabs {
         background-color: #fff !important;
@@ -25,7 +36,9 @@
         font-size: 18px !important;
     }
 </style>
+<div id="modal-placeholder">
 
+</div>
 <div class="container mt-5 mb-5 border">
     <div id="user-profile-2" class="user-profile p-4">
         <div class="tabbable">
@@ -51,25 +64,19 @@
                     </a>
                 </li>
             </ul>
-
             <div class="tab-content mt-4">
                 <div id="profile" class="tab-pane in active">
                     <div class="row">
-                        <form asp-action="Profile" method="post">
-                                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
-                            <input type="hidden" asp-for="User.Id" />
-                            <div class="row mt-2 mb-2">
-                                <div class="col-md-4 border-left">
-                                    <div class="col-md-12 border-bottom text-center">
-                                        <p>
-                                            تصویر پروفایل
-                                        </p>
+                        <div class="col-12">
+                            <form asp-controller="Account" asp-action="EditProfile" enctype="multipart/form-data" method="post">
+                                <input type="hidden" asp-for="Id" />
+                                <div class="row">
+                                    <div class="col-4">
                                         <div class="fileinput fileinput-new" data-provides="fileinput">
                                             <div class="fileinput-new thumbnail" style="height: 150px;">
-                                                @if (Model.User.Image != null)
+                                                @if (Model.Image != null)
                                                 {
-                                                    <input type="hidden" asp-for="User.Image" value="@Model.User.Image" />
-                                                    <img src="~/avatars/@Model.User.Image" />
+                                                    <img src="~/avatars/@Model.Image" />
                                                 }
                                                 else
                                                 {
@@ -81,123 +88,139 @@
                                                 <span class="btn default btn-file">
                                                     <span class="fileinput-new btn btn-success"> انتخاب کنید </span>
                                                     <span class="fileinput-exists btn btn-default"> تغییر عکس </span>
-                                                    <input type="file" asp-for="User.ImageFile" accept=".jpg, .png, .jpeg, .gif, .tif, .tiff, .JPG" />
+                                                    <input type="file" asp-for="ImageFile" accept=".jpg, .png, .jpeg, .gif, .tif, .tiff, .JPG" />
                                                 </span>
                                                 <a href="javascript:;" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"> حذف </a>
                                             </div>
-                                            <span asp-validation-for="User.ImageFile" class="text-danger"></span>
+                                            <span asp-validation-for="ImageFile" class="text-danger"></span>
                                         </div>
+                                        <button type="submit" class="btn btn-sm btn-block btn-success mt-2">
+                                            <i class="ace-icon fa fa-edit"></i>
+                                            <span>ویرایش پروفایل</span>
+                                        </button>
                                     </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label asp-for="User.UserName" class="control-label"></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input asp-for="User.UserName" class="form-control" />
-                                            <span asp-validation-for="User.UserName" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label asp-for="User.Email" class="control-label"></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input asp-for="User.Email" class="form-control" />
-                                            <span asp-validation-for="User.Email" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label asp-for="User.FirstName" class="control-label"></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input asp-for="User.FirstName" class="form-control" />
-                                            <span asp-validation-for="User.FirstName" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label asp-for="User.LastName" class="control-label"></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input asp-for="User.LastName" class="form-control" />
-                                            <span asp-validation-for="User.LastName" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label asp-for="User.Gender" class="control-label"></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <div class="row">
-                                                <div class="col-md-4 custom-control custom-radio mb-3">
-                                                    <input asp-for="User.Gender" value="@GenderType.male" class="custom-control-input" id="customRadio1" type="radio">
-                                                    <label class="custom-control-label" for="customRadio1">مرد</label>
-                                                </div>
-                                                <div class="col-md-4 custom-control custom-radio mb-3">
-                                                    <input asp-for="User.Gender" value="@GenderType.famale" class="custom-control-input" id="customRadio2" type="radio">
-                                                    <label class="custom-control-label" for="customRadio2">زن</label>
+                                    <div class="col-8">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="profile-user-info">
+                                                    <div class="col-md-12">
+                                                        <label asp-for="FirstName" class="control-label"></label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <input asp-for="FirstName" class="form-control" />
+                                                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <span asp-validation-for="User.Gender" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label asp-for="User.PhoneNumber" class="control-label"></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input asp-for="User.PhoneNumber" class="form-control" />
-                                            <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label asp-for="User.Bio" class="control-label"></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <textarea asp-for="User.Bio" class="form-control" />
-                                            <span asp-validation-for="User.Bio" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label asp-for="User.PersianBirthDate" class="control-label"></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text cursor-pointer" id="BirthDate">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </span>
+                                            <div class="col-6">
+                                                <div class="profile-user-info">
+                                                    <div class="col-md-12">
+                                                        <label asp-for="LastName" class="control-label"></label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <input asp-for="LastName" class="form-control" />
+                                                        <span asp-validation-for="LastName" class="text-danger"></span>
+                                                    </div>
                                                 </div>
-                                                <input asp-for="User.PersianBirthDate" class="form-control" id="InputBirthDate" style="direction:ltr" />
-
                                             </div>
                                         </div>
-
-                                        <span asp-validation-for="User.PersianBirthDate" class="text-danger"></span>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="profile-user-info">
+                                                    <div class="col-md-12">
+                                                        <label asp-for="UserName" class="control-label"></label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <input asp-for="UserName" class="form-control" />
+                                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="profile-user-info">
+                                                    <div class="col-md-12">
+                                                        <label asp-for="Email" class="control-label"></label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <input asp-for="Email" class="form-control" />
+                                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="profile-user-info">
+                                                    <div class="col-md-12">
+                                                        <label asp-for="PhoneNumber" class="control-label"></label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <input asp-for="PhoneNumber" class="form-control" />
+                                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="profile-user-info">
+                                                    <div class="col-md-12">
+                                                        <label asp-for="PersianBirthDate" class="control-label"></label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text cursor-pointer" id="BirthDate">
+                                                                    <i class="fa fa-calendar"></i>
+                                                                </span>
+                                                            </div>
+                                                            <input type="datetime" asp-for="PersianBirthDate" class="form-control" id="InputBirthDate" style="direction:ltr" />
+                                                        </div>
+                                                    </div>
+                                                    <span asp-validation-for="PersianBirthDate" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="profile-user-info">
+                                                    <div class="col-md-12">
+                                                        <label asp-for="Gender" class="control-label"></label>
+                                                    </div>
+                                                    <div class="col-12 mr-3">
+                                                        <div class="row">
+                                                            <div class="col-md-4 custom-control custom-radio mb-3">
+                                                                <input asp-for="Gender" value="@GenderType.male" class="custom-control-input" id="customRadio1" type="radio">
+                                                                <label class="custom-control-label" for="customRadio1">مرد</label>
+                                                            </div>
+                                                            <div class="col-md-4 custom-control custom-radio mb-3">
+                                                                <input asp-for="Gender" value="@GenderType.famale" class="custom-control-input" id="customRadio2" type="radio">
+                                                                <label class="custom-control-label" for="customRadio2">زن</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="profile-info-row">
+                                                    <div class="col-md-12">
+                                                        <label asp-for="Bio" class="control-label"></label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <textarea style="height:100px; width:142%;" asp-for="Bio" class="form-control"></textarea>
+                                                        <span asp-validation-for="Bio" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="hr hr-8 dotted"></div>
                                     </div>
-                                    @*<script>
-                                        $("#BirthDate").MdPersianDateTimePicker({
-                                            targetTextSelector: "#InputBirthDate",
-                                            placement: 'top',
-                                        });
-                                    </script>*@
                                 </div>
-                            </div>
-                            <p>hello world</p>
-                        </form>
-
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div id="bookmarks" class="tab-pane">
-                    @await Html.PartialAsync("_Bookmarks", Model.Bookmarks)
+                    @await Html.PartialAsync("_Bookmarks",Model.BookmarkNews)
                 </div>
                 <div id="changePassword" class="tab-pane">
                     @await Html.PartialAsync("_ChangePassword", new ChangePasswordViewModel())
@@ -206,3 +229,9 @@
         </div>
     </div>
 </div>
+<script>
+    $("#BirthDate").MdPersianDateTimePicker({
+        targetTextSelector: "#InputBirthDate",
+        placement: 'top',
+    });
+</script>

@@ -80,7 +80,7 @@ namespace NewsWebsite.Controllers
                             ModelState.AddModelError(string.Empty, "حساب کاربری شما به مدت 20 دقیقه به دلیل تلاش های ناموفق قفل شد.");
 
                         else if (result.RequiresTwoFactor)
-                            return Json("requiresTwoFactor");
+                            ModelState.AddModelError(string.Empty, "احراز هویت دو مرحله ای برای شما فعال شده است لطفا از صفحه ادمین اقدام به ورود کنید.");
 
                         else
                         {
@@ -164,16 +164,10 @@ namespace NewsWebsite.Controllers
         {
             int userId = User.Identity.GetUserId<int>();
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            var res = _mapper.Map<UsersViewModel>(user);
             var books = await _uw.NewsRepository.GetUserBookmarksAsync(userId);
-            return View(new UserPanelViewModel(res , books));
-        }
-        [HttpGet]
-        public async Task<IActionResult> EditProfile()
-        {
-            int userId = User.Identity.GetUserId<int>();
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-            return View("EditProfile" ,_mapper.Map<ProfileViewModel>(user));
+            var profile = _mapper.Map<ProfileViewModel>(user);
+            profile.BookmarkNews = books;
+            return View(profile);
         }
         [HttpPost]
         public async Task<IActionResult> EditProfile(ProfileViewModel viewModel)
@@ -196,14 +190,12 @@ namespace NewsWebsite.Controllers
                     else
                         viewModel.Image = user.Image;
 
-                    viewModel.BirthDate = viewModel.PersianBirthDate.ConvertShamsiToMiladi();
+                    viewModel.BirthDate = viewModel.PersianBirthDate?.ConvertShamsiToMiladi();
                     var result = await _userManager.UpdateAsync(_mapper.Map(viewModel, user));
                     if (result.Succeeded)
-                        return RedirectToAction(nameof(Profile));
-                    else
-                        ModelState.AddErrorsFromResult(result);
+                        return RedirectToAction( "Index", "Home");
                 }
-                return View("");
+                return RedirectToAction(nameof(Profile));
             }
         }
         [HttpPost]
@@ -266,17 +258,9 @@ namespace NewsWebsite.Controllers
             {
                 var ChangePassResult = await _userManager.ChangePasswordAsync(user, ViewModel.OldPassword, ViewModel.NewPassword);
                 if (ChangePassResult.Succeeded)
-                    TempData["notification"] = "ویرایش اطلاعات با موفقیت انجام شد.";
-
-                else
-                {
-                    foreach (var item in ChangePassResult.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, item.Description);
-                    }
-                }
+                    return RedirectToAction("Index", "Home");
             }
-            return PartialView("_ChangePassword" , ViewModel);
+            return RedirectToAction(nameof(Profile));
         }
        
     }
