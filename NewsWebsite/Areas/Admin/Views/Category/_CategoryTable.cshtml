@@ -63,7 +63,7 @@
                 if (key != "state" && key != "Id" && key!='آدرس' && key!="ردیف")
                     html.push('<p><b>' + key + ':</b> ' + value + '</p>')
                 if (key == 'آدرس') {
-                    var url = '@string.Format("{0}://{1}", Context.Request.Scheme, Context.Request.Host)' + '/' + row.Id + '/' + value;
+                    var url = '@string.Format("{0}://{1}", Context.Request.Scheme, Context.Request.Host)' + '/' + value;
                     html.push('<p><b style = "float: right; ">' + key + ':</b> ' + '<a href="' + url + '" style="float: right;direction: ltr; margin-right: 2px;">'  + url + '</a>' + '</p>')
                 }
             })
